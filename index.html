@@ -9,8 +9,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <!-- Performance: Load Google Fonts via Link -->
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Performance: Load Google Fonts via Link (Optimized Weights - Adjust if needed) -->
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
 
     <!-- Other CSS Libraries -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
@@ -38,47 +38,80 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Manrope', system-ui, -apple-system, sans-serif; }
         html { scroll-behavior: smooth; }
         body { background: var(--darker); color: var(--light); min-height: 100vh; overflow-x: hidden; background-image: radial-gradient(circle at 10% 20%, rgba(139, 92, 246, 0.05) 0%, transparent 20%), radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 20%), radial-gradient(circle at 50% 50%, rgba(15, 23, 42, 0.8) 0%, var(--darker) 100%); }
-        .glass { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.05); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2); }
-        .glass-dark { background: rgba(2, 6, 23, 0.8); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.03); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); }
-        .glass-card { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.05); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2); border-radius: 16px; transition: all var(--transition-smooth); }
+
+        /* Glass Morphism Base Styles - Includes backdrop-filter */
+        .glass, .glass-dark, .glass-card, .glass-inset {
+            background: rgba(15, 23, 42, 0.6); /* Default light glass bg */
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+        .glass-dark { background: rgba(2, 6, 23, 0.8); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); border-color: rgba(255, 255, 255, 0.03); }
+        .glass-card { border-radius: 16px; }
+        .glass-inset { background: rgba(2, 6, 23, 0.5); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: 16px; box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.5), inset -2px -2px 5px rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.03); }
+
+        /* Performance: Disable expensive backdrop-filter on touch/mobile */
+        @media (hover: none) and (pointer: coarse), (max-width: 768px) {
+             .glass, .glass-dark, .glass-card, .glass-inset {
+                 backdrop-filter: none !important;
+                 -webkit-backdrop-filter: none !important;
+                 /* Optional: Increase opacity slightly when blur is off */
+                 /* background: rgba(15, 23, 42, 0.8); */
+             }
+             .glass-dark { /* background: rgba(2, 6, 23, 0.9); */ }
+             .glass-inset { /* background: rgba(2, 6, 23, 0.6); */ }
+        }
+
         .glass-card:hover { box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3), 0 0 20px rgba(139, 92, 246, 0.2); transform: translateY(-3px); }
-        .glass-inset { background: rgba(2, 6, 23, 0.5); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: 16px; box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.5), inset -2px -2px 5px rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.03); }
         .animated-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden; }
         .floating-particle { position: absolute; background: var(--primary-alpha); border-radius: 50%; opacity: 0; animation: float 20s infinite linear; }
         @keyframes float { 0% { opacity: 0; transform: translateY(0) translateX(0) rotate(0deg); } 10% { opacity: 0.4; } 90% { opacity: 0.4; } 100% { opacity: 0; transform: translateY(calc(-100vh - 100px)) translateX(calc(100vw * var(--x-travel))) rotate(360deg); } }
         .sidebar { background: var(--sidebar-bg); height: 100vh; position: fixed; top: 0; left: 0; padding: 2rem 1.5rem; width: 300px; z-index: 50; transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1); border-right: 1px solid rgba(255, 255, 255, 0.03); display: flex; flex-direction: column; overflow-y: hidden; }
         .content-area { margin-left: 300px; padding: 2rem; min-height: 100vh; transition: margin-left 0.6s cubic-bezier(0.22, 1, 0.36, 1); position: relative; z-index: 1; }
         @media (max-width: 1024px) { .sidebar { transform: translateX(-100%); } .sidebar.open { transform: translateX(0); } .content-area { margin-left: 0; width: 100%; } }
-        @media (max-width: 768px) { .content-area { padding: 1.5rem 1rem; } header h1 { font-size: 1.75rem !important; } .glass-card { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2); } .glass-card:hover { box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3), 0 0 20px rgba(139, 92, 246, 0.2); } .glass-inset { backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); } .card-header { flex-direction: column !important; align-items: flex-start !important; padding: 1.5rem 1rem !important; } .card-header > div:last-child { width: 100%; justify-content: space-between; margin-top: 1rem; } .progress-container { width: 100% !important; } #protocolCards { min-height: 200px; } }
-        .protocol-card { transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1), transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s ease; transform-style: preserve-3d; perspective: 1000px; overflow: hidden; transform: translateZ(0); will-change: transform, box-shadow, opacity; backface-visibility: hidden; opacity: 0; }
+        @media (max-width: 768px) { .content-area { padding: 1.5rem 1rem; } header h1 { font-size: 1.75rem !important; } .card-header { flex-direction: column !important; align-items: flex-start !important; padding: 1.5rem 1rem !important; } .card-header > div:last-child { width: 100%; justify-content: space-between; margin-top: 1rem; } .progress-container { width: 100% !important; } #protocolCards { min-height: 200px; } }
+
+        /* Removed will-change from protocol-card */
+        .protocol-card { transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1), transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s ease; transform-style: preserve-3d; perspective: 1000px; overflow: hidden; transform: translateZ(0); backface-visibility: hidden; opacity: 0; }
         .card-header { cursor: pointer; transition: background-color 0.4s ease; }
-        .card-content { max-height: 0; overflow: hidden; padding: 0 20px 0 20px; transition: max-height 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), padding 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); opacity: 0; visibility: hidden; transform: translateY(10px); will-change: max-height, opacity, transform, padding; transform-origin: top; }
+        /* Removed will-change from card-content */
+        .card-content { max-height: 0; overflow: hidden; padding: 0 20px 0 20px; transition: max-height 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), padding 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); opacity: 0; visibility: hidden; transform: translateY(10px); transform-origin: top; }
         .protocol-card.expanded .card-content { max-height: 2000px; opacity: 1; visibility: visible; padding: 0 20px 20px 20px; transform: translateY(0); }
         .toggle-container { position: relative; width: 50px; height: 26px; flex-shrink: 0; min-width: 50px; } .toggle-input { opacity: 0; width: 0; height: 0; } .toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(15, 23, 42, 0.7); transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1); border-radius: 34px; box-shadow: inset 2px 2px 4px var(--glass-dark), inset -2px -2px 4px var(--glass-light); overflow: hidden; } .toggle-slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 4px; background: var(--light); transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); border-radius: 50%; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); z-index: 2; } .toggle-slider::after { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, var(--primary-dark) 0%, var(--primary) 100%); transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1); opacity: 0; } .toggle-input:checked + .toggle-slider::after { left: 0; opacity: 1; } .toggle-input:checked + .toggle-slider:before { transform: translateX(24px); background: white; } .toggle-input:checked + .toggle-slider { box-shadow: 0 0 8px var(--primary-alpha); }
         .progress-container { width: 100%; height: 12px; background: rgba(15, 23, 42, 0.5); border-radius: 10px; box-shadow: inset 2px 2px 4px var(--glass-dark), inset -2px -2px 4px var(--glass-light); margin: 1rem 0; overflow: hidden; position: relative; } .progress-container::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.1) 50%, transparent 100%); opacity: 0.5; } .progress-bar { height: 100%; background: linear-gradient(90deg, var(--primary-dark), var(--primary), var(--primary-light)); border-radius: 10px; transition: width 1s cubic-bezier(0.22, 1, 0.36, 1); position: relative; overflow: hidden; width: 0; } .progress-bar::after { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%); animation: progressShine 2s infinite; } @keyframes progressShine { to { left: 100%; } }
         .category-badge { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); box-shadow: 0 2px 10px rgba(139, 92, 246, 0.3); position: relative; overflow: hidden; color: white; } .category-badge::after { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0) 100%); transform: skewX(-25deg); transition: all 0.8s ease; } @keyframes shine { 0% { left: -100%; } 100% { left: 100%; } }
         .category-filters { display: flex; gap: 0.75rem; flex-wrap: wrap; }
-        .category-filter { padding: 0.4rem 1rem; border-radius: 9999px; cursor: pointer; transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1); background: rgba(15, 23, 42, 0.3); border: 1px solid rgba(255, 255, 255, 0.05); position: relative; overflow: hidden; font-weight: 500; will-change: transform; font-size: 0.85rem; }
+        /* Removed will-change from category-filter */
+        .category-filter { padding: 0.4rem 1rem; border-radius: 9999px; cursor: pointer; transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1); background: rgba(15, 23, 42, 0.3); border: 1px solid rgba(255, 255, 255, 0.05); position: relative; overflow: hidden; font-weight: 500; font-size: 0.85rem; }
         .category-filter:hover { background: rgba(15, 23, 42, 0.5); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); }
         .category-filter.active { background: var(--active-filter-bg, var(--primary)); box-shadow: 0 0 20px rgba(139, 92, 246, 0.3); transform: translateY(-2px); color: white; }
         .category-filter.active::after { content: ''; position: absolute; top: 0; left: -100%; width: 200%; height: 100%; background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%); animation: shine 3s infinite; }
         .fade-in { animation: fadeIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards; opacity: 0; } @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } } .slide-in-right { animation: slideInRight 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards; } @keyframes slideInRight { from { transform: translateX(30px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         ::-webkit-scrollbar { width: 8px; } ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.2); border-radius: 10px; } ::-webkit-scrollbar-thumb { background: var(--primary-dark); border-radius: 10px; transition: all 0.3s ease; } ::-webkit-scrollbar-thumb:hover { background: var(--primary); box-shadow: 0 0 10px var(--primary); }
-        .section-animate { transform: translateY(20px); transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1), transform 0.6s cubic-bezier(0.22, 1, 0.36, 1); will-change: opacity, transform; } .section-animate.visible { opacity: 1; transform: translateY(0); } .protocol-card.section-animate { opacity: 0; } .protocol-card.section-animate.visible { opacity: 1; }
-        .list-item-animate { opacity: 0; transform: translateX(20px); transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1); will-change: opacity, transform; } .list-item-no-checkbox { margin-left: 0.5rem; padding-left: 0; }
+        .section-animate { transform: translateY(20px); transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1), transform 0.6s cubic-bezier(0.22, 1, 0.36, 1); } .section-animate.visible { opacity: 1; transform: translateY(0); } .protocol-card.section-animate { opacity: 0; } .protocol-card.section-animate.visible { opacity: 1; }
+        /* Removed will-change from list-item-animate */
+        .list-item-animate { opacity: 0; transform: translateX(20px); transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
+        .list-item-no-checkbox { margin-left: 0.5rem; padding-left: 0; }
         .search-container { position: relative; margin-bottom: 1.25rem; } .search-input { width: 100%; padding: 0.75rem 1rem 0.75rem 3rem; border-radius: 12px; background: rgba(15, 23, 42, 0.3); border: 1px solid rgba(255, 255, 255, 0.05); color: var(--light); transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); } .search-input:focus { outline: none; box-shadow: 0 0 0 2px var(--primary-alpha), 0 0 15px rgba(139, 92, 246, 0.3); background: rgba(15, 23, 42, 0.5); border-color: rgba(139, 92, 246, 0.3); } .search-icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--neutral); transition: color 0.3s ease; } .search-input:focus + .search-icon { color: var(--primary); }
-        .nav-links { flex: 1; overflow-y: auto; padding-right: 5px; margin-bottom: 1rem; max-height: calc(100vh - 130px); } .protocol-nav-item { position: relative; overflow: hidden; padding-left: 1rem; margin-bottom: 0.6rem; border-radius: 12px; transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1); will-change: transform, box-shadow, background; } .protocol-nav-item::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--nav-item-color, var(--primary)); border-top-left-radius: inherit; border-bottom-left-radius: inherit; } .protocol-nav-item:hover { transform: translateX(5px); background: rgba(15, 23, 42, 0.8) !important; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1), 0 0 5px rgba(139, 92, 246, 0.2); } .protocol-nav-item.hidden { display: none; } .protocol-nav-item > div { }
+        .nav-links { flex: 1; overflow-y: auto; padding-right: 5px; margin-bottom: 1rem; max-height: calc(100vh - 130px); }
+        .protocol-nav-item { position: relative; overflow: hidden; padding-left: 1rem; margin-bottom: 0.6rem; border-radius: 12px; transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1); /* Removed will-change */ }
+        .protocol-nav-item::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--nav-item-color, var(--primary)); border-top-left-radius: inherit; border-bottom-left-radius: inherit; }
+        .protocol-nav-item:hover { transform: translateX(5px); background: rgba(15, 23, 42, 0.8) !important; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1), 0 0 5px rgba(139, 92, 246, 0.2); }
+        .protocol-nav-item.hidden { display: none; } .protocol-nav-item > div { }
         #mainCategoryFiltersContainer { margin-bottom: 1.5rem; md:margin-bottom: 2rem; }
         .category-indicator { position: absolute; left: 0; top: 0; bottom: 0; width: 4px; border-top-left-radius: 16px; border-bottom-left-radius: 16px; }
         .expand-btn { position: relative; overflow: hidden; transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1); } .expand-btn:hover { box-shadow: 0 0 15px rgba(139, 92, 246, 0.3); transform: translateY(-2px); } .expand-btn::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle, rgba(139, 92, 246, 0.2) 0%, transparent 70%); opacity: 0; transition: opacity 0.3s ease; } .expand-btn:hover::after { opacity: 1; } .expand-btn i { transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
         .no-results { text-align: center; padding: 3rem; background: rgba(15, 23, 42, 0.5); border-radius: 1rem; margin: 2rem 0; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.03); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1); } .no-results:hover { box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2), 0 0 20px rgba(139, 92, 246, 0.1); transform: translateY(-5px); }
         .logo { position: relative; display: inline-block; } .logo::after { content: ''; position: absolute; left: 0; right: 0; bottom: -3px; height: 2px; background: linear-gradient(90deg, var(--primary-dark), var(--primary), var(--primary-dark)); transform: scaleX(0); transform-origin: left; transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1); } .logo:hover::after { transform: scaleX(1); }
         .menu-toggle { transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1); z-index: 60; } .menu-toggle:hover { transform: rotate(90deg); box-shadow: 0 0 15px rgba(139, 92, 246, 0.3); }
-        .content-section { transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1), transform 0.5s cubic-bezier(0.22, 1, 0.36, 1); transform: translateY(20px); opacity: 0; will-change: opacity, transform; } .protocol-card.expanded .content-section { transform: translateY(0); opacity: 1; }
+        /* Removed will-change from content-section */
+        .content-section { transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1), transform 0.5s cubic-bezier(0.22, 1, 0.36, 1); transform: translateY(20px); opacity: 0; }
+        .protocol-card.expanded .content-section { transform: translateY(0); opacity: 1; }
         .completion-percentage { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 0.75rem; font-weight: 600; color: white; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5); opacity: 0; transition: opacity 0.3s ease; pointer-events: none; } .progress-container:hover .completion-percentage { opacity: 1; }
         .checkmark-animate { transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); display: inline-block; overflow-wrap: break-word; word-wrap: break-word; vertical-align: top; margin-top: 0.1rem; } .toggle-input:checked ~ .checkmark-animate { transform: scale(1.1) rotate(5deg); }
         li.list-item-animate { transition: background 0.3s ease, transform 0.3s ease, opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1), transform 0.5s cubic-bezier(0.22, 1, 0.36, 1); border-radius: 8px; padding: 0.5rem; align-items: flex-start; } li.list-item-animate:hover:not(.list-item-no-checkbox-container) { background: rgba(255, 255, 255, 0.05); transform: translateX(5px) translateY(0); } li.list-item-no-checkbox-container:hover { background: transparent; transform: none; }
-        /* Removed sidebar .category-section h2 */ .protocol-section h2 { margin-bottom: 0.75rem; font-size: 1.1rem; }
+        .protocol-section h2 { margin-bottom: 0.75rem; font-size: 1.1rem; }
         .pagination-container { display: flex; justify-content: center; align-items: center; margin-top: 2rem; gap: 0.5rem; flex-wrap: wrap; } .pagination-btn { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: rgba(15, 23, 42, 0.3); border: 1px solid rgba(255, 255, 255, 0.05); color: var(--light); font-weight: 500; cursor: pointer; transition: all 0.3s ease; } .pagination-btn:hover:not(:disabled) { background: rgba(15, 23, 42, 0.5); box-shadow: 0 0 15px rgba(139, 92, 246, 0.2); transform: translateY(-2px); } .pagination-btn.active { background: var(--primary); color: white; font-weight: 600; box-shadow: 0 0 20px rgba(139, 92, 246, 0.3); } .pagination-btn:disabled { opacity: 0.5; cursor: not-allowed; } .pagination-ellipsis { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; color: var(--neutral); }
         .port-badge { font-family: 'Courier New', monospace; background: rgba(15, 23, 42, 0.5); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.8rem; margin-left: 0.5rem; border: 1px solid rgba(255, 255, 255, 0.1); display: inline-block; }
         .loading-indicator { display: flex; justify-content: center; align-items: center; padding: 2rem; font-weight: 500; color: var(--neutral); } .loading-spinner { width: 24px; height: 24px; border: 3px solid rgba(139, 92, 246, 0.2); border-radius: 50%; border-top-color: var(--primary); animation: spin 1s linear infinite; margin-right: 10px; } @keyframes spin { to { transform: rotate(360deg); } }
@@ -167,9 +200,9 @@
     </main>
 
     <script>
-        // --- DATA (Add your full protocol data here) ---
+        // --- DATA (Populate with your complete protocol list) ---
         const protocolData = [
-            {
+             {
                 id: 'ftp',
                 name: 'FTP',
                 port: 21,
@@ -3637,7 +3670,7 @@
             checkedItems: {},
             currentPage: 1,
             itemsPerPage: 5,
-            debug: false, // Set to true for console logs
+            debug: false, // Keep false for production, true for debugging
             expandedCards: new Set(),
             isMobile: false,
             observer: null
@@ -3660,13 +3693,13 @@
              loadingIndicator.style.display = 'flex';
             try {
                 updateDeviceState();
-                createBackgroundParticles();
+                createBackgroundParticles(); // Consider conditional execution based on appState.isMobile
                 loadCheckedItems();
-                renderSidebarProtocols(); // Render sidebar list initially
-                initializeMainCategoryFilters(); // Populate category filters
+                renderSidebarProtocols();
+                initializeMainCategoryFilters();
                 setupEventListeners();
                 initializeAnimations();
-                renderProtocolCards(); // Render main content cards
+                renderProtocolCards();
                 setTimeout(updateProgress, 300);
                 debug('App initialized.');
              } catch (error) {
@@ -3686,10 +3719,11 @@
             else if (window.innerWidth < 1280) { appState.itemsPerPage = 4; }
             else { appState.itemsPerPage = 5; }
             debug(`Device state: isMobile=${appState.isMobile}, itemsPerPage=${appState.itemsPerPage}`);
-            // Re-render if device type changes after load, which might affect layout/itemsPerPage
             if (document.readyState === 'complete' && wasMobile !== appState.isMobile) {
                  renderProtocolCards();
-                 renderSidebarProtocols(); // Sidebar might need update if filtering logic changes based on screen (though unlikely here)
+                 renderSidebarProtocols();
+                 // Re-evaluate background particles if disabling on mobile
+                 // createBackgroundParticles();
             }
          }
 
@@ -3703,12 +3737,18 @@
          }
 
         function createBackgroundParticles() {
-              const container = document.getElementById('animatedBg');
+            // Performance: Skip on mobile if desired
+            if (appState.isMobile) {
+                debug("Skipping background particles on mobile.");
+                return;
+            }
+            const container = document.getElementById('animatedBg');
             if (!container) return;
-            const particleCount = appState.isMobile ? 4 : 8;
+            const particleCount = 6; // Reduced default count
             container.innerHTML = '';
             for (let i = 0; i < particleCount; i++) {
-                 const size = Math.random() * 100 + 30; const particle = document.createElement('div'); particle.className = 'floating-particle';
+                 const size = Math.random() * 80 + 25; // Slightly adjusted range
+                 const particle = document.createElement('div'); particle.className = 'floating-particle';
                  particle.style.width = `${size}px`; particle.style.height = `${size}px`; particle.style.left = `${Math.random() * 100}vw`; particle.style.bottom = `-${size}px`;
                  particle.style.animationDuration = `${Math.random() * 25 + 20}s`; particle.style.animationDelay = `${Math.random() * 18}s`; particle.style.setProperty('--x-travel', Math.random() * 0.2 - 0.1);
                  particle.style.background = Math.random() > 0.5 ? 'var(--primary-alpha)' : 'var(--secondary-alpha)'; container.appendChild(particle);
@@ -3723,14 +3763,15 @@
              return '';
          }
 
-        // Renders the filtered list of protocols in the sidebar
         function renderSidebarProtocols() {
             debug('Rendering sidebar protocol list...');
             const protocolNav = document.getElementById('protocolNav');
             if (!protocolNav) { console.error("Sidebar render failed: Nav container not found."); return; }
-            protocolNav.innerHTML = '';
+            const fragment = document.createDocumentFragment(); // Use DocumentFragment
             const filteredProtocols = getFilteredProtocols();
+
             if (filteredProtocols.length === 0) { protocolNav.innerHTML = '<p class="text-sm text-neutral-500 px-3">No matching protocols.</p>'; return; }
+
             const sortedProtocols = [...filteredProtocols].sort((a, b) => (a.name || '').localeCompare(b.name || ''));
              sortedProtocols.forEach((protocol, index) => {
                  if (!protocol || !protocol.id) return;
@@ -3738,41 +3779,39 @@
                  navItem.setAttribute('data-protocol-id', protocol.id); navItem.setAttribute('data-category', protocol.category || 'default'); navItem.style.animationDelay = `${index * 0.03}s`;
                  const categoryColor = getCategoryColor(protocol.category); navItem.style.setProperty('--nav-item-color', categoryColor);
                  navItem.innerHTML = `<div class="flex items-center justify-between text-sm"><div class="flex items-center overflow-hidden whitespace-nowrap text-ellipsis"><i class="bx bx-chevron-right mr-1 text-primary flex-shrink-0"></i><span class="overflow-hidden whitespace-nowrap text-ellipsis">${protocol.name || 'Unnamed'}</span></div></div>`;
-                 protocolNav.appendChild(navItem);
+                 fragment.appendChild(navItem); // Append to fragment
             });
+            protocolNav.innerHTML = ''; // Clear only once before appending fragment
+            protocolNav.appendChild(fragment); // Append fragment once
             debug(`Sidebar protocol list rendered with ${filteredProtocols.length} items.`);
         }
 
-        // Populates the category filter buttons in the main content area
         function initializeMainCategoryFilters() {
             debug('Initializing main category filters...');
             const categoryFilters = document.getElementById('categoryFilters');
-            if (!categoryFilters) { console.error("Category filter initialization failed: Filter container not found in main content."); return; }
+            if (!categoryFilters) { console.error("Category filter initialization failed."); return; }
              const categories = [...new Set(protocolData.map(p => p.category || 'default'))].sort();
              let allCategoryBtn = categoryFilters.querySelector('[data-category="all"]');
-             if (!allCategoryBtn) { console.warn("'All' category button not found in HTML, creating dynamically."); allCategoryBtn = document.createElement('button'); allCategoryBtn.className = 'category-filter active'; allCategoryBtn.setAttribute('data-category', 'all'); allCategoryBtn.textContent = 'All'; categoryFilters.insertBefore(allCategoryBtn, categoryFilters.firstChild); }
+             if (!allCategoryBtn) { console.warn("'All' button missing, creating."); allCategoryBtn = document.createElement('button'); allCategoryBtn.className = 'category-filter active'; allCategoryBtn.setAttribute('data-category', 'all'); allCategoryBtn.textContent = 'All'; categoryFilters.insertBefore(allCategoryBtn, categoryFilters.firstChild); }
              else { const existingFilters = categoryFilters.querySelectorAll('.category-filter:not([data-category="all"])'); existingFilters.forEach(btn => btn.remove()); allCategoryBtn.classList.add('active'); }
-             allCategoryBtn.style.setProperty('--active-filter-bg', 'var(--primary)'); // Set initial 'All' color
+             allCategoryBtn.style.setProperty('--active-filter-bg', 'var(--primary)');
              categories.forEach(category => { const categoryBtn = document.createElement('button'); categoryBtn.className = 'category-filter'; categoryBtn.setAttribute('data-category', category); categoryBtn.textContent = category.charAt(0).toUpperCase() + category.slice(1); categoryFilters.appendChild(categoryBtn); });
              debug('Main category filters initialized');
         }
 
-        // Gets the list of protocols matching current filters and search term
         function getFilteredProtocols() {
              try {
                  const lowerSearchTerm = appState.searchTerm.toLowerCase();
-                 const filtered = protocolData.filter(protocol => {
-                     if (!protocol || typeof protocol.name !== 'string' || typeof protocol.description !== 'string' ) { return false; }
+                 return protocolData.filter(protocol => {
+                     if (!protocol || !protocol.name || !protocol.description) { return false; } // Basic validation
                      const currentCategory = appState.currentFilter === 'all' ? null : appState.currentFilter; const protocolCategory = protocol.category || 'default';
                      const matchesCategory = !currentCategory || protocolCategory === currentCategory;
                      const matchesSearch = !lowerSearchTerm || protocol.name.toLowerCase().includes(lowerSearchTerm) || protocol.description.toLowerCase().includes(lowerSearchTerm) || matchesPort(protocol.port, lowerSearchTerm);
                      return matchesCategory && matchesSearch;
                  });
-                 return filtered;
-             } catch (error) { console.error("Error during protocol filtering:", error); return []; }
+             } catch (error) { console.error("Error during filtering:", error); return []; }
          }
 
-         // Checks if a protocol's port matches the (potentially multi-port) search term
          function matchesPort(protocolPort, searchTerm) {
              if (protocolPort === null || typeof protocolPort === 'undefined' || !searchTerm) return false;
              const portStr = String(protocolPort).toLowerCase(); const searchStr = String(searchTerm).toLowerCase().trim(); if (!portStr || !searchStr) return false;
@@ -3786,10 +3825,9 @@
              return false;
         }
 
-        // Renders the protocol cards in the main content area based on current state
         function renderProtocolCards() {
             const container = document.getElementById('protocolCards'); const pagination = document.getElementById('paginationContainer'); const loadingIndicator = document.getElementById('loadingIndicator');
-            if (!container || !pagination || !loadingIndicator) { console.error("Render failed: Essential elements not found during render call."); return; }
+            if (!container || !pagination || !loadingIndicator) { console.error("Render failed: Elements missing."); return; }
             const currentPageForRender = appState.currentPage; const currentFilterForRender = appState.currentFilter; const currentSearchForRender = appState.searchTerm;
             debug(`renderProtocolCards START: Filter="${currentFilterForRender}", Search="${currentSearchForRender}", Page=${currentPageForRender}`);
             loadingIndicator.style.display = 'flex'; container.innerHTML = ''; pagination.style.display = 'none';
@@ -3797,23 +3835,27 @@
              requestAnimationFrame(() => {
                 try {
                     if (appState.observer) appState.observer.disconnect();
+                    const fragment = document.createDocumentFragment(); // Use DocumentFragment
                     const filtered = getFilteredProtocols();
-                    if (filtered.length === 0) { container.innerHTML = `<div class="no-results section-animate visible col-span-full"><i class="bx bx-search text-4xl mb-2 text-gray-500"></i><h3 class="text-xl font-semibold mb-2">No protocols found</h3><p class="text-gray-400">Try adjusting your search or category filter.</p></div>`; pagination.style.display = 'none'; requestAnimationFrame(() => container.querySelector('.no-results')?.classList.add('visible')); debug('No results found.'); }
+                    if (filtered.length === 0) { container.innerHTML = `<div class="no-results section-animate visible col-span-full"><i class="bx bx-search text-4xl mb-2 text-gray-500"></i><h3 class="text-xl font-semibold mb-2">No protocols found</h3><p class="text-gray-400">Try adjusting search or category.</p></div>`; pagination.style.display = 'none'; requestAnimationFrame(() => container.querySelector('.no-results')?.classList.add('visible')); debug('No results found.'); }
                     else {
                         const totalPages = Math.ceil(filtered.length / appState.itemsPerPage); let validatedPage = Math.max(1, Math.min(currentPageForRender, totalPages));
-                         if (validatedPage !== currentPageForRender) { debug(`Page validation changed page number from ${currentPageForRender} to ${validatedPage} (totalPages: ${totalPages})`); if(appState.currentPage !== validatedPage) { appState.currentPage = validatedPage; debug(`Global appState.currentPage corrected to ${validatedPage}`); } }
-                        debug(`renderProtocolCards SLICING: Using page ${validatedPage}`); const start = (validatedPage - 1) * appState.itemsPerPage; const end = Math.min(start + appState.itemsPerPage, filtered.length); debug(`Calculated start: ${start}, end: ${end}, totalFiltered: ${filtered.length}`);
+                         if (validatedPage !== currentPageForRender) { debug(`Page validated: ${currentPageForRender} -> ${validatedPage}`); if(appState.currentPage !== validatedPage) { appState.currentPage = validatedPage; debug(`Global page updated to ${validatedPage}`); } }
+                        debug(`Render SLICING: Page ${validatedPage}`); const start = (validatedPage - 1) * appState.itemsPerPage; const end = Math.min(start + appState.itemsPerPage, filtered.length); debug(`Slice: ${start}-${end} of ${filtered.length}`);
                         const toRender = filtered.slice(start, end);
-                        if (toRender.length === 0 && filtered.length > 0) { console.warn(`Pagination issue? Page ${validatedPage}, start ${start}, end ${end} resulted in empty slice from ${filtered.length} items.`); container.innerHTML = `<div class="no-results section-animate visible col-span-full"><i class='bx bx-error text-4xl text-yellow-500 mb-2'></i><h3 class="text-xl font-semibold mb-2 text-yellow-400">Pagination Error</h3><p class="text-gray-400">Could not display items for this page.</p></div>`; }
-                        else { toRender.forEach((protocol, index) => { const card = createProtocolCard(protocol, index); if (card) { container.appendChild(card); if (appState.observer) appState.observer.observe(card); } }); updatePagination(totalPages); }
-                        updateProgress(); requestAnimationFrame(handleScrollAnimations); debug('Protocol cards rendered.');
+                        if (toRender.length === 0 && filtered.length > 0) { console.warn(`Pagination Error: Empty slice.`); container.innerHTML = `<div class="no-results section-animate visible col-span-full"><i class='bx bx-error text-4xl text-yellow-500 mb-2'></i><h3 class="text-xl font-semibold mb-2 text-yellow-400">Pagination Error</h3></div>`; }
+                        else {
+                            toRender.forEach((protocol, index) => { const card = createProtocolCard(protocol, index); if (card) { fragment.appendChild(card); if (appState.observer) appState.observer.observe(card); } });
+                            container.appendChild(fragment); // Append fragment once
+                            updatePagination(totalPages);
+                         }
+                        updateProgress(); requestAnimationFrame(handleScrollAnimations); debug('Cards rendered.');
                     }
-                } catch (error) { console.error("Error rendering protocol cards:", error); container.innerHTML = `<div class="no-results section-animate visible col-span-full"><i class='bx bx-error-circle text-4xl text-red-500 mb-2'></i><h3 class="text-xl font-semibold mb-2 text-red-400">Error Rendering Protocols</h3><p class="text-gray-400">Check console for details.</p></div>`; pagination.style.display = 'none';
+                } catch (error) { console.error("Error rendering cards:", error); container.innerHTML = `<div class="no-results section-animate visible col-span-full"><i class='bx bx-error-circle text-4xl text-red-500 mb-2'></i><h3>Error Rendering</h3><p class="text-gray-400">Check console.</p></div>`; pagination.style.display = 'none';
                 } finally { loadingIndicator.style.display = 'none'; debug("Loader hidden."); }
              });
         }
 
-        // Updates the pagination controls based on the total number of pages
         function updatePagination(totalPages) {
              const container = document.getElementById('paginationContainer'); if (!container) return; container.innerHTML = ''; if (totalPages <= 1) { container.style.display = 'none'; return; } container.style.display = 'flex';
              const prevBtn = document.createElement('button'); prevBtn.className = 'pagination-btn'; prevBtn.innerHTML = '<i class="bx bx-chevron-left pointer-events-none"></i>'; prevBtn.disabled = appState.currentPage === 1; prevBtn.setAttribute('aria-label', 'Previous page'); prevBtn.addEventListener('click', () => goToPage(appState.currentPage - 1)); container.appendChild(prevBtn);
@@ -3824,17 +3866,15 @@
              const nextBtn = document.createElement('button'); nextBtn.className = 'pagination-btn'; nextBtn.innerHTML = '<i class="bx bx-chevron-right pointer-events-none"></i>'; nextBtn.disabled = appState.currentPage === totalPages; nextBtn.setAttribute('aria-label', 'Next page'); nextBtn.addEventListener('click', () => goToPage(appState.currentPage + 1)); container.appendChild(nextBtn);
          }
 
-        // Navigates to a specific page number
         function goToPage(page) {
-            debug(`goToPage called with requested page: ${page}, current page: ${appState.currentPage}`); if (page < 1 || page === appState.currentPage) { debug(`goToPage ignored: Page ${page} is invalid or same as current.`); return; }
+            debug(`goToPage called: req=${page}, current=${appState.currentPage}`); if (page < 1 || page === appState.currentPage) { return; }
             const filtered = getFilteredProtocols(); const totalPages = Math.ceil(filtered.length / appState.itemsPerPage);
-            if (page > totalPages && totalPages > 0) { debug(`goToPage adjusted: Requested page ${page} > total pages ${totalPages}. Setting to ${totalPages}.`); page = totalPages; } else if (page < 1) { debug(`goToPage adjusted: Requested page ${page} < 1. Setting to 1.`); page = 1; }
-            if (page === appState.currentPage) { debug(`goToPage ignored: Adjusted page ${page} is same as current.`); return; }
-            appState.currentPage = page; debug(`appState.currentPage updated to: ${appState.currentPage}`); renderProtocolCards();
+            if (page > totalPages && totalPages > 0) { page = totalPages; } else if (page < 1) { page = 1; }
+            if (page === appState.currentPage) { return; }
+            appState.currentPage = page; debug(`appState.currentPage updated: ${appState.currentPage}`); renderProtocolCards();
             const mainContent = document.getElementById('mainContent'); if (mainContent) { mainContent.scrollIntoView({ behavior: 'smooth', block: 'start' }); } else { window.scrollTo({ top: 0, behavior: 'smooth' }); }
         }
 
-        // Generates HTML for list items (vulnerabilities, testing, tools)
         function generateListItems(items, type, protocolId) {
               if (!items || items.length === 0) return '<li class="text-gray-500 text-sm list-item-no-checkbox">None listed.</li>';
               const includeCheckbox = (type === 'testing');
@@ -3848,29 +3888,20 @@
               }).join('');
           }
 
-        // Creates the HTML structure for a single protocol card
         function createProtocolCard(protocol, indexOnPage) {
              try {
-                 if (!protocol || !protocol.id || !protocol.name) { console.warn("Skipping card creation: invalid protocol data:", protocol); return null; }
+                 if (!protocol || !protocol.id || !protocol.name) { console.warn("Skipping card: invalid data:", protocol); return null; }
                  const card = document.createElement('div'); card.className = 'protocol-card glass-card section-animate relative'; card.id = protocol.id;
                  const categoryColor = getCategoryColor(protocol.category); const totalItems = protocol.testing?.length || 0; let checkedCount = 0;
                  if (protocol.testing) { protocol.testing.forEach((_, i) => { if (appState.checkedItems[`${protocol.id}-testing-${i}`]) { checkedCount++; } }); }
                  const percentage = totalItems > 0 ? Math.round((checkedCount / totalItems) * 100) : 0; let portDisplayHtml = getPortDisplay(protocol.port); const isExpanded = appState.expandedCards.has(protocol.id);
                  const vulnerabilitiesList = generateListItems(protocol.vulnerabilities, 'vulnerability', protocol.id); const testingList = generateListItems(protocol.testing, 'testing', protocol.id); const toolsList = generateListItems(protocol.tools, 'tool', protocol.id);
                  card.innerHTML = `<div class="category-indicator" style="background: ${categoryColor}"></div> <div class="card-header p-4 md:p-6 flex flex-col md:flex-row md:items-center justify-between" data-id="${protocol.id}"> <div class="flex-grow mb-3 md:mb-0 md:mr-4"><div class="flex items-center mb-1 flex-wrap"><h2 class="text-xl md:text-2xl font-bold mr-3">${protocol.name}</h2>${portDisplayHtml}<span class="category-badge ml-3 mt-1 md:mt-0" style="background: ${categoryColor};">${protocol.category || 'other'}</span></div><p class="text-gray-400 text-sm">${protocol.description || ''}</p></div> <div class="flex items-center justify-between md:justify-start flex-shrink-0"><div class="mr-4 relative text-center md:text-left"><div class="text-xs text-gray-400 mb-1">Testing Progress</div><div class="progress-container w-24 md:w-32"><div class="progress-bar" data-protocol="${protocol.id}" style="width: ${percentage}%"></div><div class="completion-percentage">${percentage}%</div></div></div><button class="expand-btn bg-gray-800 hover:bg-gray-700 p-2 rounded-full transition-all duration-300" aria-expanded="${isExpanded}"><i class="bx bx-chevron-down text-2xl transition-transform duration-300 ${isExpanded ? 'transform rotate-180' : ''}"></i></button></div> </div> <div class="card-content"><div class="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6 pt-2 md:pt-4"><div class="glass-inset p-4 content-section"><h3 class="text-base md:text-lg font-semibold mb-3 flex items-center"><i class="bx bx-shield-quarter text-red-500 mr-2"></i> Vulnerabilities</h3><ul class="space-y-2">${vulnerabilitiesList}</ul></div><div class="glass-inset p-4 content-section"><h3 class="text-base md:text-lg font-semibold mb-3 flex items-center"><i class="bx bx-test-tube text-yellow-500 mr-2"></i> Testing</h3><ul class="space-y-2">${testingList}</ul></div><div class="glass-inset p-4 content-section"><h3 class="text-base md:text-lg font-semibold mb-3 flex items-center"><i class="bx bx-wrench text-blue-500 mr-2"></i> Tools</h3><ul class="space-y-2">${toolsList}</ul></div></div></div>`;
-                 // Apply expanded styles immediately if needed, without transition
-                 if (isExpanded) {
-                     card.classList.add('expanded'); const content = card.querySelector('.card-content');
-                     if (content) { const originalTransition = content.style.transition; content.style.transition = 'none'; content.style.maxHeight = '2000px'; content.style.opacity = '1'; content.style.visibility = 'visible'; content.style.transform = 'translateY(0)'; content.style.paddingTop = '1rem'; content.style.paddingBottom = '20px';
-                         card.querySelectorAll('.content-section, .list-item-animate').forEach(el => { const originalItemTransition = el.style.transition; el.style.transition = 'none'; el.style.opacity = '1'; el.style.transform = 'translate(0, 0)'; requestAnimationFrame(() => { el.style.transition = originalItemTransition; }); });
-                         requestAnimationFrame(() => { content.style.transition = originalTransition; });
-                     } else { console.warn(`Could not find .card-content for initially expanded card: ${protocol.id}`); }
-                 }
+                 if (isExpanded) { card.classList.add('expanded'); const content = card.querySelector('.card-content'); if (content) { const originalTransition = content.style.transition; content.style.transition = 'none'; content.style.maxHeight = '2000px'; content.style.opacity = '1'; content.style.visibility = 'visible'; content.style.transform = 'translateY(0)'; content.style.paddingTop = '1rem'; content.style.paddingBottom = '20px'; card.querySelectorAll('.content-section, .list-item-animate').forEach(el => { const originalItemTransition = el.style.transition; el.style.transition = 'none'; el.style.opacity = '1'; el.style.transform = 'translate(0, 0)'; requestAnimationFrame(() => { el.style.transition = originalItemTransition; }); }); requestAnimationFrame(() => { content.style.transition = originalTransition; }); } }
                  return card;
-             } catch (error) { console.error(`Error creating card for protocol ${protocol?.id}:`, error); return null; }
+             } catch (error) { console.error(`Error creating card for ${protocol?.id}:`, error); return null; }
           }
 
-        // Filters the view by category
         function filterByCategory(category) {
             debug(`Filtering category: "${category}"`); if (appState.currentFilter === category) return;
             appState.currentFilter = category; appState.currentPage = 1;
@@ -3881,10 +3912,8 @@
             renderProtocolCards(); renderSidebarProtocols();
         }
 
-        // Sets up all application event listeners
         function setupEventListeners() {
-            debug('Setting up event listeners...');
-            const sidebar = document.getElementById('sidebar'); const mainContent = document.getElementById('mainContent'); const categoryFilters = document.getElementById('categoryFilters');
+            debug('Setting up listeners...'); const sidebar = document.getElementById('sidebar'); const mainContent = document.getElementById('mainContent'); const categoryFilters = document.getElementById('categoryFilters');
             document.getElementById('menuToggle')?.addEventListener('click', () => sidebar?.classList.add('open'));
             document.getElementById('mobileClose')?.addEventListener('click', () => sidebar?.classList.remove('open'));
             mainContent?.addEventListener('click', (e) => { if (appState.isMobile && sidebar?.classList.contains('open') && !sidebar.contains(e.target) && !e.target.closest('#menuToggle')) { sidebar.classList.remove('open'); } });
@@ -3895,19 +3924,17 @@
             document.getElementById('protocolNav')?.addEventListener('click', (e) => { const item = e.target.closest('[data-protocol-id]'); if (item) { const id = item.getAttribute('data-protocol-id'); scrollToProtocol(id); if (appState.isMobile) { sidebar?.classList.remove('open'); } } });
             window.addEventListener('resize', debounce(updateDeviceState, 250));
             document.addEventListener('keydown', (e) => { const paginationContainer = document.getElementById('paginationContainer'); if (!paginationContainer || paginationContainer.style.display === 'none') return; if (e.key === 'ArrowLeft') { const btn = paginationContainer.querySelector('button:first-child:not(:disabled)'); if (btn) goToPage(appState.currentPage - 1); } else if (e.key === 'ArrowRight') { const btn = paginationContainer.querySelector('button:last-child:not(:disabled)'); if (btn) goToPage(appState.currentPage + 1); } });
-            debug('Event listeners setup complete');
+            debug('Listeners setup complete');
         }
 
-        // Handles changes to the 'testing' item checkboxes
         function handleCheckboxChange(checkbox) {
               const protocol = checkbox.getAttribute('data-protocol'); const type = checkbox.getAttribute('data-type'); const index = checkbox.getAttribute('data-index'); const key = `${protocol}-${type}-${index}`; const isChecked = checkbox.checked;
-              appState.checkedItems[key] = isChecked; debug(`Testing Checkbox changed: ${key} = ${isChecked}`);
-              try { localStorage.setItem('checkedItems', JSON.stringify(appState.checkedItems)); } catch (e) { console.error("Error saving checked items:", e); }
+              appState.checkedItems[key] = isChecked; debug(`Checkbox changed: ${key} = ${isChecked}`);
+              try { localStorage.setItem('checkedItems', JSON.stringify(appState.checkedItems)); } catch (e) { console.error("Error saving items:", e); }
               const textElement = checkbox.closest('li')?.querySelector('span.checkmark-animate'); if (textElement) { textElement.classList.toggle('line-through', isChecked); textElement.classList.toggle('text-gray-500', isChecked); }
               updateProgressForCard(protocol);
           }
 
-        // Updates the progress bar for a specific protocol card
         function updateProgressForCard(protocolId) {
               const protocol = protocolData.find(p => p && p.id === protocolId); if (!protocol) return;
               const totalItems = protocol.testing?.length || 0; const cardElement = document.getElementById(protocolId); if (!cardElement) return;
@@ -3919,75 +3946,26 @@
               if (text) { text.textContent = `${percentage}%`; }
           }
 
-        // Updates progress for all currently visible cards
         function updateProgress() {
-              debug('Updating all visible progress bars'); const visibleCards = document.querySelectorAll('#protocolCards .protocol-card'); visibleCards.forEach(card => { if (card.id) { updateProgressForCard(card.id); } });
+              debug('Updating progress bars'); const visibleCards = document.querySelectorAll('#protocolCards .protocol-card'); visibleCards.forEach(card => { if (card.id) { updateProgressForCard(card.id); } });
           }
 
-        // Utility to animate elements using Web Animations API with fallback and reduced motion support
         function animateElement(element, keyframes, options) {
               if (!element || typeof element.animate !== 'function') { if (element && keyframes.length > 0) Object.assign(element.style, keyframes[keyframes.length - 1]); return { finished: Promise.resolve() }; }
               const effectiveOptions = { ...options }; if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { effectiveOptions.duration = (options.duration || 300) * 0.1; effectiveOptions.delay = (options.delay || 0) * 0.1; }
               try { return element.animate(keyframes, effectiveOptions); } catch (e) { console.error("Animation error:", e, element); if (element && keyframes.length > 0) Object.assign(element.style, keyframes[keyframes.length - 1]); return { finished: Promise.resolve() }; }
           }
 
-        // Handles expanding and collapsing a protocol card with animation
         function toggleCardExpansion(card) {
-            if (!card) return; const content = card.querySelector('.card-content'); const icon = card.querySelector('.expand-btn i'); const button = card.querySelector('.expand-btn'); const id = card.id; if (!content || !icon || !button) return; const wasExpanded = card.classList.contains('expanded'); debug(`Toggling card: ${id} (was expanded: ${wasExpanded})`); if (wasExpanded) { appState.expandedCards.delete(id); } else { appState.expandedCards.add(id); } button.setAttribute('aria-expanded', !wasExpanded);
+               if (!card) return; const content = card.querySelector('.card-content'); const icon = card.querySelector('.expand-btn i'); const button = card.querySelector('.expand-btn'); const id = card.id; if (!content || !icon || !button) return; const wasExpanded = card.classList.contains('expanded'); debug(`Toggling card: ${id} (was expanded: ${wasExpanded})`); if (wasExpanded) { appState.expandedCards.delete(id); } else { appState.expandedCards.add(id); } button.setAttribute('aria-expanded', !wasExpanded);
+               if (wasExpanded) { card.classList.remove('expanded'); card.querySelectorAll('.content-section').forEach((s) => animateElement(s, [{ opacity: 1, transform: 'translateY(0)' }, { opacity: 0, transform: 'translateY(10px)' }], { duration: 150, easing: 'ease-out', fill: 'forwards' })); card.querySelectorAll('.list-item-animate').forEach(item => item.style.opacity = 0); const anim = animateElement(content, [{ height: content.scrollHeight + 'px', opacity: 1, transform: 'translateY(0)', paddingBottom: '20px', paddingTop: '1rem' }, { height: '0px', opacity: 0, transform: 'translateY(10px)', paddingBottom: '0px', paddingTop: '0px'}], { duration: 350, easing: 'cubic-bezier(0.4, 0, 0.2, 1)', fill: 'forwards' }); animateElement(icon, [{ transform: 'rotate(180deg)' }, { transform: 'rotate(0deg)' }], { duration: 300, easing: 'ease-out', fill: 'forwards' }); anim.finished.catch(e => console.warn("Collapse animation interrupted", e)); }
+               else { card.classList.add('expanded'); content.style.height = '0px'; content.style.opacity = '0'; content.style.paddingTop = '0px'; content.style.paddingBottom = '0px'; const anim = animateElement(content, [{ height: '0px', opacity: 0, transform: 'translateY(10px)', paddingBottom: '0px', paddingTop: '0px' }, { height: content.scrollHeight + 'px', opacity: 1, transform: 'translateY(0)', paddingBottom: '20px', paddingTop: '1rem' }], { duration: 400, easing: 'cubic-bezier(0.2, 0, 0.1, 1)', fill: 'forwards' }); animateElement(icon, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(180deg)' }], { duration: 350, easing: 'ease-in-out', fill: 'forwards' }); anim.finished.then(() => { if (!appState.expandedCards.has(id)) return; card.querySelectorAll('.content-section').forEach((s, i) => animateElement(s, [{ opacity: 0, transform: 'translateY(15px)' }, { opacity: 1, transform: 'translateY(0)' }], { duration: 300, easing: 'ease-out', fill: 'forwards', delay: 50 + i * 75 })); card.querySelectorAll('.list-item-animate').forEach((item, i) => animateElement(item, [{ opacity: 0, transform: 'translateX(15px)' }, { opacity: 1, transform: 'translateX(0)' }], { duration: 300, easing: 'ease-out', fill: 'forwards', delay: 150 + i * 30 })); }).catch(e => { console.warn("Expand animation interrupted", e); if (appState.expandedCards.has(id)) { content.style.height = ''; content.style.opacity = '1'; content.style.transform = 'translateY(0)'; content.style.paddingBottom = '20px'; content.style.paddingTop = '1rem'; card.querySelectorAll('.content-section, .list-item-animate').forEach(el => { el.style.opacity = '1'; el.style.transform = 'translate(0, 0)'; }); } else { card.classList.remove('expanded'); } }); }
+           }
 
-            if (wasExpanded) {
-                // --- Collapse Animation ---
-                card.classList.remove('expanded'); // Remove class early for collapse
-                // Animate inner content out first
-                card.querySelectorAll('.content-section').forEach((s) => animateElement(s, [{ opacity: 1, transform: 'translateY(0)' }, { opacity: 0, transform: 'translateY(10px)' }], { duration: 150, easing: 'ease-out', fill: 'forwards' }));
-                card.querySelectorAll('.list-item-animate').forEach(item => item.style.opacity = 0); // Hide list items quickly
-
-                // Animate container height
-                const anim = animateElement(content, [{ height: content.scrollHeight + 'px', opacity: 1, transform: 'translateY(0)', paddingBottom: '20px', paddingTop: '1rem' }, { height: '0px', opacity: 0, transform: 'translateY(10px)', paddingBottom: '0px', paddingTop: '0px'}], { duration: 350, easing: 'cubic-bezier(0.4, 0, 0.2, 1)', fill: 'forwards' });
-                animateElement(icon, [{ transform: 'rotate(180deg)' }, { transform: 'rotate(0deg)' }], { duration: 300, easing: 'ease-out', fill: 'forwards' });
-                anim.finished.catch(e => console.warn("Collapse animation interrupted or failed", e)); // Catch errors
-
-            } else {
-                // --- Expand Animation ---
-                card.classList.add('expanded'); // Add class immediately
-                content.style.height = '0px'; content.style.opacity = '0'; content.style.paddingTop = '0px'; content.style.paddingBottom = '0px'; // Set initial state for animation
-
-                // Animate container height
-                const anim = animateElement(content, [{ height: '0px', opacity: 0, transform: 'translateY(10px)', paddingBottom: '0px', paddingTop: '0px' }, { height: content.scrollHeight + 'px', opacity: 1, transform: 'translateY(0)', paddingBottom: '20px', paddingTop: '1rem' }], { duration: 400, easing: 'cubic-bezier(0.2, 0, 0.1, 1)', fill: 'forwards' });
-                animateElement(icon, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(180deg)' }], { duration: 350, easing: 'ease-in-out', fill: 'forwards' });
-
-                // Animate inner content *after* main animation finishes, with adjusted delays
-                anim.finished.then(() => {
-                    if (!appState.expandedCards.has(id)) return; // Check state hasn't changed back
-                    card.querySelectorAll('.content-section').forEach((s, i) => animateElement(s,
-                       [{ opacity: 0, transform: 'translateY(15px)' }, { opacity: 1, transform: 'translateY(0)' }],
-                       // *** INCREASED DELAY ***
-                       { duration: 300, easing: 'ease-out', fill: 'forwards', delay: 50 + i * 75 } // Start slightly later, bigger stagger
-                   ));
-                    card.querySelectorAll('.list-item-animate').forEach((item, i) => animateElement(item,
-                       [{ opacity: 0, transform: 'translateX(15px)' }, { opacity: 1, transform: 'translateX(0)' }],
-                        // *** INCREASED DELAY ***
-                       { duration: 300, easing: 'ease-out', fill: 'forwards', delay: 150 + i * 30 } // Start list items even later
-                   ));
-                }).catch(e => {
-                   console.warn("Expand animation interrupted or failed", e);
-                   // Fallback to ensure visibility if animation fails but card should be expanded
-                   if (appState.expandedCards.has(id)) {
-                       content.style.height = ''; content.style.opacity = '1'; content.style.transform = 'translateY(0)'; content.style.paddingBottom = '20px'; content.style.paddingTop = '1rem';
-                       card.querySelectorAll('.content-section, .list-item-animate').forEach(el => { el.style.opacity = '1'; el.style.transform = 'translate(0, 0)'; });
-                   } else {
-                       card.classList.remove('expanded'); // Ensure consistency if cancelled
-                   }
-                });
-            }
-        }
-
-        // Initializes IntersectionObserver for scroll animations
         function initializeAnimations() {
-              debug('Initializing Intersection Observer for scroll animations'); const options = { root: null, rootMargin: '0px', threshold: 0.1 }; if (appState.observer) appState.observer.disconnect(); appState.observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); } }); }, options); requestAnimationFrame(handleScrollAnimations);
+              debug('Initializing Intersection Observer'); const options = { root: null, rootMargin: '0px', threshold: 0.1 }; if (appState.observer) appState.observer.disconnect(); appState.observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); } }); }, options); requestAnimationFrame(handleScrollAnimations);
           }
 
-        // Callback for IntersectionObserver to add 'visible' class
         function handleScrollAnimations() {
               const elements = document.querySelectorAll('.section-animate:not(.visible)'); if (!appState.observer) return; elements.forEach(element => { const rect = element.getBoundingClientRect(); if (rect.top < window.innerHeight && rect.bottom > 0) { appState.observer.observe(element); } });
           }
@@ -3995,15 +3973,16 @@
         // --- DYNAMIC COLOR GENERATION ---
         const categoryColorCache = {};
         const GOLDEN_ANGLE_RATIO = 0.61803398875;
-        function generateHslColorFromString(str) { // Generates HSL, excluding pinks, with S/L variation
-            const baseSaturation = 75; const baseLightness = 55; const lightnessVariation = 10; const saturationVariation = 10; let hash = 0;
-            if (!str || str.length === 0) { hash = 0; } else { for (let i = 0; i < str.length; i++) { const char = str.charCodeAt(i); hash = ((hash << 5) - hash) + char; hash |= 0; } } const absHash = Math.abs(hash);
+        function generateHslColorFromString(str) {
+            const baseSaturation = 75; const baseLightness = 55; const lightnessVariation = 15; const saturationVariation = 15; // Increased variation
+            let hash = 0; if (!str || str.length === 0) { hash = 0; } else { for (let i = 0; i < str.length; i++) { const char = str.charCodeAt(i); hash = ((hash << 5) - hash) + char; hash |= 0; } } const absHash = Math.abs(hash);
             let hue = Math.floor(((absHash * GOLDEN_ANGLE_RATIO) % 1) * 360); const pinkMinHue = 290; const pinkMaxHue = 350; const hueShiftAmount = 60; if (hue >= pinkMinHue && hue <= pinkMaxHue) { hue = (hue + hueShiftAmount) % 360; }
-            const saturationOffset = (absHash % (saturationVariation * 2)) - saturationVariation; const saturation = Math.max(40, Math.min(90, baseSaturation + saturationOffset));
-            const lightnessOffset = (Math.floor(absHash / 100) % (lightnessVariation * 2)) - lightnessVariation; const lightness = Math.max(40, Math.min(70, baseLightness + lightnessOffset));
-            const lightnessDarker = Math.max(25, lightness - 15); return { hue, saturation, lightness, lightnessDarker };
+            const saturationOffset = (absHash % (saturationVariation * 2)) - saturationVariation; const saturation = Math.max(50, Math.min(95, baseSaturation + saturationOffset)); // Wider S range
+            const lightnessOffset = (Math.floor(absHash / 13) % (lightnessVariation * 2)) - lightnessVariation; const lightness = Math.max(45, Math.min(75, baseLightness + lightnessOffset)); // Wider L range
+            const lightnessDarker = Math.max(25, lightness - 20); // Ensure decent gradient diff
+            return { hue, saturation, lightness, lightnessDarker };
         }
-        function getCategoryColor(category) { // Gets cached or generates new dynamic color gradient
+        function getCategoryColor(category) {
             const categoryKey = (category && typeof category === 'string' && category.trim() !== '') ? category.toLowerCase() : 'uncategorized';
             if (categoryColorCache[categoryKey]) { return categoryColorCache[categoryKey]; } const hsl = generateHslColorFromString(categoryKey);
             const colorGradient = `linear-gradient(135deg, hsl(${hsl.hue}, ${hsl.saturation}%, ${hsl.lightness}%) 0%, hsl(${hsl.hue}, ${hsl.saturation}%, ${hsl.lightnessDarker}%) 100%)`;
@@ -4011,42 +3990,36 @@
          }
         // --- END DYNAMIC COLOR GENERATION ---
 
-
         // --- SCROLL/HIGHLIGHT/EXPAND LOGIC ---
         function scrollToProtocol(id) {
              const protocol = protocolData.find(p => p && p.id === id); if (!protocol) { debug(`Protocol not found for scroll: ${id}`); return; }
-             // Optional: Reset filter to 'all' when jumping?
-             // if (appState.currentFilter !== 'all') { filterByCategory('all'); }
              if (appState.currentFilter !== 'all' && protocol.category !== appState.currentFilter) { debug(`Switching filter to '${protocol.category}' for scrolling to ${id}`); filterByCategory(protocol.category); setTimeout(() => findAndScrollToProtocol(id), 200); return; }
              findAndScrollToProtocol(id);
          }
-
         function findAndScrollToProtocol(id) {
              const filtered = getFilteredProtocols(); const index = filtered.findIndex(p => p && p.id === id);
-             if (index === -1) { debug(`Protocol ${id} not found in current filtered results for scrolling.`); return; }
+             if (index === -1) { debug(`Protocol ${id} not found in current results.`); return; }
              const targetPage = Math.floor(index / appState.itemsPerPage) + 1;
-             if (targetPage !== appState.currentPage) { debug(`Navigating to page ${targetPage} for scrolling to ${id}`); appState.currentPage = targetPage; renderProtocolCards(); renderSidebarProtocols(); setTimeout(() => scrollAndHighlight(id), 300); }
+             if (targetPage !== appState.currentPage) { debug(`Navigating to page ${targetPage} for ${id}`); appState.currentPage = targetPage; renderProtocolCards(); renderSidebarProtocols(); setTimeout(() => scrollAndHighlight(id), 300); }
              else { scrollAndHighlight(id); }
          }
-
         function scrollAndHighlight(id) {
-             requestAnimationFrame(() => { // Wait for potential re-render
+             requestAnimationFrame(() => {
                  const element = document.getElementById(id);
-                 if (!element) { setTimeout(() => { const elementRetry = document.getElementById(id); if (!elementRetry) { debug(`Element ${id} not found for highlight even after delay.`); return; } performScrollAndHighlight(elementRetry); }, 150); return; }
+                 if (!element) { setTimeout(() => { const elementRetry = document.getElementById(id); if (!elementRetry) { debug(`Element ${id} not found.`); return; } performScrollAndHighlight(elementRetry); }, 150); return; }
                  performScrollAndHighlight(element);
             });
         }
-
-        function performScrollAndHighlight(element) { // The actual scroll/expand/highlight actions
-            const id = element.id; debug(`Scrolling to element: ${id}`);
+        function performScrollAndHighlight(element) {
+            const id = element.id; debug(`Scrolling & Highlighting: ${id}`);
             element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-             setTimeout(() => { // Wait for scroll + buffer
-                  if (!document.getElementById(id)) return; // Check element still exists
-                  if (!element.classList.contains('expanded')) { toggleCardExpansion(element); } // Expand if needed
-                  const originalShadow = element.style.boxShadow; element.style.transition = 'box-shadow 0.3s ease-in-out'; // Animate highlight
+             setTimeout(() => {
+                  if (!document.getElementById(id)) return;
+                  if (!element.classList.contains('expanded')) { toggleCardExpansion(element); }
+                  const originalShadow = element.style.boxShadow; element.style.transition = 'box-shadow 0.3s ease-in-out';
                   element.style.boxShadow = `0 0 30px rgba(139, 92, 246, 0.6), ${originalShadow || ''}`;
-                  setTimeout(() => { element.style.boxShadow = originalShadow || ''; setTimeout(() => element.style.transition = '', 300); }, 1500); // Remove highlight
-             }, 400); // Delay allows scroll and potentially expand animation to start
+                  setTimeout(() => { element.style.boxShadow = originalShadow || ''; setTimeout(() => element.style.transition = '', 300); }, 1500);
+             }, 400);
          }
         // --- END SCROLL/HIGHLIGHT/EXPAND LOGIC ---
 
