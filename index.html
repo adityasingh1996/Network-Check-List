@@ -38,7 +38,8 @@
         }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Manrope', system-ui, -apple-system, sans-serif; }
         html { scroll-behavior: smooth; }
-        body { background: var(--darker); color: var(--light); min-height: 100vh; overflow-x: hidden; background-image: radial-gradient(circle at 10% 20%, rgba(139, 92, 246, 0.05) 0%, transparent 20%), radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 20%), radial-gradient(circle at 50% 50%, rgba(15, 23, 42, 0.8) 0%, var(--darker) 100%); }
+        /* Removed background animation, simplified background */
+        body { background: var(--darker); color: var(--light); min-height: 100vh; overflow-x: hidden; background-image: radial-gradient(circle at 10% 20%, rgba(139, 92, 246, 0.03) 0%, transparent 15%), radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.03) 0%, transparent 15%), radial-gradient(circle at 50% 50%, rgba(15, 23, 42, 0.8) 0%, var(--darker) 100%); }
 
         /* Base Glass Styles */
         .glass-effect { backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.05); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2); }
@@ -52,10 +53,7 @@
         .glass-card { backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.05); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2); }
         .glass-inset { backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.5), inset -2px -2px 5px rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.03); }
 
-        /* Background Animation */
-        .animated-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden; }
-        .floating-particle { position: absolute; background: var(--primary-alpha); border-radius: 50%; opacity: 0; animation: float 20s infinite linear; }
-        @keyframes float { 0% { opacity: 0; transform: translateY(0) translateX(0) rotate(0deg); } 10% { opacity: 0.4; } 90% { opacity: 0.4; } 100% { opacity: 0; transform: translateY(calc(-100vh - 100px)) translateX(calc(100vw * var(--x-travel))) rotate(360deg); } }
+        /* Background Animation Rules REMOVED */
 
         /* Sidebar Styling */
         .sidebar { background: var(--sidebar-bg); height: 100vh; position: fixed; top: 0; left: 0; padding: 2rem 1.5rem; width: 300px; z-index: 50; transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.3s ease; border-right: 1px solid rgba(255, 255, 255, 0.03); display: flex; flex-direction: column; overflow-y: hidden; }
@@ -145,8 +143,7 @@
     </style>
 </head>
 <body>
-    <!-- Background Animation Elements -->
-    <div class="animated-bg" id="animatedBg"></div>
+    <!-- Background Animation Elements REMOVED -->
 
     <!-- Mobile menu toggle -->
     <button id="menuToggle" class="fixed top-4 left-4 z-50 lg:hidden menu-toggle p-2 w-10 h-10 flex items-center justify-center glass-dark rounded-full text-white focus:outline-none">
@@ -154,7 +151,7 @@
     </button>
 
     <!-- Sidebar -->
-    <aside class="sidebar glass-dark-effect" id="sidebar"> <!-- Added glass effect class for desktop -->
+    <aside class="sidebar glass-dark-effect" id="sidebar">
         <!-- Header -->
         <div class="flex flex-col mb-8 flex-shrink-0">
             <div class="flex items-center justify-between">
@@ -257,7 +254,7 @@
             checkedItems: {},
             currentPage: 1,
             itemsPerPage: 5,
-            debug: false, // Set true for console logs
+            debug: true, // Set true for console logs
             expandedCards: new Set(),
             isMobile: false,
             observer: null
@@ -280,7 +277,7 @@
              loadingIndicator.style.display = 'flex';
             try {
                 updateDeviceState();
-                createBackgroundParticles();
+                // createBackgroundParticles(); // REMOVED CALL
                 loadCheckedItems();
                 renderSidebarProtocols();
                 initializeMainCategoryFilters();
@@ -309,7 +306,7 @@
             if (document.readyState === 'complete' && wasMobile !== appState.isMobile) {
                  renderProtocolCards();
                  renderSidebarProtocols();
-                 createBackgroundParticles(); // Re-evaluate particles on resize
+                 // createBackgroundParticles(); // REMOVED CALL
             }
          }
 
@@ -322,18 +319,7 @@
              } catch (e) { console.error("Error loading checked items:", e); appState.checkedItems = {}; }
          }
 
-        function createBackgroundParticles() {
-            if (appState.isMobile) { debug("Skipping background particles on mobile."); return; } // Skip on mobile
-            const container = document.getElementById('animatedBg');
-            if (!container) return;
-            const particleCount = 6; container.innerHTML = '';
-            for (let i = 0; i < particleCount; i++) {
-                 const size = Math.random() * 80 + 25; const particle = document.createElement('div'); particle.className = 'floating-particle';
-                 particle.style.width = `${size}px`; particle.style.height = `${size}px`; particle.style.left = `${Math.random() * 100}vw`; particle.style.bottom = `-${size}px`;
-                 particle.style.animationDuration = `${Math.random() * 25 + 20}s`; particle.style.animationDelay = `${Math.random() * 18}s`; particle.style.setProperty('--x-travel', Math.random() * 0.2 - 0.1);
-                 particle.style.background = Math.random() > 0.5 ? 'var(--primary-alpha)' : 'var(--secondary-alpha)'; container.appendChild(particle);
-             }
-        }
+        // Background Particle Function REMOVED
 
         function getPortDisplay(port) {
              if (port === null || typeof port === 'undefined') return '';
@@ -447,7 +433,6 @@
             const mainContent = document.getElementById('mainContent'); if (mainContent) { mainContent.scrollIntoView({ behavior: 'smooth', block: 'start' }); } else { window.scrollTo({ top: 0, behavior: 'smooth' }); }
         }
 
-        // --- MODIFIED: generateListItems with Copy Button ---
         function generateListItems(items, type, protocolId) {
             if (!items || items.length === 0) return '<li class="text-gray-500 text-sm list-item-no-checkbox">None listed.</li>';
             const includeCheckbox = (type === 'testing');
@@ -489,8 +474,8 @@
                 return listItemHTML;
             }).join('');
         }
-        // --- END MODIFIED ---
 
+        // --- MODIFIED: createProtocolCard with new layout ---
         function createProtocolCard(protocol, indexOnPage) {
              try {
                  if (!protocol || !protocol.id || !protocol.name) { console.warn("Skipping card: invalid data:", protocol); return null; }
@@ -499,11 +484,91 @@
                  if (protocol.testing) { protocol.testing.forEach((_, i) => { if (appState.checkedItems[`${protocol.id}-testing-${i}`]) { checkedCount++; } }); }
                  const percentage = totalItems > 0 ? Math.round((checkedCount / totalItems) * 100) : 0; let portDisplayHtml = getPortDisplay(protocol.port); const isExpanded = appState.expandedCards.has(protocol.id);
                  const vulnerabilitiesList = generateListItems(protocol.vulnerabilities, 'vulnerability', protocol.id); const testingList = generateListItems(protocol.testing, 'testing', protocol.id); const toolsList = generateListItems(protocol.tools, 'tool', protocol.id);
-                 card.innerHTML = `<div class="category-indicator" style="background: ${categoryColor}"></div> <div class="card-header p-4 md:p-6 flex flex-col md:flex-row md:items-center justify-between" data-id="${protocol.id}"> <div class="flex-grow mb-3 md:mb-0 md:mr-4"><div class="flex items-center mb-1 flex-wrap"><h2 class="text-xl md:text-2xl font-bold mr-3">${protocol.name}</h2>${portDisplayHtml}<span class="category-badge ml-3 mt-1 md:mt-0" style="background: ${categoryColor};">${protocol.category || 'other'}</span></div><p class="text-gray-400 text-sm">${protocol.description || ''}</p></div> <div class="flex items-center justify-between md:justify-start flex-shrink-0"><div class="mr-4 relative text-center md:text-left"><div class="text-xs text-gray-400 mb-1">Testing Progress</div><div class="progress-container w-24 md:w-32"><div class="progress-bar" data-protocol="${protocol.id}" style="width: ${percentage}%"></div><div class="completion-percentage">${percentage}%</div></div></div><button class="expand-btn bg-gray-800 hover:bg-gray-700 w-9 h-9 flex items-center justify-center rounded-full transition-all duration-300" aria-expanded="${isExpanded}"><i class="bx bx-chevron-down text-2xl transition-transform duration-300 ${isExpanded ? 'transform rotate-180' : ''}"></i></button></div> </div> <div class="card-content"><div class="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6 pt-2 md:pt-4"><div class="glass-inset p-4 content-section"><h3 class="text-base md:text-lg font-semibold mb-3 flex items-center"><i class="bx bx-shield-quarter text-red-500 mr-2"></i> Vulnerabilities</h3><ul class="space-y-2">${vulnerabilitiesList}</ul></div><div class="glass-inset p-4 content-section"><h3 class="text-base md:text-lg font-semibold mb-3 flex items-center"><i class="bx bx-test-tube text-yellow-500 mr-2"></i> Testing</h3><ul class="space-y-2">${testingList}</ul></div><div class="glass-inset p-4 content-section"><h3 class="text-base md:text-lg font-semibold mb-3 flex items-center"><i class="bx bx-wrench text-blue-500 mr-2"></i> Tools</h3><ul class="space-y-2">${toolsList}</ul></div></div></div>`;
-                 if (isExpanded) { card.classList.add('expanded'); const content = card.querySelector('.card-content'); if (content) { const originalTransition = content.style.transition; content.style.transition = 'none'; content.style.maxHeight = '2000px'; content.style.opacity = '1'; content.style.visibility = 'visible'; content.style.transform = 'translateY(0)'; content.style.paddingTop = '1rem'; content.style.paddingBottom = '20px'; card.querySelectorAll('.content-section, .list-item-animate').forEach(el => { const originalItemTransition = el.style.transition; el.style.transition = 'none'; el.style.opacity = '1'; el.style.transform = 'translate(0, 0)'; requestAnimationFrame(() => { el.style.transition = originalItemTransition; }); }); requestAnimationFrame(() => { content.style.transition = originalTransition; }); } }
+
+                 // Card Header remains the same
+                 card.innerHTML = `
+                    <div class="category-indicator" style="background: ${categoryColor}"></div>
+                    <div class="card-header p-4 md:p-6 flex flex-col md:flex-row md:items-center justify-between" data-id="${protocol.id}">
+                        <div class="flex-grow mb-3 md:mb-0 md:mr-4">
+                            <div class="flex items-center mb-1 flex-wrap">
+                                <h2 class="text-xl md:text-2xl font-bold mr-3">${protocol.name}</h2>
+                                ${portDisplayHtml}
+                                <span class="category-badge ml-3 mt-1 md:mt-0" style="background: ${categoryColor};">${protocol.category || 'other'}</span>
+                            </div>
+                            <p class="text-gray-400 text-sm">${protocol.description || ''}</p>
+                        </div>
+                        <div class="flex items-center justify-between md:justify-start flex-shrink-0">
+                            <div class="mr-4 relative text-center md:text-left">
+                                <div class="text-xs text-gray-400 mb-1">Testing Progress</div>
+                                <div class="progress-container w-24 md:w-32">
+                                    <div class="progress-bar" data-protocol="${protocol.id}" style="width: ${percentage}%"></div>
+                                    <div class="completion-percentage">${percentage}%</div>
+                                </div>
+                            </div>
+                            <button class="expand-btn bg-gray-800 hover:bg-gray-700 w-9 h-9 flex items-center justify-center rounded-full transition-all duration-300" aria-expanded="${isExpanded}">
+                                <i class="bx bx-chevron-down text-2xl transition-transform duration-300 ${isExpanded ? 'transform rotate-180' : ''}"></i>
+                            </button>
+                        </div>
+                    </div>
+                    `;
+
+                 // Card Content with NEW layout
+                 card.innerHTML += `
+                    <div class="card-content">
+    
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6 pt-2 md:pt-4">
+
+        
+        
+        <div class="glass-inset p-4 content-section lg:col-span-1">
+            <h3 class="text-base md:text-lg font-semibold mb-3 flex items-center"><i class="bx bx-shield-quarter text-red-500 mr-2"></i> Vulnerabilities</h3>
+            <ul class="space-y-2">${vulnerabilitiesList}</ul>
+        </div>
+
+        
+        <div class="glass-inset p-4 content-section lg:col-span-2">
+            <h3 class="text-base md:text-lg font-semibold mb-3 flex items-center"><i class="bx bx-test-tube text-yellow-500 mr-2"></i> Testing</h3>
+            <ul class="space-y-2">${testingList}</ul>
+        </div>
+
+        
+        <div class="glass-inset p-4 content-section lg:col-span-3">
+            <h3 class="text-base md:text-lg font-semibold mb-3 flex items-center"><i class="bx bx-wrench text-blue-500 mr-2"></i> Tools</h3>
+            <ul class="space-y-2">${toolsList}</ul>
+        </div>
+
+    </div>
+</div>`;
+                 // --- END NEW Layout ---
+
+
+                 // Restore expanded state if applicable (no change here)
+                 if (isExpanded) {
+                     card.classList.add('expanded');
+                     const content = card.querySelector('.card-content');
+                     if (content) {
+                         const originalTransition = content.style.transition;
+                         content.style.transition = 'none';
+                         content.style.maxHeight = '2000px';
+                         content.style.opacity = '1';
+                         content.style.visibility = 'visible';
+                         content.style.transform = 'translateY(0)';
+                         content.style.paddingTop = '1rem';
+                         content.style.paddingBottom = '20px';
+                         card.querySelectorAll('.content-section, .list-item-animate').forEach(el => {
+                             const originalItemTransition = el.style.transition;
+                             el.style.transition = 'none';
+                             el.style.opacity = '1';
+                             el.style.transform = 'translate(0, 0)';
+                             requestAnimationFrame(() => { el.style.transition = originalItemTransition; });
+                         });
+                         requestAnimationFrame(() => { content.style.transition = originalTransition; });
+                     }
+                 }
                  return card;
              } catch (error) { console.error(`Error creating card for ${protocol?.id}:`, error); return null; }
           }
+        // --- END MODIFIED ---
 
         function filterByCategory(category) {
             debug(`Filtering category: "${category}"`); if (appState.currentFilter === category) return;
@@ -515,13 +580,12 @@
             renderProtocolCards(); renderSidebarProtocols();
         }
 
-        // --- MODIFIED: setupEventListeners with Copy Button Logic ---
         function setupEventListeners() {
             debug('Setting up listeners...');
             const sidebar = document.getElementById('sidebar');
             const mainContent = document.getElementById('mainContent');
             const categoryFilters = document.getElementById('categoryFilters');
-            const protocolCardsContainer = document.getElementById('protocolCards'); // Get container
+            const protocolCardsContainer = document.getElementById('protocolCards');
 
             // --- Basic Listeners ---
             document.getElementById('menuToggle')?.addEventListener('click', () => sidebar?.classList.add('open'));
@@ -539,32 +603,30 @@
                     const card = trigger.closest('.protocol-card');
                     if (card) {
                         toggleCardExpansion(card);
-                        return; // Stop processing if it was an expansion click
+                        return; // Stop processing
                     }
                 }
 
                 // Copy Command Logic
                 const copyButton = e.target.closest('.copy-command-btn');
                 if (copyButton) {
-                    const codeElement = copyButton.previousElementSibling; // Assumes <code> is directly before <button>
+                    const codeElement = copyButton.previousElementSibling;
                     if (codeElement && codeElement.tagName === 'CODE' && codeElement.classList.contains('command-inline')) {
                         const commandText = codeElement.textContent || '';
                         if (commandText) {
                             navigator.clipboard.writeText(commandText).then(() => {
-                                // Success Feedback
                                 debug(`Copied: ${commandText}`);
                                 const icon = copyButton.querySelector('i');
                                 if (icon) {
                                     const originalIcon = icon.className;
-                                    copyButton.classList.add('text-secondary'); // Use secondary color (green)
-                                    icon.className = 'bx bx-check text-sm pointer-events-none'; // Change icon
-                                    copyButton.disabled = true; // Prevent rapid clicks
-
+                                    copyButton.classList.add('text-secondary');
+                                    icon.className = 'bx bx-check text-sm pointer-events-none';
+                                    copyButton.disabled = true;
                                     setTimeout(() => {
                                         copyButton.classList.remove('text-secondary');
-                                        icon.className = originalIcon; // Restore original icon
+                                        icon.className = originalIcon;
                                         copyButton.disabled = false;
-                                    }, 1500); // Restore after 1.5 seconds
+                                    }, 1500);
                                 }
                             }).catch(err => {
                                 console.error('Failed to copy command: ', err);
@@ -573,9 +635,9 @@
                     } else {
                         console.warn('Could not find command code element next to copy button.', copyButton);
                     }
-                    return; // Stop processing if it was a copy click
+                    return; // Stop processing
                 }
-            }); // End click listener for protocolCardsContainer
+            }); // End click listener
 
             // --- Separate Change Listener for Checkboxes ---
             protocolCardsContainer?.addEventListener('change', (e) => {
@@ -593,7 +655,6 @@
 
             debug('Listeners setup complete');
         }
-        // --- END MODIFIED ---
 
 
         function handleCheckboxChange(checkbox) {
@@ -646,31 +707,24 @@
             if (!str || str.length === 0) str = 'uncategorized';
 
             // --- Configuration ---
-            const numSegments = 18;         // How many hue bins (more = finer separation)
+            const numSegments = 18;
             const segmentSize = 360 / numSegments;
-            const hueVariation = Math.floor(segmentSize / 3); // How much hue can vary within a bin (+/-)
-
+            const hueVariation = Math.floor(segmentSize / 3);
             const baseSaturation = 70;
-            const saturationVariation = 15; // Allow slightly more S variation now
+            const saturationVariation = 15;
             const minSaturation = 55;
             const maxSaturation = 85;
-
             const baseLightness = 55;
-            const lightnessVariation = 10; // Allow slightly more L variation
+            const lightnessVariation = 10;
             const minLightness = 45;
             const maxLightness = 65;
-
-            const primaryHue = 258;         // Approximate hue of your --primary color (#8b5cf6)
-            const hueAvoidanceRange = 25;   // Degrees +/- around primaryHue to avoid
-            const hueShiftAmount = segmentSize * 3; // Shift by multiple segments if too close
+            const primaryHue = 258;
+            const hueAvoidanceRange = 25;
+            const hueShiftAmount = segmentSize * 3;
 
             // --- Hashing ---
             let hash = 0;
-            for (let i = 0; i < str.length; i++) {
-                const char = str.charCodeAt(i);
-                hash = ((hash << 5) - hash) + char;
-                hash |= 0;
-            }
+            for (let i = 0; i < str.length; i++) { hash = ((hash << 5) - hash) + str.charCodeAt(i); hash |= 0; }
             const absHash = Math.abs(hash);
 
             // --- Hue Generation (Binning) ---
@@ -682,7 +736,7 @@
             // --- Primary Color Avoidance ---
             const hueDiff = Math.abs(hue - primaryHue);
             if (Math.min(hueDiff, 360 - hueDiff) < hueAvoidanceRange) {
-                const shiftDirection = ((absHash >> 16) % 2 === 0) ? 1 : -1; // Use another hash part
+                const shiftDirection = ((absHash >> 16) % 2 === 0) ? 1 : -1;
                 hue = (hue + (hueShiftAmount * shiftDirection) + 360) % 360;
                  debug(`Shifted hue for '${str}' from original near ${primaryHue} to ${hue}`);
             }
@@ -696,15 +750,12 @@
 
             // --- Construct Gradient String ---
             const colorGradient = `linear-gradient(135deg, hsl(${hue.toFixed(0)}, ${saturation.toFixed(0)}%, ${lightness.toFixed(0)}%) 0%, hsl(${hue.toFixed(0)}, ${saturation.toFixed(0)}%, ${lightnessDarker.toFixed(0)}%) 100%)`;
-
             return colorGradient;
         }
 
         function getCategoryColor(category) {
             const categoryKey = (category && typeof category === 'string' && category.trim() !== '') ? category.toLowerCase() : 'uncategorized';
-            if (categoryColorCache[categoryKey]) {
-                return categoryColorCache[categoryKey];
-            }
+            if (categoryColorCache[categoryKey]) return categoryColorCache[categoryKey];
             const generatedColor = generateHslColorFromString(categoryKey);
             debug(`Generated color (Binning) for category '${categoryKey}': ${generatedColor}`);
             categoryColorCache[categoryKey] = generatedColor;
@@ -712,7 +763,7 @@
         }
         // --- END DYNAMIC COLOR GENERATION ---
 
-        // --- SCROLL/HIGHLIGHT/EXPAND LOGIC ---
+        // --- SCROLL/HIGHLIGHT/EXPAND LOGIC (Refined Version) ---
         function scrollToProtocol(id) {
              const protocol = protocolData.find(p => p && p.id === id); if (!protocol) { debug(`Protocol not found: ${id}`); return; }
              if (appState.currentFilter !== 'all' && protocol.category !== appState.currentFilter) { debug(`Switching filter for scroll: ${protocol.category}`); filterByCategory(protocol.category); setTimeout(() => findAndScrollToProtocol(id), 200); return; }
@@ -733,7 +784,6 @@
             });
         }
 
-        // --- MODIFIED: performScrollAndHighlight for better scroll timing ---
         function performScrollAndHighlight(element) {
             const id = element.id;
             debug(`Scrolling & Highlighting: ${id}`);
@@ -742,59 +792,45 @@
             element.scrollIntoView({ behavior: 'auto', block: 'start' });
             debug(`Performed initial 'auto' scroll to start for ${id}`);
 
-            // Small delay to let the initial scroll settle before animation/highlight
+            // Small delay to let the initial scroll settle
             setTimeout(() => {
-                if (!document.getElementById(id)) {
-                    debug(`Element ${id} disappeared after initial scroll.`);
-                    return;
-                }
+                if (!document.getElementById(id)) { debug(`Element ${id} disappeared after initial scroll.`); return; }
 
                 const needsExpansion = !element.classList.contains('expanded');
-                const expansionAnimationDuration = 400; // Approx duration from CSS/JS
-                const highlightDelay = 50; // Start highlight quickly
-                const finalScrollDelay = needsExpansion ? expansionAnimationDuration + 100 : 50; // Wait for expansion + buffer
+                const expansionAnimationDuration = 400;
+                const highlightDelay = 50;
+                const finalScrollDelay = needsExpansion ? expansionAnimationDuration + 100 : 50;
 
                 // --- Step 2: Expand if needed ---
-                if (needsExpansion) {
-                    debug(`Triggering expansion for ${id}`);
-                    toggleCardExpansion(element);
-                }
+                if (needsExpansion) { debug(`Triggering expansion for ${id}`); toggleCardExpansion(element); }
 
                 // --- Step 3: Highlight ---
                 setTimeout(() => {
                      if (!document.getElementById(id)) return;
                      debug(`Applying highlight for ${id}`);
                      const originalShadow = getComputedStyle(element).boxShadow;
-                     element.classList.add('highlighting'); // Add class for transition
+                     element.classList.add('highlighting');
                      element.style.boxShadow = `0 0 30px rgba(139, 92, 246, 0.6), ${originalShadow || ''}`;
-
                      setTimeout(() => {
                          if (document.getElementById(id)) {
                              element.style.boxShadow = originalShadow || '';
-                            setTimeout(() => {
-                                if(document.getElementById(id)) element.classList.remove('highlighting'); // Remove class
-                             }, 300); // Match transition duration
+                            setTimeout(() => { if(document.getElementById(id)) element.classList.remove('highlighting'); }, 300);
                          }
-                     }, 1500); // Highlight duration
+                     }, 1500);
                 }, highlightDelay);
 
-
-                // --- Step 4: Final Smooth Scroll (After Expansion Delay) ---
+                // --- Step 4: Final Smooth Scroll ---
                 debug(`Scheduling final smooth scroll for ${id} in ${finalScrollDelay}ms`);
                 setTimeout(() => {
-                    requestAnimationFrame(() => { // Ensure layout is stable
-                         if (!document.getElementById(id)) {
-                              debug(`Element ${id} disappeared before final scroll.`);
-                              return;
-                         }
+                    requestAnimationFrame(() => {
+                         if (!document.getElementById(id)) { debug(`Element ${id} disappeared before final scroll.`); return; }
                          debug(`Performing final 'smooth' scroll for ${id}`);
                          element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                     });
                 }, finalScrollDelay);
 
-            }, 50); // Delay after initial scroll command
+            }, 50);
         }
-        // --- END MODIFIED ---
         // --- END SCROLL/HIGHLIGHT/EXPAND LOGIC ---
 
     </script>
