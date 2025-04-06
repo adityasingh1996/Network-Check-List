@@ -4,10 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SecureCheck - Protocol Checklist</title>
+
+    <!-- Performance: Preconnect to Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Performance: Load Google Fonts via Link -->
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Other CSS Libraries -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css">
+
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap');
+        /* Performance: Removed @import for Google Fonts here */
         
         :root {
             --primary: #8b5cf6;
@@ -36,7 +46,7 @@
         }
 
         html {
-            scroll-behavior: smooth; /* Added for smoother scrolling */
+            scroll-behavior: smooth; 
         }
 
         body {
@@ -79,13 +89,14 @@
         }
 
         .glass-card:hover {
+            /* Default hover */
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3), 0 0 20px rgba(139, 92, 246, 0.2);
             transform: translateY(-3px);
         }
 
         .glass-inset {
             background: rgba(2, 6, 23, 0.5);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px); 
             -webkit-backdrop-filter: blur(10px);
             border-radius: 16px;
             box-shadow: 
@@ -109,36 +120,23 @@
             position: absolute;
             background: var(--primary-alpha);
             border-radius: 50%;
-            filter: blur(8px);
             opacity: 0;
             animation: float 20s infinite linear;
         }
 
         @keyframes float {
-            0% {
-                opacity: 0;
-                transform: translateY(0) translateX(0) rotate(0deg);
-            }
-            10% {
-                opacity: 0.5;
-            }
-            90% {
-                opacity: 0.5;
-            }
-            100% {
-                opacity: 0;
-                transform: translateY(calc(-100vh - 100px)) translateX(calc(100vw * var(--x-travel))) rotate(360deg);
-            }
+            0% { opacity: 0; transform: translateY(0) translateX(0) rotate(0deg); }
+            10% { opacity: 0.4; }
+            90% { opacity: 0.4; }
+            100% { opacity: 0; transform: translateY(calc(-100vh - 100px)) translateX(calc(100vw * var(--x-travel))) rotate(360deg); }
         }
 
         .sidebar {
             background: var(--sidebar-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
             height: 100vh;
             position: fixed;
-            top: 0; /* Ensure it's positioned correctly */
-            left: 0; /* Ensure it's positioned correctly */
+            top: 0; 
+            left: 0; 
             padding: 2rem 1.5rem;
             width: 300px;
             z-index: 50;
@@ -146,7 +144,7 @@
             border-right: 1px solid rgba(255, 255, 255, 0.03);
             display: flex;
             flex-direction: column;
-            overflow-y: hidden; /* Keep this */
+            overflow-y: hidden; 
         }
 
         .content-area {
@@ -154,801 +152,231 @@
             padding: 2rem;
             min-height: 100vh;
             transition: margin-left 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-            position: relative; /* Added for potential stacking context issues */
-            z-index: 1; /* Ensure content is above background */
+            position: relative; 
+            z-index: 1; 
         }
 
         @media (max-width: 1024px) {
-            .sidebar {
-                transform: translateX(-100%);
-            }
-            .sidebar.open {
-                transform: translateX(0);
-            }
-            .content-area {
-                margin-left: 0;
-                width: 100%; /* Ensure it takes full width */
-            }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .content-area { margin-left: 0; width: 100%; }
         }
 
-        /* Mobile optimizations */
+        /* Mobile optimizations & Performance */
         @media (max-width: 768px) {
-            .content-area {
-                padding: 1.5rem 1rem;
-            }
-            
-            header h1 {
-                font-size: 1.75rem !important;
-            }
-            
-            .card-header {
-                flex-direction: column !important;
-                align-items: flex-start !important;
-                padding: 1.5rem 1rem !important; /* Ensure padding is consistent */
-            }
-            
-            .card-header > div:last-child {
-                width: 100%;
-                justify-content: space-between;
-                margin-top: 1rem;
-            }
-            
-            .progress-container {
-                width: 100% !important; /* Use important if necessary, but prefer specificity */
-            }
-            
-             /* Ensure cards container takes up space */
-            #protocolCards {
-                min-height: 200px; /* Example minimum height */
-            }
+            .content-area { padding: 1.5rem 1rem; }
+            header h1 { font-size: 1.75rem !important; }
+            .glass-card { background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2); }
+            .glass-card:hover { box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25); }
+            .glass-inset { backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+            .sidebar { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+            .card-header { flex-direction: column !important; align-items: flex-start !important; padding: 1.5rem 1rem !important; }
+            .card-header > div:last-child { width: 100%; justify-content: space-between; margin-top: 1rem; }
+            .progress-container { width: 100% !important; }
+            #protocolCards { min-height: 200px; }
         }
 
         .protocol-card {
-            transition: all var(--transition-smooth);
+            transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1), transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s ease; 
             transform-style: preserve-3d;
             perspective: 1000px;
             overflow: hidden;
             transform: translateZ(0); 
-            will-change: transform, box-shadow, max-height, opacity; /* Added opacity */
+            will-change: transform, box-shadow, opacity; 
             backface-visibility: hidden;
+            opacity: 0; 
         }
+        .protocol-card.expanded { /* No change needed here usually */ }
 
-        .protocol-card.expanded {
-            transform: translateZ(10px);
-        }
-
-        .protocol-card:hover {
-            box-shadow: 0 0 25px rgba(0, 0, 0, 0.3), 0 0 15px rgba(139, 92, 246, 0.15);
-        }
-
-        .card-header {
-            cursor: pointer;
-            transition: all 0.4s ease;
-        }
-
-        .card-header:hover .category-badge::after {
-            animation: shine 2s infinite;
-        }
+        .card-header { cursor: pointer; transition: background-color 0.4s ease; }
+        .card-header:hover .category-badge::after { /* animation: shine 2s infinite; */ }
 
         .card-content {
             max-height: 0;
             overflow: hidden;
-            padding: 0 20px 0 20px; /* Adjusted padding for transition */
-            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            padding: 0 20px 0 20px; 
+            transition: max-height 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), padding 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); 
             opacity: 0;
-            visibility: hidden;
+            visibility: hidden; 
             transform: translateY(10px);
             will-change: max-height, opacity, transform, padding;
             transform-origin: top;
         }
-
-        .protocol-card.expanded .card-content {
-            max-height: 2000px; /* Ensure this is large enough */
-            opacity: 1;
-            visibility: visible;
-            padding: 0 20px 20px 20px;
-            transform: translateY(0);
-        }
+        .protocol-card.expanded .card-content { max-height: 2000px; opacity: 1; visibility: visible; padding: 0 20px 20px 20px; transform: translateY(0); }
 
         /* Elegant Toggle Switch */
-        .toggle-container {
-            position: relative;
-            width: 50px;
-            height: 26px;
-            flex-shrink: 0;
-            min-width: 50px;
-        }
-
-        .toggle-input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .toggle-slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(15, 23, 42, 0.7);
-            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-            border-radius: 34px;
-            box-shadow: 
-                inset 2px 2px 4px var(--glass-dark), 
-                inset -2px -2px 4px var(--glass-light);
-            overflow: hidden;
-        }
-
-        .toggle-slider:before {
-            position: absolute;
-            content: "";
-            height: 18px;
-            width: 18px;
-            left: 4px;
-            bottom: 4px;
-            background: var(--light);
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            border-radius: 50%;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-            z-index: 2;
-        }
-
-        .toggle-slider::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, 
-                var(--primary-dark) 0%, 
-                var(--primary) 100%);
-            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-            opacity: 0;
-        }
-
-        .toggle-input:checked + .toggle-slider::after {
-            left: 0;
-            opacity: 1;
-        }
-
-        .toggle-input:checked + .toggle-slider:before {
-            transform: translateX(24px);
-            background: white;
-        }
-
-        .toggle-input:checked + .toggle-slider {
-            box-shadow: 0 0 8px var(--primary-alpha);
-        }
+        .toggle-container { position: relative; width: 50px; height: 26px; flex-shrink: 0; min-width: 50px; }
+        .toggle-input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(15, 23, 42, 0.7); transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1); border-radius: 34px; box-shadow: inset 2px 2px 4px var(--glass-dark), inset -2px -2px 4px var(--glass-light); overflow: hidden; }
+        .toggle-slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 4px; background: var(--light); transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); border-radius: 50%; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); z-index: 2; }
+        .toggle-slider::after { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, var(--primary-dark) 0%, var(--primary) 100%); transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1); opacity: 0; }
+        .toggle-input:checked + .toggle-slider::after { left: 0; opacity: 1; }
+        .toggle-input:checked + .toggle-slider:before { transform: translateX(24px); background: white; }
+        .toggle-input:checked + .toggle-slider { box-shadow: 0 0 8px var(--primary-alpha); }
 
         /* Animated Progress bar */
-        .progress-container {
-            width: 100%;
-            height: 12px;
-            background: rgba(15, 23, 42, 0.5);
-            border-radius: 10px;
-            box-shadow: 
-                inset 2px 2px 4px var(--glass-dark), 
-                inset -2px -2px 4px var(--glass-light);
-            margin: 1rem 0;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .progress-container::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(90deg, 
-                transparent 0%, 
-                rgba(255, 255, 255, 0.1) 50%, 
-                transparent 100%);
-            opacity: 0.5;
-        }
-
-        .progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary-dark), var(--primary), var(--primary-light));
-            border-radius: 10px;
-            transition: width 1s cubic-bezier(0.22, 1, 0.36, 1);
-            position: relative;
-            overflow: hidden;
-            width: 0; /* Start at 0 width */
-        }
-
-        .progress-bar::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, 
-                transparent 0%, 
-                rgba(255, 255, 255, 0.2) 50%, 
-                transparent 100%);
-            animation: progressShine 2s infinite;
-        }
-
-        @keyframes progressShine {
-            to { left: 100%; }
-        }
+        .progress-container { width: 100%; height: 12px; background: rgba(15, 23, 42, 0.5); border-radius: 10px; box-shadow: inset 2px 2px 4px var(--glass-dark), inset -2px -2px 4px var(--glass-light); margin: 1rem 0; overflow: hidden; position: relative; }
+        .progress-container::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.1) 50%, transparent 100%); opacity: 0.5; }
+        .progress-bar { height: 100%; background: linear-gradient(90deg, var(--primary-dark), var(--primary), var(--primary-light)); border-radius: 10px; transition: width 1s cubic-bezier(0.22, 1, 0.36, 1); position: relative; overflow: hidden; width: 0; }
+        .progress-bar::after { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%); animation: progressShine 2s infinite; }
+        @keyframes progressShine { to { left: 100%; } }
 
         /* Glowing Category badges */
-        .category-badge {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            box-shadow: 0 2px 10px rgba(139, 92, 246, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
+        .category-badge { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); box-shadow: 0 2px 10px rgba(139, 92, 246, 0.3); position: relative; overflow: hidden; }
+        .category-badge::after { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0) 100%); transform: skewX(-25deg); transition: all 0.8s ease; }
+        @keyframes shine { 0% { left: -100%; } 100% { left: 100%; } }
 
-        .category-badge::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, 
-                rgba(255, 255, 255, 0) 0%, 
-                rgba(255, 255, 255, 0.3) 50%, 
-                rgba(255, 255, 255, 0) 100%);
-            transform: skewX(-25deg);
-            transition: all 0.8s ease;
-        }
-
-        @keyframes shine {
-            0% { left: -100%; }
-            100% { left: 100%; }
-        }
-
-        /* Category filters with elegant motion */
-        .category-filters {
-            display: flex;
-            gap: 0.75rem;
-            flex-wrap: wrap;
-            margin-bottom: 1rem;
-        }
-
-        .category-filter {
-            padding: 0.4rem 1rem;
-            border-radius: 9999px;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-            background: rgba(15, 23, 42, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            position: relative;
-            overflow: hidden;
-            font-weight: 500;
-            will-change: transform;
-            font-size: 0.85rem;
-        }
-
-        .category-filter:hover {
-            background: rgba(15, 23, 42, 0.5);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .category-filter.active {
-            background: var(--primary);
-            box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
-            transform: translateY(-2px);
-        }
-
-        .category-filter.active::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 200%;
-            height: 100%;
-            background: linear-gradient(90deg, 
-                transparent 0%, 
-                rgba(255, 255, 255, 0.2) 50%, 
-                transparent 100%);
-            animation: shine 3s infinite;
-        }
+        /* Category filters */
+        .category-filters { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1rem; }
+        .category-filter { padding: 0.4rem 1rem; border-radius: 9999px; cursor: pointer; transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1); background: rgba(15, 23, 42, 0.3); border: 1px solid rgba(255, 255, 255, 0.05); position: relative; overflow: hidden; font-weight: 500; will-change: transform; font-size: 0.85rem; }
+        .category-filter:hover { background: rgba(15, 23, 42, 0.5); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); }
+        .category-filter.active { background: var(--primary); box-shadow: 0 0 20px rgba(139, 92, 246, 0.3); transform: translateY(-2px); }
+        .category-filter.active::after { content: ''; position: absolute; top: 0; left: -100%; width: 200%; height: 100%; background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%); animation: shine 3s infinite; }
 
         /* Animation effects */
-        .fade-in {
-            animation: fadeIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-            opacity: 0;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); } /* Slightly less movement */
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .slide-in-right {
-            animation: slideInRight 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-        }
-
-        @keyframes slideInRight {
-            from { transform: translateX(30px); opacity: 0; } /* Slightly less movement */
-            to { transform: translateX(0); opacity: 1; }
-        }
+        .fade-in { animation: fadeIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards; opacity: 0; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .slide-in-right { animation: slideInRight 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+        @keyframes slideInRight { from { transform: translateX(30px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
         /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: rgba(15, 23, 42, 0.2);
-            border-radius: 10px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--primary-dark);
-            border-radius: 10px;
-            transition: all 0.3s ease;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--primary);
-            box-shadow: 0 0 10px var(--primary);
-        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.2); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: var(--primary-dark); border-radius: 10px; transition: all 0.3s ease; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); box-shadow: 0 0 10px var(--primary); }
 
         /* Section animations */
-        .section-animate {
-            opacity: 0;
-            transform: translateY(20px); /* Match fadeIn */
-            transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1), transform 0.6s cubic-bezier(0.22, 1, 0.36, 1); /* Slightly faster */
-            will-change: opacity, transform; /* Optimization */
-        }
-
-        .section-animate.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        .section-animate { transform: translateY(20px); transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1), transform 0.6s cubic-bezier(0.22, 1, 0.36, 1); will-change: opacity, transform; }
+        .section-animate.visible { opacity: 1; transform: translateY(0); }
+        .protocol-card.section-animate { opacity: 0; }
+        .protocol-card.section-animate.visible { opacity: 1; }
 
         /* List item animations */
-        .list-item-animate {
-            opacity: 0;
-            transform: translateX(20px);
-            transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-            will-change: opacity, transform; /* Optimization */
-        }
+        .list-item-animate { opacity: 0; transform: translateX(20px); transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1); will-change: opacity, transform; }
 
-        /* Removed .list-item-visible - handled by expansion animation now */
+        /* Search bar */
+        .search-container { position: relative; margin-bottom: 1.25rem; }
+        .search-input { width: 100%; padding: 0.75rem 1rem 0.75rem 3rem; border-radius: 12px; background: rgba(15, 23, 42, 0.3); border: 1px solid rgba(255, 255, 255, 0.05); color: var(--light); transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+        .search-input:focus { outline: none; box-shadow: 0 0 0 2px var(--primary-alpha), 0 0 15px rgba(139, 92, 246, 0.3); background: rgba(15, 23, 42, 0.5); border-color: rgba(139, 92, 246, 0.3); }
+        .search-icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--neutral); transition: color 0.3s ease; }
+        .search-input:focus + .search-icon { color: var(--primary); }
 
-        /* Elegant Search bar */
-        .search-container {
-            position: relative;
-            margin-bottom: 1.25rem;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 0.75rem 1rem 0.75rem 3rem;
-            border-radius: 12px;
-            background: rgba(15, 23, 42, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            color: var(--light);
-            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
-        }
-
-        .search-input:focus {
-            outline: none;
-            box-shadow: 0 0 0 2px var(--primary-alpha), 0 0 15px rgba(139, 92, 246, 0.3);
-            background: rgba(15, 23, 42, 0.5);
-            border-color: rgba(139, 92, 246, 0.3);
-        }
-
-        .search-icon {
-            position: absolute;
-            left: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--neutral);
-            transition: color 0.3s ease;
-        }
-
-        .search-input:focus + .search-icon {
-            color: var(--primary);
-        }
-
-        /* Style for protocol nav area */
-        .nav-links {
-            flex: 1;
-            overflow-y: auto;
-            padding-right: 5px;
-            margin-bottom: 1rem;
-            max-height: calc(100vh - 220px); /* Adjusted slightly */
-        }
-
-        /* Protocol navigation item styling */
-        .protocol-nav-item {
-            margin-bottom: 0.6rem;
-            border-radius: 12px;
-            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-            will-change: transform, box-shadow, background;
-        }
-
-        .protocol-nav-item:hover {
-            transform: translateX(5px);
-            background: rgba(15, 23, 42, 0.8) !important;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1), 0 0 5px rgba(139, 92, 246, 0.2);
-        }
-
-        .protocol-nav-item.hidden {
-            display: none;
-        }
+        /* Sidebar Nav */
+        .nav-links { flex: 1; overflow-y: auto; padding-right: 5px; margin-bottom: 1rem; max-height: calc(100vh - 220px); }
+        .protocol-nav-item { margin-bottom: 0.6rem; border-radius: 12px; transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1); will-change: transform, box-shadow, background; }
+        .protocol-nav-item:hover { transform: translateX(5px); background: rgba(15, 23, 42, 0.8) !important; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1), 0 0 5px rgba(139, 92, 246, 0.2); }
+        .protocol-nav-item.hidden { display: none; }
 
         /* Card category indicators */
-        .category-indicator {
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 4px;
-            border-top-left-radius: 16px;
-            border-bottom-left-radius: 16px;
-        }
+        .category-indicator { position: absolute; left: 0; top: 0; bottom: 0; width: 4px; border-top-left-radius: 16px; border-bottom-left-radius: 16px; }
 
-        /* Expand button animation */
-        .expand-btn {
-            position: relative;
-            overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-        }
+        /* Expand button */
+        .expand-btn { position: relative; overflow: hidden; transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1); }
+        .expand-btn:hover { box-shadow: 0 0 15px rgba(139, 92, 246, 0.3); transform: translateY(-2px); }
+        .expand-btn::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle, rgba(139, 92, 246, 0.2) 0%, transparent 70%); opacity: 0; transition: opacity 0.3s ease; }
+        .expand-btn:hover::after { opacity: 1; }
+        .expand-btn i { transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
 
-        .expand-btn:hover {
-            box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
-            transform: translateY(-2px);
-        }
+        /* No results */
+        .no-results { text-align: center; padding: 3rem; background: rgba(15, 23, 42, 0.5); border-radius: 1rem; margin: 2rem 0; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.03); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
+        .no-results:hover { box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2), 0 0 20px rgba(139, 92, 246, 0.1); transform: translateY(-5px); }
 
-        .expand-btn::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle, rgba(139, 92, 246, 0.2) 0%, transparent 70%);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
+        /* Logo */
+        .logo { position: relative; display: inline-block; }
+        .logo::after { content: ''; position: absolute; left: 0; right: 0; bottom: -3px; height: 2px; background: linear-gradient(90deg, var(--primary-dark), var(--primary), var(--primary-dark)); transform: scaleX(0); transform-origin: left; transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
+        .logo:hover::after { transform: scaleX(1); }
 
-        .expand-btn:hover::after {
-            opacity: 1;
-        }
+        /* Mobile menu */
+        .menu-toggle { transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1); z-index: 60; }
+        .menu-toggle:hover { transform: rotate(90deg); box-shadow: 0 0 15px rgba(139, 92, 246, 0.3); }
 
-        .expand-btn i {
-            transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-        }
-
-        /* No results message */
-        .no-results {
-            text-align: center;
-            padding: 3rem;
-            background: rgba(15, 23, 42, 0.5);
-            border-radius: 1rem;
-            margin: 2rem 0;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-        }
-
-        .no-results:hover {
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2), 0 0 20px rgba(139, 92, 246, 0.1);
-            transform: translateY(-5px);
-        }
-
-        /* Logo animation */
-        .logo {
-            position: relative;
-            display: inline-block;
-        }
-
-        .logo::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            right: 0;
-            bottom: -3px;
-            height: 2px;
-            background: linear-gradient(90deg, var(--primary-dark), var(--primary), var(--primary-dark));
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-        }
-
-        .logo:hover::after {
-            transform: scaleX(1);
-        }
-
-        /* Mobile menu animation */
-        .menu-toggle {
-            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-            z-index: 60; /* Ensure it's above sidebar */
-        }
-
-        .menu-toggle:hover {
-            transform: rotate(90deg);
-            box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
-        }
-
-        /* Card content animation */
-        .content-section {
-            transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-            transform: translateY(20px);
-            opacity: 0;
-            will-change: opacity, transform; /* Optimization */
-        }
-
-        .protocol-card.expanded .content-section {
-            transform: translateY(0);
-            opacity: 1;
-        }
+        /* Card content section */
+        .content-section { transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1), transform 0.5s cubic-bezier(0.22, 1, 0.36, 1); transform: translateY(20px); opacity: 0; will-change: opacity, transform; }
+        .protocol-card.expanded .content-section { transform: translateY(0); opacity: 1; }
         
-        /* Completion percentage display */
-        .completion-percentage {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: white;
-            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none; /* Avoid interfering with hover */
-        }
+        /* Completion % */
+        .completion-percentage { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 0.75rem; font-weight: 600; color: white; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5); opacity: 0; transition: opacity 0.3s ease; pointer-events: none; }
+        .progress-container:hover .completion-percentage { opacity: 1; }
         
-        .progress-container:hover .completion-percentage {
-            opacity: 1;
+        /* Checkmark */
+        .checkmark-animate { 
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); 
+            display: inline-block; 
+            /* Fix: Allow long strings (like URLs/code) to break and wrap */
+            overflow-wrap: break-word; 
+            word-wrap: break-word; /* Older alias for broader compatibility */
+            vertical-align: top; /* Improves alignment with toggle */
         }
+        .toggle-input:checked ~ .checkmark-animate { transform: scale(1.1) rotate(5deg); }
         
-        /* Checkmark animation */
-        .checkmark-animate {
-            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-            display: inline-block; /* Needed for transform */
-        }
-        
-        .toggle-input:checked ~ .checkmark-animate {
-            transform: scale(1.1) rotate(5deg);
-        }
-        
-        /* Hover states for list items */
-        li.list-item-animate {
-            transition: background 0.3s ease, transform 0.3s ease, opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1), transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-            border-radius: 8px;
-            padding: 0.5rem;
-        }
-        
-        li.list-item-animate:hover {
-            background: rgba(255, 255, 255, 0.05);
-            transform: translateX(5px) translateY(0); /* Ensure translateX is maintained */
-        }
+        /* List item hover */
+        li.list-item-animate { transition: background 0.3s ease, transform 0.3s ease, opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1), transform 0.5s cubic-bezier(0.22, 1, 0.36, 1); border-radius: 8px; padding: 0.5rem; align-items: flex-start; /* Ensure top alignment */ }
+        li.list-item-animate:hover { background: rgba(255, 255, 255, 0.05); transform: translateX(5px) translateY(0); }
 
-        /* Category section adjustments */
-        .category-section h2 {
-            margin-bottom: 0.75rem;
-            font-size: 1rem;
-        }
+        /* Section Headers */
+        .category-section h2 { margin-bottom: 0.75rem; font-size: 1rem; }
+        .protocol-section h2 { margin-bottom: 0.75rem; font-size: 1.1rem; }
 
-        /* Protocol section adjustments */
-        .protocol-section h2 {
-            margin-bottom: 0.75rem;
-            font-size: 1.1rem;
-        }
+        /* Pagination */
+        .pagination-container { display: flex; justify-content: center; align-items: center; margin-top: 2rem; gap: 0.5rem; flex-wrap: wrap; }
+        .pagination-btn { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: rgba(15, 23, 42, 0.3); border: 1px solid rgba(255, 255, 255, 0.05); color: var(--light); font-weight: 500; cursor: pointer; transition: all 0.3s ease; }
+        .pagination-btn:hover:not(:disabled) { background: rgba(15, 23, 42, 0.5); box-shadow: 0 0 15px rgba(139, 92, 246, 0.2); transform: translateY(-2px); }
+        .pagination-btn.active { background: var(--primary); color: white; font-weight: 600; box-shadow: 0 0 20px rgba(139, 92, 246, 0.3); }
+        .pagination-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .pagination-ellipsis { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; color: var(--neutral); }
 
-        /* Pagination styles */
-        .pagination-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 2rem;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-        }
-
-        .pagination-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: rgba(15, 23, 42, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            color: var(--light);
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .pagination-btn:hover:not(:disabled) {
-            background: rgba(15, 23, 42, 0.5);
-            box-shadow: 0 0 15px rgba(139, 92, 246, 0.2);
-            transform: translateY(-2px);
-        }
-
-        .pagination-btn.active {
-            background: var(--primary);
-            color: white;
-            font-weight: 600;
-            box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
-        }
-
-        .pagination-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .pagination-ellipsis {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            color: var(--neutral);
-        }
-
-        /* Port badge styles */
-        .port-badge {
-            font-family: 'Courier New', monospace;
-            background: rgba(15, 23, 42, 0.5);
-            padding: 0.2rem 0.5rem;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            margin-left: 0.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        /* Virtual list styles (If implemented - not currently used) */
-        .virtual-list-container {
-            position: relative;
-        }
-
-        .virtual-list-spacer {
-            position: relative;
-            width: 100%;
-            visibility: hidden;
-        }
+        /* Port badge */
+        .port-badge { font-family: 'Courier New', monospace; background: rgba(15, 23, 42, 0.5); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.8rem; margin-left: 0.5rem; border: 1px solid rgba(255, 255, 255, 0.1); display: inline-block; }
 
         /* Loading indicator */
-        .loading-indicator {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 2rem;
-            font-weight: 500;
-            color: var(--neutral);
-        }
-
-        .loading-spinner {
-            width: 24px;
-            height: 24px;
-            border: 3px solid rgba(139, 92, 246, 0.2);
-            border-radius: 50%;
-            border-top-color: var(--primary);
-            animation: spin 1s linear infinite;
-            margin-right: 10px;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
+        .loading-indicator { display: flex; justify-content: center; align-items: center; padding: 2rem; font-weight: 500; color: var(--neutral); }
+        .loading-spinner { width: 24px; height: 24px; border: 3px solid rgba(139, 92, 246, 0.2); border-radius: 50%; border-top-color: var(--primary); animation: spin 1s linear infinite; margin-right: 10px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
         
         /* Mobile responsiveness improvements */
         @media (max-width: 640px) {
-            .category-filter {
-                padding: 0.3rem 0.8rem;
-                font-size: 0.75rem;
-            }
-            
-            .category-badge {
-                font-size: 0.65rem;
-                padding: 0.2rem 0.6rem;
-            }
-            
-            .progress-container {
-                height: 10px;
-            }
-            
-            .card-header {
-                padding: 1.2rem 1rem !important; /* Unified padding */
-            }
-            
-            .card-header h2 {
-                font-size: 1.5rem !important;
-            }
-            
-            /* Ensure grid layout reverts properly if needed */
-            .protocol-card .grid {
-                grid-template-columns: 1fr !important; /* Force single column */
-                display: block !important; /* Fallback if grid causes issues */
-            }
-            
-            .glass-inset {
-                margin-bottom: 1rem;
-            }
-            
-            .toggle-container {
-                min-width: 40px;
-                width: 40px;
-                height: 22px;
-            }
-            
-            .toggle-slider:before {
-                height: 14px;
-                width: 14px;
-            }
-            
-            .toggle-input:checked + .toggle-slider:before {
-                transform: translateX(18px);
-            }
-            
-            .nav-links {
-                 max-height: calc(100vh - 200px); /* Adjust for smaller screens */
-            }
+            .category-filter { padding: 0.3rem 0.8rem; font-size: 0.75rem; }
+            .category-badge { font-size: 0.65rem; padding: 0.2rem 0.6rem; }
+            .progress-container { height: 10px; }
+            .card-header { padding: 1.2rem 1rem !important; }
+            .card-header h2 { font-size: 1.5rem !important; }
+            .protocol-card .grid { grid-template-columns: 1fr !important; display: block !important; }
+            .glass-inset { margin-bottom: 1rem; }
+            .toggle-container { min-width: 40px; width: 40px; height: 22px; }
+            .toggle-slider:before { height: 14px; width: 14px; }
+            .toggle-input:checked + .toggle-slider:before { transform: translateX(18px); }
+            .nav-links { max-height: calc(100vh - 200px); }
         }
         
         /* Protocol card mobile optimizations */
         @media (max-width: 768px) {
-            .card-content {
-                transition-duration: 0.4s;
-                 padding: 0 15px 0 15px; /* Adjust padding */
-            }
-            
-            .protocol-card.expanded .card-content {
-                padding: 0 15px 15px 15px;
-            }
-            
-            .content-section {
-                transition-delay: 0.05s !important;
-            }
-            
-            /* List item animation delay handled by expansion now */
+            .card-content { transition-duration: 0.4s; padding: 0 15px 0 15px; }
+            .protocol-card.expanded .card-content { padding: 0 15px 15px 15px; }
+            .content-section { transition-delay: 0.05s !important; }
         }
-        
-        /* Prevent content jumping during animation (if needed) */
-        .card-container {
-            min-height: 0;
-            transition: min-height 0.5s ease;
-        }
-        
+                
         /* Improved touch targets for mobile */
         @media (max-width: 640px) {
-            .protocol-nav-item {
-                padding: 0.75rem !important;
-            }
-            
-            li.list-item-animate {
-                padding: 0.75rem 0.5rem;
-                margin-bottom: 0.75rem;
-            }
-            
-            .pagination-btn {
-                width: 36px;
-                height: 36px;
-            }
-            
-            .expand-btn {
-                padding: 0.75rem !important;
-            }
+            .protocol-nav-item { padding: 0.75rem !important; }
+            li.list-item-animate { padding: 0.75rem 0.5rem; margin-bottom: 0.75rem; }
+            .pagination-btn { width: 36px; height: 36px; }
+            .expand-btn { padding: 0.75rem !important; }
         }
+
+        /* Performance: Disable expensive hover effects on touch devices */
+        @media (hover: none) and (pointer: coarse) { 
+            .glass-card:hover { transform: none; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2); }
+            .category-filter:hover { transform: none; box-shadow: none; }
+            .category-badge:hover::after, .card-header:hover .category-badge::after { animation: none; }
+            .category-filter.active:hover::after { animation: none; }
+            .expand-btn:hover { transform: none; box-shadow: none; }
+            .expand-btn:hover::after { opacity: 0; }
+            .pagination-btn:hover:not(:disabled) { transform: none; box-shadow: none; }
+            .protocol-nav-item:hover { transform: none; box-shadow: none; background: rgba(2, 6, 23, 0.5) !important; }
+            .no-results:hover { transform: none; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); }
+            li.list-item-animate:hover { transform: translateX(0) translateY(0); background: transparent; }
+        }
+
     </style>
 </head>
 <body>
@@ -962,6 +390,7 @@
 
     <!-- Sidebar -->
     <aside class="sidebar glass-dark" id="sidebar">
+        <!-- Sidebar content unchanged -->
         <div class="flex flex-col mb-8">
             <div class="flex items-center justify-between">
                 <h1 class="text-2xl font-bold tracking-tight logo">
@@ -974,57 +403,47 @@
             <div class="flex items-center mt-2">
                 <p class="text-xs text-gray-400 tracking-wide relative group">
                     <span class="text-primary">◈</span> Created by <span class="underline cursor-pointer text-gray-300 hover:text-primary transition-colors duration-300">Aditya Singh</span>
-                    <span class="absolute bottom-full left-0 mb-2 w-48 p-2 bg-gray-800 rounded-md shadow-lg text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10"> <!-- Added z-index -->
+                    <span class="absolute bottom-full left-0 mb-2 w-48 p-2 bg-gray-800 rounded-md shadow-lg text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10"> 
                         https://www.youtube.com/watch?v=dQw4w9WgXcQ<br>© 2025 All Rights Reserved
                     </span>
                 </p>
             </div>
         </div>
-        
         <div class="search-container">
             <input type="text" id="search" class="search-input" placeholder="Search protocols or ports...">
             <i class="bx bx-search search-icon"></i>
         </div>
-        
         <div class="category-section">
             <h2 class="text-sm font-semibold mb-1 text-neutral-400">Categories</h2>
             <div class="category-filters mb-4" id="categoryFilters">
                 <button class="category-filter active" data-category="all">All</button>
-                <!-- Categories will be populated dynamically -->
             </div>
         </div>
-        
         <div class="protocol-section">
             <h2 class="text-lg font-semibold mb-2 text-neutral-300">Protocols</h2>
             <div class="nav-links space-y-2" id="protocolNav">
-                <!-- Protocol navigation will be populated dynamically -->
             </div>
         </div>
     </aside>
 
     <!-- Main content -->
     <main class="content-area" id="mainContent">
+        <!-- Header unchanged -->
         <header class="mb-6 md:mb-10 fade-in" style="animation-delay: 0.1s;">
             <h1 class="text-3xl md:text-4xl font-bold mb-2">Protocol Security Checklist</h1>
             <p class="text-gray-400">Track vulnerabilities, testing procedures, and security tools for network protocols.</p>
         </header>
-        
-        <!-- Protocol cards container -->
+        <!-- Protocol cards container unchanged -->
         <div class="grid grid-cols-1 gap-6" id="protocolCards">
-            <!-- Protocol cards will be populated dynamically -->
-            <!-- No Results Message will be inserted here by JS -->
         </div>
-
-        <!-- Pagination -->
+        <!-- Pagination unchanged -->
         <div class="pagination-container" id="paginationContainer">
-            <!-- Pagination will be generated dynamically -->
         </div>
     </main>
 
     <script>
-        // Sample data (assuming protocolData remains the same as provided)
-        const protocolData = [
-            {
+        // --- DATA (Assume protocolData is the same) ---
+        const protocolData = [ {
                 id: 'ftp',
                 name: 'FTP',
                 port: 21,
@@ -4482,982 +3901,44 @@
     'BACpypes',
     'Wireshark with BACnet dissector'
   ]
-}
-            // Add more protocols here if needed
-        ];
-
-        // Global application state
-        const appState = {
-            currentFilter: 'all',
-            searchTerm: '',
-            checkedItems: {},
-            currentPage: 1,
-            itemsPerPage: 5, // Will be adjusted based on screen size
-            debug: false,
-            expandedCards: new Set(),
-            isMobile: false, // Will be set dynamically
-            observer: null // For scroll animations
-        };
-
-        // Debug logging function
-        function debug(message) {
-            if (!appState.debug) return;
-            console.log(`[DEBUG] ${message}`);
-        }
+} ];
         
-        // Debounce function
-        const debounce = (func, delay) => {
-            let timeout;
-            return function(...args) {
-                const context = this;
-                clearTimeout(timeout);
-                timeout = setTimeout(() => func.apply(context, args), delay);
-            };
-        };
+        // --- STATE (Unchanged) ---
+        const appState = { currentFilter: 'all', searchTerm: '', checkedItems: {}, currentPage: 1, itemsPerPage: 5, debug: false, expandedCards: new Set(), isMobile: false, observer: null };
 
-        // Initialize the app when DOM is loaded
-        document.addEventListener('DOMContentLoaded', () => {
-            debug('Application initializing...');
-            
-            updateDeviceState(); // Set initial mobile state and itemsPerPage
+        // --- UTILITIES (Unchanged) ---
+        function debug(message) { if (appState.debug) console.log(`[DEBUG] ${message}`); }
+        const debounce = (func, delay) => { let timeout; return (...args) => { const context = this; clearTimeout(timeout); timeout = setTimeout(() => func.apply(context, args), delay); }; };
 
-            createBackgroundParticles();
-            
-            // Load checked items from localStorage
-            try {
-                const savedCheckedItems = localStorage.getItem('checkedItems');
-                if (savedCheckedItems) {
-                    appState.checkedItems = JSON.parse(savedCheckedItems);
-                    debug(`Loaded ${Object.keys(appState.checkedItems).length} checked items from storage`);
-                }
-            } catch (e) {
-                console.error("Error loading checked items from localStorage:", e);
-                appState.checkedItems = {}; // Reset if loading fails
-            }
+        // --- INITIALIZATION (Unchanged) ---
+        document.addEventListener('DOMContentLoaded', () => { debug('App initializing...'); updateDeviceState(); createBackgroundParticles(); loadCheckedItems(); initializeSidebar(); renderProtocolCards(); setupEventListeners(); initializeAnimations(); setTimeout(updateProgress, 300); debug('App initialized.'); });
 
-            initializeSidebar();
-            renderProtocolCards(); // Initial render
-            setupEventListeners();
-            initializeAnimations(); // Setup scroll observer
-            
-            // Update progress bars after initial render and loading state
-            setTimeout(updateProgress, 300); 
-
-            debug('Application initialized successfully');
-        });
-        
-        // Update mobile state and items per page
-        function updateDeviceState() {
-             const wasMobile = appState.isMobile;
-             appState.isMobile = window.innerWidth < 768;
-             
-             if (appState.isMobile) {
-                 appState.itemsPerPage = 3;
-             } else if (window.innerWidth < 1280) {
-                 appState.itemsPerPage = 4;
-             } else {
-                 appState.itemsPerPage = 5;
-             }
-             debug(`Device state updated: isMobile=${appState.isMobile}, itemsPerPage=${appState.itemsPerPage}`);
-             
-             // Re-render if mobile state *changed* to adjust pagination
-             if (document.readyState === 'complete' && wasMobile !== appState.isMobile) {
-                renderProtocolCards();
-             }
-        }
-
-        // Create animated background particles
-        function createBackgroundParticles() {
-            const container = document.getElementById('animatedBg');
-            if (!container) return;
-            const particleCount = appState.isMobile ? 6 : 12; // Reduced count slightly
-            
-            // Clear existing particles if any (e.g., on hot-reload)
-            container.innerHTML = ''; 
-            
-            for (let i = 0; i < particleCount; i++) {
-                const size = Math.random() * 120 + 40; // 40-160px
-                const particle = document.createElement('div');
-                particle.className = 'floating-particle';
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-                particle.style.left = `${Math.random() * 100}vw`;
-                particle.style.bottom = `-${size}px`; // Start below screen
-                particle.style.animationDuration = `${Math.random() * 20 + 20}s`; // 20-40s
-                particle.style.animationDelay = `${Math.random() * 15}s`; // 0-15s delay
-                particle.style.setProperty('--x-travel', Math.random() * 0.3 - 0.15); // -0.15 to 0.15
+        // --- CORE LOGIC (Functions are unchanged unless explicitly mentioned) ---
+        function updateDeviceState() { /* ... */ const wasMobile = appState.isMobile; appState.isMobile = window.innerWidth < 768; if (appState.isMobile) appState.itemsPerPage = 3; else if (window.innerWidth < 1280) appState.itemsPerPage = 4; else appState.itemsPerPage = 5; debug(`Device state: isMobile=${appState.isMobile}, itemsPerPage=${appState.itemsPerPage}`); if (document.readyState === 'complete' && wasMobile !== appState.isMobile) renderProtocolCards(); }
+        function loadCheckedItems() { /* ... */ try { const saved = localStorage.getItem('checkedItems'); if (saved) appState.checkedItems = JSON.parse(saved); debug(`Loaded ${Object.keys(appState.checkedItems).length} checked items`); } catch (e) { console.error("Error loading checked items:", e); appState.checkedItems = {}; } }
+        function createBackgroundParticles() { /* ... */ const container = document.getElementById('animatedBg'); if (!container) return; const particleCount = appState.isMobile ? 4 : 8; container.innerHTML = ''; for (let i = 0; i < particleCount; i++) { const size = Math.random() * 100 + 30; const particle = document.createElement('div'); particle.className = 'floating-particle'; particle.style.width = `${size}px`; particle.style.height = `${size}px`; particle.style.left = `${Math.random() * 100}vw`; particle.style.bottom = `-${size}px`; particle.style.animationDuration = `${Math.random() * 25 + 20}s`; particle.style.animationDelay = `${Math.random() * 18}s`; particle.style.setProperty('--x-travel', Math.random() * 0.2 - 0.1); particle.style.background = Math.random() > 0.5 ? 'var(--primary-alpha)' : 'var(--secondary-alpha)'; container.appendChild(particle); } }
+        function getPortDisplay(port) { /* ... */ const portStr = String(port); if (!portStr || portStr === 'null' || portStr === 'undefined') return ''; if (portStr.includes(',') || portStr.includes('-') || portStr.includes(' ')) { return `<span class="port-badge">Ports ${portStr}</span>`; } else if (/\d+/.test(portStr)) { return `<span class="port-badge">Port ${portStr}</span>`; } return ''; }
+        function initializeSidebar() { /* ... */ debug('Initializing sidebar...'); const protocolNav = document.getElementById('protocolNav'); const categoryFilters = document.getElementById('categoryFilters'); if (!protocolNav || !categoryFilters) return; protocolNav.innerHTML = ''; const categories = [...new Set(protocolData.map(p => p.category))].sort(); const allCategoryBtn = categoryFilters.querySelector('[data-category="all"]'); categoryFilters.innerHTML = ''; if (allCategoryBtn) categoryFilters.appendChild(allCategoryBtn); categories.forEach(category => { const categoryBtn = document.createElement('button'); categoryBtn.className = 'category-filter'; categoryBtn.setAttribute('data-category', category); categoryBtn.textContent = category.charAt(0).toUpperCase() + category.slice(1); categoryFilters.appendChild(categoryBtn); }); protocolData.forEach((protocol, index) => { const navItem = document.createElement('div'); navItem.className = 'glass-inset p-3 cursor-pointer transition-all duration-300 protocol-nav-item fade-in'; navItem.setAttribute('data-protocol-id', protocol.id); navItem.setAttribute('data-category', protocol.category); navItem.style.animationDelay = `${index * 0.05}s`; let portDisplayHtml = getPortDisplay(protocol.port); navItem.innerHTML = `<div class="flex items-center justify-between text-sm"><div class="flex items-center overflow-hidden whitespace-nowrap text-ellipsis"><i class="bx bx-chevron-right mr-1 text-primary flex-shrink-0"></i><span class="overflow-hidden whitespace-nowrap text-ellipsis">${protocol.name}</span></div>${portDisplayHtml}</div>`; protocolNav.appendChild(navItem); }); debug('Sidebar initialized'); }
+        function getFilteredProtocols() { /* ... */ const lowerSearchTerm = appState.searchTerm.toLowerCase(); const filtered = protocolData.filter(protocol => { const matchesCategory = appState.currentFilter === 'all' || protocol.category === appState.currentFilter; const matchesSearch = !lowerSearchTerm || protocol.name.toLowerCase().includes(lowerSearchTerm) || protocol.description.toLowerCase().includes(lowerSearchTerm) || matchesPort(protocol.port, lowerSearchTerm); return matchesCategory && matchesSearch; }); return filtered; }
+        function matchesPort(protocolPort, searchTerm) { /* ... */ const portStr = String(protocolPort).toLowerCase(); const searchStr = String(searchTerm).toLowerCase(); if (!portStr || !searchStr) return false; if (portStr.includes(searchStr)) return true; if (portStr.includes(',')) { const portList = portStr.split(',').map(p => p.trim()); if (portList.includes(searchStr) || portList.some(p => searchStr.includes(p))) return true; } if (searchStr.includes(',')) { const searchPorts = searchStr.split(',').map(p => p.trim()); if (searchPorts.includes(portStr)) return true; if (!portStr.includes(',') && !portStr.includes('-') && searchPorts.includes(portStr)) return true; } if (portStr.includes('-')) { const [minPort, maxPort] = portStr.split('-').map(p => parseInt(p.trim())); if (!isNaN(minPort) && !isNaN(maxPort)) { const searchNum = parseInt(searchStr); if (!isNaN(searchNum) && searchNum >= minPort && searchNum <= maxPort) return true; } } return false; }
+        function renderProtocolCards() { /* ... */ const container = document.getElementById('protocolCards'); const pagination = document.getElementById('paginationContainer'); if (!container || !pagination) return; debug(`Rendering cards: Filter="${appState.currentFilter}", Search="${appState.searchTerm}", Page=${appState.currentPage}`); if (appState.observer) appState.observer.disconnect(); container.innerHTML = ''; const filtered = getFilteredProtocols(); if (filtered.length === 0) { container.innerHTML = `<div class="no-results section-animate visible col-span-full"><i class="bx bx-search text-4xl mb-2 text-gray-500"></i><h3 class="text-xl font-semibold mb-2">No protocols found</h3><p class="text-gray-400">Try changing criteria</p></div>`; pagination.style.display = 'none'; requestAnimationFrame(() => container.querySelector('.no-results')?.classList.add('visible')); debug('No results found.'); return; } const totalPages = Math.ceil(filtered.length / appState.itemsPerPage); appState.currentPage = Math.max(1, Math.min(appState.currentPage, totalPages)); const start = (appState.currentPage - 1) * appState.itemsPerPage; const end = Math.min(start + appState.itemsPerPage, filtered.length); const toRender = filtered.slice(start, end); debug(`Rendering page ${appState.currentPage}/${totalPages}, indices ${start}-${end-1}`); toRender.forEach((protocol, index) => { const card = createProtocolCard(protocol, index); container.appendChild(card); if (appState.observer) appState.observer.observe(card); }); updatePagination(totalPages); updateProgress(); requestAnimationFrame(handleScrollAnimations); debug('Protocol cards rendered.'); }
+        function updatePagination(totalPages) { /* ... */ const container = document.getElementById('paginationContainer'); if (!container) return; container.innerHTML = ''; if (totalPages <= 1) { container.style.display = 'none'; return; } container.style.display = 'flex'; const prevBtn = document.createElement('button'); prevBtn.className = 'pagination-btn'; prevBtn.innerHTML = '<i class="bx bx-chevron-left pointer-events-none"></i>'; prevBtn.disabled = appState.currentPage === 1; prevBtn.setAttribute('aria-label', 'Previous page'); prevBtn.addEventListener('click', () => goToPage(appState.currentPage - 1)); container.appendChild(prevBtn); const maxVisible = appState.isMobile ? 3 : 5; let startPage = Math.max(1, appState.currentPage - Math.floor(maxVisible / 2)); let endPage = Math.min(totalPages, startPage + maxVisible - 1); if (endPage - startPage + 1 < maxVisible) startPage = Math.max(1, endPage - maxVisible + 1); if (startPage > 1) { const firstBtn = document.createElement('button'); firstBtn.className = 'pagination-btn'; firstBtn.textContent = '1'; firstBtn.setAttribute('aria-label', 'Page 1'); firstBtn.addEventListener('click', () => goToPage(1)); container.appendChild(firstBtn); if (startPage > 2) { const ellipsis = document.createElement('span'); ellipsis.className = 'pagination-ellipsis'; ellipsis.textContent = '...'; ellipsis.setAttribute('aria-hidden', 'true'); container.appendChild(ellipsis); } } for (let i = startPage; i <= endPage; i++) { const pageBtn = document.createElement('button'); pageBtn.className = `pagination-btn ${i === appState.currentPage ? 'active' : ''}`; pageBtn.textContent = i; pageBtn.setAttribute('aria-label', `Page ${i}`); if (i === appState.currentPage) pageBtn.setAttribute('aria-current', 'page'); pageBtn.addEventListener('click', () => goToPage(i)); container.appendChild(pageBtn); } if (endPage < totalPages) { if (endPage < totalPages - 1) { const ellipsis = document.createElement('span'); ellipsis.className = 'pagination-ellipsis'; ellipsis.textContent = '...'; ellipsis.setAttribute('aria-hidden', 'true'); container.appendChild(ellipsis); } const lastBtn = document.createElement('button'); lastBtn.className = 'pagination-btn'; lastBtn.textContent = totalPages; lastBtn.setAttribute('aria-label', `Page ${totalPages}`); lastBtn.addEventListener('click', () => goToPage(totalPages)); container.appendChild(lastBtn); } const nextBtn = document.createElement('button'); nextBtn.className = 'pagination-btn'; nextBtn.innerHTML = '<i class="bx bx-chevron-right pointer-events-none"></i>'; nextBtn.disabled = appState.currentPage === totalPages; nextBtn.setAttribute('aria-label', 'Next page'); nextBtn.addEventListener('click', () => goToPage(appState.currentPage + 1)); container.appendChild(nextBtn); }
+        function goToPage(page) { /* ... */ if (page < 1 || page === appState.currentPage) return; appState.currentPage = page; renderProtocolCards(); const mainContent = document.getElementById('mainContent'); if (mainContent) mainContent.scrollIntoView({ behavior: 'smooth', block: 'start' }); else window.scrollTo({ top: 0, behavior: 'smooth' }); }
+        function createProtocolCard(protocol, indexOnPage) { /* ... */ const card = document.createElement('div'); card.className = 'protocol-card glass-card section-animate relative'; card.id = protocol.id; const categoryColor = getCategoryColor(protocol.category); const totalItems = (protocol.vulnerabilities?.length || 0) + (protocol.testing?.length || 0) + (protocol.tools?.length || 0); let checkedCount = 0; const checkItem = (type, i) => { if (appState.checkedItems[`${protocol.id}-${type}-${i}`]) checkedCount++; }; protocol.vulnerabilities?.forEach((_, i) => checkItem('vulnerability', i)); protocol.testing?.forEach((_, i) => checkItem('testing', i)); protocol.tools?.forEach((_, i) => checkItem('tool', i)); const percentage = totalItems > 0 ? Math.round((checkedCount / totalItems) * 100) : 0; let portDisplayHtml = getPortDisplay(protocol.port); const isExpanded = appState.expandedCards.has(protocol.id); if (isExpanded) card.classList.add('expanded'); const generateListItems = (items, type) => { if (!items || items.length === 0) return '<li>None listed.</li>'; return items.map((item, i) => { const key = `${protocol.id}-${type}-${i}`; const isChecked = appState.checkedItems[key]; return `<li class="flex items-start list-item-animate"><label class="toggle-container inline-flex mr-2 mt-0.5 flex-shrink-0"><input type="checkbox" class="toggle-input ${type}-check" data-protocol="${protocol.id}" data-type="${type}" data-index="${i}" ${isChecked ? 'checked' : ''}><span class="toggle-slider"></span></label><span class="checkmark-animate text-sm ${isChecked ? 'line-through text-gray-500' : ''}">${item}</span></li>`; }).join(''); }; card.innerHTML = ` <div class="category-indicator" style="background: ${categoryColor}"></div> <div class="card-header p-4 md:p-6 flex flex-col md:flex-row md:items-center justify-between" data-id="${protocol.id}"> <div class="flex-grow mb-3 md:mb-0 md:mr-4"><div class="flex items-center mb-1 flex-wrap"><h2 class="text-xl md:text-2xl font-bold mr-3">${protocol.name}</h2>${portDisplayHtml}<span class="category-badge ml-3 mt-1 md:mt-0" style="background: ${categoryColor}">${protocol.category}</span></div><p class="text-gray-400 text-sm">${protocol.description}</p></div> <div class="flex items-center justify-between md:justify-start flex-shrink-0"><div class="mr-4 relative text-center md:text-left"><div class="text-xs text-gray-400 mb-1">Completion</div><div class="progress-container w-24 md:w-32"><div class="progress-bar" data-protocol="${protocol.id}" style="width: ${percentage}%"></div><div class="completion-percentage">${percentage}%</div></div></div><button class="expand-btn bg-gray-800 hover:bg-gray-700 p-2 rounded-full transition-all duration-300" aria-expanded="${isExpanded}"><i class="bx bx-chevron-down text-2xl transition-transform duration-300 ${isExpanded ? 'transform rotate-180' : ''}"></i></button></div> </div> <div class="card-content"><div class="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6 pt-2 md:pt-4"><div class="glass-inset p-4 content-section"><h3 class="text-base md:text-lg font-semibold mb-3 flex items-center"><i class="bx bx-shield-quarter text-red-500 mr-2"></i> Vulnerabilities</h3><ul class="space-y-2">${generateListItems(protocol.vulnerabilities, 'vulnerability')}</ul></div><div class="glass-inset p-4 content-section"><h3 class="text-base md:text-lg font-semibold mb-3 flex items-center"><i class="bx bx-test-tube text-yellow-500 mr-2"></i> Testing</h3><ul class="space-y-2">${generateListItems(protocol.testing, 'testing')}</ul></div><div class="glass-inset p-4 content-section"><h3 class="text-base md:text-lg font-semibold mb-3 flex items-center"><i class="bx bx-wrench text-blue-500 mr-2"></i> Tools</h3><ul class="space-y-2">${generateListItems(protocol.tools, 'tool')}</ul></div></div></div>`; if (isExpanded) { card.querySelectorAll('.content-section').forEach((section, i) => section.style.transitionDelay = `${0.1 + i * 0.05}s`); card.querySelectorAll('.list-item-animate').forEach((item, i) => item.style.transitionDelay = `${0.15 + i * 0.02}s`); } return card; }
+        function filterByCategory(category) { /* ... */ debug(`Filtering category: "${category}"`); if (appState.currentFilter === category) return; appState.currentFilter = category; appState.currentPage = 1; document.querySelectorAll('.category-filter').forEach(btn => btn.classList.toggle('active', btn.getAttribute('data-category') === category)); document.querySelectorAll('.protocol-nav-item').forEach(item => { const itemCat = item.getAttribute('data-category'); item.classList.toggle('hidden', category !== 'all' && itemCat !== category); }); renderProtocolCards(); }
+        function setupEventListeners() { /* ... */ debug('Setting up event listeners...'); const sidebar = document.getElementById('sidebar'); const mainContent = document.getElementById('mainContent'); document.getElementById('menuToggle')?.addEventListener('click', () => sidebar?.classList.add('open')); document.getElementById('mobileClose')?.addEventListener('click', () => sidebar?.classList.remove('open')); mainContent?.addEventListener('click', (e) => { if (appState.isMobile && sidebar?.classList.contains('open') && !sidebar.contains(e.target) && !e.target.closest('#menuToggle')) sidebar.classList.remove('open'); }); document.getElementById('search')?.addEventListener('input', debounce((e) => { appState.searchTerm = e.target.value.trim(); appState.currentPage = 1; renderProtocolCards(); }, 300)); document.getElementById('protocolCards')?.addEventListener('click', (e) => { const trigger = e.target.closest('.card-header, .expand-btn'); if (trigger) { const card = trigger.closest('.protocol-card'); if (card) toggleCardExpansion(card); } }); document.getElementById('protocolCards')?.addEventListener('change', (e) => { if (e.target.classList.contains('toggle-input')) handleCheckboxChange(e.target); }); document.getElementById('categoryFilters')?.addEventListener('click', (e) => { const btn = e.target.closest('.category-filter'); if (btn && !btn.classList.contains('active')) filterByCategory(btn.getAttribute('data-category')); }); document.getElementById('protocolNav')?.addEventListener('click', (e) => { const item = e.target.closest('[data-protocol-id]'); if (item) { const id = item.getAttribute('data-protocol-id'); scrollToProtocol(id); if (appState.isMobile) sidebar?.classList.remove('open'); } }); window.addEventListener('resize', debounce(updateDeviceState, 250)); document.addEventListener('keydown', (e) => { const paginationContainer = document.getElementById('paginationContainer'); if (!paginationContainer || paginationContainer.style.display === 'none') return; if (e.key === 'ArrowLeft') { const btn = paginationContainer.querySelector('button:first-child:not(:disabled)'); if (btn) goToPage(appState.currentPage - 1); } else if (e.key === 'ArrowRight') { const btn = paginationContainer.querySelector('button:last-child:not(:disabled)'); if (btn) goToPage(appState.currentPage + 1); } }); debug('Event listeners setup complete'); }
+        function handleCheckboxChange(checkbox) { /* ... */ const protocol = checkbox.getAttribute('data-protocol'); const type = checkbox.getAttribute('data-type'); const index = checkbox.getAttribute('data-index'); const key = `${protocol}-${type}-${index}`; const isChecked = checkbox.checked; appState.checkedItems[key] = isChecked; debug(`Checkbox changed: ${key} = ${isChecked}`); try { localStorage.setItem('checkedItems', JSON.stringify(appState.checkedItems)); } catch (e) { console.error("Error saving checked items:", e); } const textElement = checkbox.closest('li')?.querySelector('span.checkmark-animate'); if (textElement) { textElement.classList.toggle('line-through', isChecked); textElement.classList.toggle('text-gray-500', isChecked); } updateProgressForCard(protocol); }
+        function animateElement(element, keyframes, options) { /* ... */ if (!element || typeof element.animate !== 'function') { if (element && keyframes.length > 0) Object.assign(element.style, keyframes[keyframes.length - 1]); return { finished: Promise.resolve() }; } const effectiveOptions = { ...options }; if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { effectiveOptions.duration = (options.duration || 300) * 0.1; effectiveOptions.delay = (options.delay || 0) * 0.1; } try { return element.animate(keyframes, effectiveOptions); } catch (e) { console.error("Animation error:", e, element); return { finished: Promise.resolve() }; } }
+        function toggleCardExpansion(card) { /* ... */ if (!card) return; const content = card.querySelector('.card-content'); const icon = card.querySelector('.expand-btn i'); const button = card.querySelector('.expand-btn'); const id = card.id; if (!content || !icon || !button) return; const wasExpanded = card.classList.contains('expanded'); debug(`Toggling card: ${id} (was expanded: ${wasExpanded})`); if (wasExpanded) appState.expandedCards.delete(id); else appState.expandedCards.add(id); button.setAttribute('aria-expanded', !wasExpanded); if (wasExpanded) { card.querySelectorAll('.content-section').forEach((s) => animateElement(s, [{ opacity: 1, transform: 'translateY(0)' }, { opacity: 0, transform: 'translateY(10px)' }], { duration: 150, easing: 'ease-out', fill: 'forwards' })); card.querySelectorAll('.list-item-animate').forEach(item => item.style.opacity = 0); const anim = animateElement(content, [{ height: content.scrollHeight + 'px', opacity: 1, transform: 'translateY(0)', paddingBottom: '20px' }, { height: '0px', opacity: 0, transform: 'translateY(10px)', paddingBottom: '0px' }], { duration: 350, easing: 'cubic-bezier(0.4, 0, 0.2, 1)', fill: 'forwards' }); animateElement(icon, [{ transform: 'rotate(180deg)' }, { transform: 'rotate(0deg)' }], { duration: 300, easing: 'ease-out', fill: 'forwards' }); anim.finished.then(() => card.classList.remove('expanded')).catch(e => console.warn("Collapse interrupted", e)); } else { card.classList.add('expanded'); const anim = animateElement(content, [{ height: '0px', opacity: 0, transform: 'translateY(10px)', paddingBottom: '0px' }, { height: content.scrollHeight + 'px', opacity: 1, transform: 'translateY(0)', paddingBottom: '20px' }], { duration: 400, easing: 'cubic-bezier(0.2, 0, 0.1, 1)', fill: 'forwards' }); animateElement(icon, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(180deg)' }], { duration: 350, easing: 'ease-in-out', fill: 'forwards' }); anim.finished.then(() => { if (!card.classList.contains('expanded')) return; card.querySelectorAll('.content-section').forEach((s, i) => animateElement(s, [{ opacity: 0, transform: 'translateY(15px)' }, { opacity: 1, transform: 'translateY(0)' }], { duration: 300, easing: 'ease-out', fill: 'forwards', delay: i * 50 })); card.querySelectorAll('.list-item-animate').forEach((item, i) => animateElement(item, [{ opacity: 0, transform: 'translateX(15px)' }, { opacity: 1, transform: 'translateX(0)' }], { duration: 300, easing: 'ease-out', fill: 'forwards', delay: 100 + i * 20 })); }).catch(e => console.warn("Expand interrupted", e)); } }
+        function scrollToProtocol(id) { /* ... */ const protocol = protocolData.find(p => p.id === id); if (!protocol) { debug(`Protocol not found: ${id}`); return; } if (appState.currentFilter !== 'all' && protocol.category !== appState.currentFilter) { debug(`Switching filter to '${protocol.category}' for ${id}`); filterByCategory(protocol.category); setTimeout(() => findAndScrollToProtocol(id), 100); return; } findAndScrollToProtocol(id); }
+        function findAndScrollToProtocol(id) { /* ... */ const filtered = getFilteredProtocols(); const index = filtered.findIndex(p => p.id === id); if (index === -1) { debug(`Protocol ${id} not found in filtered results.`); return; } const targetPage = Math.floor(index / appState.itemsPerPage) + 1; if (targetPage !== appState.currentPage) { debug(`Navigating to page ${targetPage} for ${id}`); appState.currentPage = targetPage; renderProtocolCards(); setTimeout(() => scrollAndHighlight(id), 150); } else { scrollAndHighlight(id); } }
+        function scrollAndHighlight(id) { /* ... */ const element = document.getElementById(id); if (!element) { debug(`Element ${id} not found.`); return; } debug(`Scrolling to element: ${id}`); element.scrollIntoView({ behavior: 'smooth', block: 'center' }); setTimeout(() => { if (!element.classList.contains('expanded')) toggleCardExpansion(element); const originalShadow = element.style.boxShadow; element.style.transition = 'box-shadow 0.3s ease-in-out'; element.style.boxShadow = `0 0 30px rgba(139, 92, 246, 0.6)`; setTimeout(() => { element.style.boxShadow = originalShadow || ''; setTimeout(() => element.style.transition = '', 300); }, 1500); }, 350); }
+        function updateProgressForCard(protocolId) { /* ... */ const protocol = protocolData.find(p => p.id === protocolId); if (!protocol) return; const totalItems = (protocol.vulnerabilities?.length || 0) + (protocol.testing?.length || 0) + (protocol.tools?.length || 0); if (totalItems === 0) return; let checkedCount = 0; const checkItem = (type, i) => { if (appState.checkedItems[`${protocol.id}-${type}-${i}`]) checkedCount++; }; protocol.vulnerabilities?.forEach((_, i) => checkItem('vulnerability', i)); protocol.testing?.forEach((_, i) => checkItem('testing', i)); protocol.tools?.forEach((_, i) => checkItem('tool', i)); const percentage = Math.round((checkedCount / totalItems) * 100); const cardElement = document.getElementById(protocolId); if (!cardElement) return; const bar = cardElement.querySelector(`.progress-bar[data-protocol="${protocolId}"]`); const text = cardElement.querySelector('.completion-percentage'); if (bar) animateElement(bar, [{ width: bar.style.width || '0%' }, { width: `${percentage}%` }], { duration: 600, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', fill: 'forwards' }); if (text) text.textContent = `${percentage}%`; }
+        function updateProgress() { /* ... */ debug('Updating all visible progress bars'); [...document.querySelectorAll('.protocol-card')].map(card => card.id).forEach(id => updateProgressForCard(id)); }
+        function initializeAnimations() { /* ... */ debug('Initializing Intersection Observer'); const options = { root: null, rootMargin: '0px', threshold: 0.1 }; appState.observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); }); }, options); requestAnimationFrame(handleScrollAnimations); }
+        function handleScrollAnimations() { /* ... */ const elements = document.querySelectorAll('.section-animate:not(.visible)'); const viewportHeight = window.innerHeight; elements.forEach(element => { const rect = element.getBoundingClientRect(); if (rect.top < viewportHeight && rect.bottom > 0) element.classList.add('visible'); }); }
+        function getCategoryColor(category) { /* ... */ const colors = { 'file': 'linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%)', 'remote': 'linear-gradient(135deg, #EC4899 0%, #BE185D 100%)', 'mail': 'linear-gradient(135deg, #10B981 0%, #059669 100%)', 'network': 'linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%)', 'web': 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)', 'database': 'linear-gradient(135deg, #0EA5E9 0%, #0369A1 100%)', 'default': 'linear-gradient(135deg, #64748B 0%, #475569 100%)' }; return colors[category] || colors['default']; }
                 
-                particle.style.background = Math.random() > 0.5 ? 'var(--primary-alpha)' : 'var(--secondary-alpha)';
-                container.appendChild(particle);
-            }
-        }
-        
-        // Format port display
-        function getPortDisplay(port) {
-            const portStr = String(port); // Ensure it's a string
-            if (!portStr || portStr === 'null' || portStr === 'undefined') return ''; // Handle empty/invalid ports
-
-            if (portStr.includes(',') || portStr.includes('-') || portStr.includes(' ')) { // Check for multiple/ranges
-                 return `<span class="port-badge">Ports ${portStr}</span>`;
-            } else if (/\d+/.test(portStr)) { // Check if it's a single number
-                return `<span class="port-badge">Port ${portStr}</span>`;
-            }
-            return ''; // Return empty if not a recognized format
-        }
-        
-        // Initialize the sidebar
-        function initializeSidebar() {
-            debug('Initializing sidebar...');
-            const protocolNav = document.getElementById('protocolNav');
-            const categoryFilters = document.getElementById('categoryFilters');
-            if (!protocolNav || !categoryFilters) return;
-            
-            protocolNav.innerHTML = ''; // Clear existing links
-            
-            const categories = [...new Set(protocolData.map(p => p.category))].sort();
-            debug(`Found ${categories.length} unique categories: ${categories.join(', ')}`);
-            
-            const allCategoryBtn = categoryFilters.querySelector('[data-category="all"]');
-            categoryFilters.innerHTML = ''; // Clear filters
-            if (allCategoryBtn) categoryFilters.appendChild(allCategoryBtn); // Re-add "All" button
-            
-            // Create category filters
-            categories.forEach(category => {
-                const categoryBtn = document.createElement('button');
-                categoryBtn.className = 'category-filter';
-                categoryBtn.setAttribute('data-category', category);
-                categoryBtn.textContent = category.charAt(0).toUpperCase() + category.slice(1);
-                categoryFilters.appendChild(categoryBtn);
-            });
-            
-            // Create protocol navigation links
-            protocolData.forEach((protocol, index) => {
-                const navItem = document.createElement('div');
-                // Use glass-inset for a slightly different look in sidebar
-                navItem.className = 'glass-inset p-3 cursor-pointer transition-all duration-300 protocol-nav-item fade-in'; 
-                navItem.setAttribute('data-protocol-id', protocol.id);
-                navItem.setAttribute('data-category', protocol.category);
-                navItem.style.animationDelay = `${index * 0.05}s`; // Faster stagger
-                
-                let portDisplayHtml = getPortDisplay(protocol.port);
-                
-                navItem.innerHTML = `
-                    <div class="flex items-center justify-between text-sm">
-                        <div class="flex items-center overflow-hidden whitespace-nowrap text-ellipsis">
-                            <i class="bx bx-chevron-right mr-1 text-primary flex-shrink-0"></i>
-                            <span class="overflow-hidden whitespace-nowrap text-ellipsis">${protocol.name}</span>
-                        </div>
-                        ${portDisplayHtml} 
-                    </div>
-                `;
-                protocolNav.appendChild(navItem);
-            });
-            
-            debug('Sidebar initialized');
-        }
-
-        // Get filtered and sorted protocols
-        function getFilteredProtocols() {
-            const lowerSearchTerm = appState.searchTerm.toLowerCase();
-            
-            const filtered = protocolData.filter(protocol => {
-                const matchesCategory = appState.currentFilter === 'all' || protocol.category === appState.currentFilter;
-                
-                const matchesSearch = !lowerSearchTerm || 
-                    protocol.name.toLowerCase().includes(lowerSearchTerm) ||
-                    protocol.description.toLowerCase().includes(lowerSearchTerm) ||
-                    matchesPort(protocol.port, lowerSearchTerm); // Use lower case search term here too
-                
-                return matchesCategory && matchesSearch;
-            });
-            
-            // Optional: Sort filtered results alphabetically by name
-            // filtered.sort((a, b) => a.name.localeCompare(b.name));
-            
-            return filtered;
-        }
-        
-        // Check if a port matches the search term (case-insensitive for potential keywords)
-        function matchesPort(protocolPort, searchTerm) {
-             const portStr = String(protocolPort).toLowerCase();
-             const searchStr = String(searchTerm).toLowerCase();
-             if (!portStr || !searchStr) return false;
-
-            // Simple direct match first
-             if (portStr.includes(searchStr)) return true;
-
-            // Handle comma-separated lists in protocolPort
-            if (portStr.includes(',')) {
-                const portList = portStr.split(',').map(p => p.trim());
-                // Check if any port in the list *is* the search term or if search term is in list
-                if (portList.includes(searchStr) || portList.some(p => searchStr.includes(p))) return true;
-            }
-             
-            // Handle comma-separated lists in searchTerm
-            if (searchStr.includes(',')) {
-                const searchPorts = searchStr.split(',').map(p => p.trim());
-                if (searchPorts.includes(portStr)) return true;
-                 // Check if protocol port is in the search list (if protocol port is single)
-                 if (!portStr.includes(',') && !portStr.includes('-') && searchPorts.includes(portStr)) return true;
-            }
-
-            // Handle ranges (e.g., "100-200")
-            if (portStr.includes('-')) {
-                const [minPort, maxPort] = portStr.split('-').map(p => parseInt(p.trim()));
-                if (!isNaN(minPort) && !isNaN(maxPort)) {
-                    const searchNum = parseInt(searchStr);
-                     if (!isNaN(searchNum) && searchNum >= minPort && searchNum <= maxPort) {
-                         return true;
-                     }
-                }
-            }
-            
-            return false;
-        }
-
-        // Render protocol cards based on current state
-        function renderProtocolCards() {
-            const protocolCardsContainer = document.getElementById('protocolCards');
-            const paginationContainer = document.getElementById('paginationContainer');
-            if (!protocolCardsContainer || !paginationContainer) return;
-
-            debug(`Rendering cards: Filter="${appState.currentFilter}", Search="${appState.searchTerm}", Page=${appState.currentPage}`);
-            
-            // --- IMPORTANT: Disconnect observer before clearing ---
-            if (appState.observer) {
-                appState.observer.disconnect(); 
-                debug("IntersectionObserver disconnected");
-            }
-            
-            protocolCardsContainer.innerHTML = ''; // Clear previous cards
-
-            const filteredProtocols = getFilteredProtocols();
-            debug(`Filter results: ${filteredProtocols.length} protocols`);
-            
-            if (filteredProtocols.length === 0) {
-                protocolCardsContainer.innerHTML = `
-                    <div class="no-results section-animate visible col-span-full"> <!-- Add col-span-full if using grid -->
-                        <i class="bx bx-search text-4xl mb-2 text-gray-500"></i>
-                        <h3 class="text-xl font-semibold mb-2">No protocols found</h3>
-                        <p class="text-gray-400">Try changing your search or filter criteria</p>
-                    </div>
-                `;
-                paginationContainer.style.display = 'none';
-                 // Ensure the no-results message animates in immediately
-                requestAnimationFrame(() => {
-                    const noResults = protocolCardsContainer.querySelector('.no-results');
-                    if (noResults) noResults.classList.add('visible');
-                });
-                debug('No results found.');
-                return; // Stop here if no results
-            }
-            
-            // Pagination Calculation
-            const totalPages = Math.ceil(filteredProtocols.length / appState.itemsPerPage);
-            appState.currentPage = Math.max(1, Math.min(appState.currentPage, totalPages)); // Clamp current page
-            
-            const startIndex = (appState.currentPage - 1) * appState.itemsPerPage;
-            const endIndex = Math.min(startIndex + appState.itemsPerPage, filteredProtocols.length);
-            const protocolsToRender = filteredProtocols.slice(startIndex, endIndex);
-            
-            debug(`Rendering page ${appState.currentPage}/${totalPages}, indices ${startIndex}-${endIndex-1}`);
-
-            // Create and append cards for the current page
-            protocolsToRender.forEach((protocol, index) => {
-                const card = createProtocolCard(protocol, index); // index here is relative to the page
-                protocolCardsContainer.appendChild(card);
-                // --- IMPORTANT: Observe the new card ---
-                 if (appState.observer) {
-                    appState.observer.observe(card);
-                 }
-            });
-            
-            updatePagination(totalPages);
-            updateProgress(); // Update progress bars for potentially new/visible cards
-
-            // --- Re-trigger animation check for potentially visible elements ---
-            // Use requestAnimationFrame to ensure DOM is updated before checking
-            requestAnimationFrame(handleScrollAnimations); // Check visibility immediately after render
-
-            debug('Protocol cards rendered.');
-        }
-        
-        // Update pagination UI
-        function updatePagination(totalPages) {
-            const paginationContainer = document.getElementById('paginationContainer');
-            if (!paginationContainer) return;
-            paginationContainer.innerHTML = '';
-            
-            if (totalPages <= 1) {
-                paginationContainer.style.display = 'none';
-                return;
-            }
-            
-            paginationContainer.style.display = 'flex';
-            
-            // Previous button
-            const prevBtn = document.createElement('button');
-            prevBtn.className = 'pagination-btn';
-            prevBtn.innerHTML = '<i class="bx bx-chevron-left pointer-events-none"></i>'; // Prevent icon clicks
-            prevBtn.disabled = appState.currentPage === 1;
-            prevBtn.setAttribute('aria-label', 'Previous page');
-            prevBtn.addEventListener('click', () => goToPage(appState.currentPage - 1));
-            paginationContainer.appendChild(prevBtn);
-            
-            // Page numbers logic (simplified for clarity)
-            const maxVisible = appState.isMobile ? 3 : 5;
-            let startPage = Math.max(1, appState.currentPage - Math.floor(maxVisible / 2));
-            let endPage = Math.min(totalPages, startPage + maxVisible - 1);
-            
-            // Adjust if we are near the end
-            if (endPage - startPage + 1 < maxVisible) {
-                startPage = Math.max(1, endPage - maxVisible + 1);
-            }
-
-            if (startPage > 1) {
-                const firstBtn = document.createElement('button');
-                firstBtn.className = 'pagination-btn';
-                firstBtn.textContent = '1';
-                firstBtn.setAttribute('aria-label', 'Page 1');
-                firstBtn.addEventListener('click', () => goToPage(1));
-                paginationContainer.appendChild(firstBtn);
-                if (startPage > 2) {
-                     const ellipsis = document.createElement('span');
-                     ellipsis.className = 'pagination-ellipsis';
-                     ellipsis.textContent = '...';
-                     ellipsis.setAttribute('aria-hidden', 'true');
-                     paginationContainer.appendChild(ellipsis);
-                }
-            }
-
-            for (let i = startPage; i <= endPage; i++) {
-                const pageBtn = document.createElement('button');
-                pageBtn.className = `pagination-btn ${i === appState.currentPage ? 'active' : ''}`;
-                pageBtn.textContent = i;
-                pageBtn.setAttribute('aria-label', `Page ${i}`);
-                if (i === appState.currentPage) {
-                    pageBtn.setAttribute('aria-current', 'page');
-                }
-                pageBtn.addEventListener('click', () => goToPage(i));
-                paginationContainer.appendChild(pageBtn);
-            }
-
-             if (endPage < totalPages) {
-                 if (endPage < totalPages - 1) {
-                     const ellipsis = document.createElement('span');
-                     ellipsis.className = 'pagination-ellipsis';
-                     ellipsis.textContent = '...';
-                     ellipsis.setAttribute('aria-hidden', 'true');
-                     paginationContainer.appendChild(ellipsis);
-                 }
-                const lastBtn = document.createElement('button');
-                lastBtn.className = 'pagination-btn';
-                lastBtn.textContent = totalPages;
-                lastBtn.setAttribute('aria-label', `Page ${totalPages}`);
-                lastBtn.addEventListener('click', () => goToPage(totalPages));
-                paginationContainer.appendChild(lastBtn);
-            }
-            
-            // Next button
-            const nextBtn = document.createElement('button');
-            nextBtn.className = 'pagination-btn';
-            nextBtn.innerHTML = '<i class="bx bx-chevron-right pointer-events-none"></i>'; // Prevent icon clicks
-            nextBtn.disabled = appState.currentPage === totalPages;
-            nextBtn.setAttribute('aria-label', 'Next page');
-            nextBtn.addEventListener('click', () => goToPage(appState.currentPage + 1));
-            paginationContainer.appendChild(nextBtn);
-        }
-        
-        // Navigate to a specific page
-        function goToPage(page) {
-            if (page < 1 || page === appState.currentPage) return; 
-            // Add check against totalPages if needed, but render handles clamping
-
-            appState.currentPage = page;
-            renderProtocolCards();
-            
-            // Scroll to top of content area smoothly
-            const mainContent = document.getElementById('mainContent');
-            if (mainContent) {
-                 mainContent.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            } else {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-        }
-        
-        // Create a single protocol card element
-        function createProtocolCard(protocol, indexOnPage) {
-            const card = document.createElement('div');
-            // Add section-animate here - visibility handled by Intersection Observer / handleScrollAnimations
-            card.className = 'protocol-card glass-card section-animate relative'; 
-            card.id = protocol.id;
-            // card.style.animationDelay = `${indexOnPage * 0.05}s`; // Optional: keep stagger for animation timing if desired
-
-            const categoryColor = getCategoryColor(protocol.category);
-            
-            // --- Calculate Progress ---
-            const totalItems = (protocol.vulnerabilities?.length || 0) + 
-                               (protocol.testing?.length || 0) + 
-                               (protocol.tools?.length || 0);
-            let checkedCount = 0;
-            const checkItem = (type, i) => {
-                if (appState.checkedItems[`${protocol.id}-${type}-${i}`]) checkedCount++;
-            };
-            protocol.vulnerabilities?.forEach((_, i) => checkItem('vulnerability', i));
-            protocol.testing?.forEach((_, i) => checkItem('testing', i));
-            protocol.tools?.forEach((_, i) => checkItem('tool', i));
-            const percentage = totalItems > 0 ? Math.round((checkedCount / totalItems) * 100) : 0;
-            // --- End Progress Calculation ---
-
-            let portDisplayHtml = getPortDisplay(protocol.port); // Use the helper function
-
-            // Determine if card should start expanded (based on stored state)
-            const isExpanded = appState.expandedCards.has(protocol.id);
-            if (isExpanded) {
-                card.classList.add('expanded');
-            }
-
-            // Helper to generate list items
-            const generateListItems = (items, type) => {
-                if (!items || items.length === 0) return '<li>None listed.</li>'; // Handle empty lists
-                return items.map((item, i) => {
-                    const key = `${protocol.id}-${type}-${i}`;
-                    const isChecked = appState.checkedItems[key];
-                    // Add list-item-animate for potential future use or if expansion animates them
-                    return ` 
-                        <li class="flex items-start list-item-animate"> 
-                            <label class="toggle-container inline-flex mr-2 mt-0.5 flex-shrink-0">
-                                <input type="checkbox" class="toggle-input ${type}-check" 
-                                    data-protocol="${protocol.id}" data-type="${type}" data-index="${i}"
-                                    ${isChecked ? 'checked' : ''}>
-                                <span class="toggle-slider"></span>
-                            </label>
-                            <span class="checkmark-animate text-sm ${isChecked ? 'line-through text-gray-500' : ''}">${item}</span>
-                        </li>`;
-                }).join('');
-            };
-
-            card.innerHTML = `
-                <div class="category-indicator" style="background: ${categoryColor}"></div>
-                <div class="card-header p-4 md:p-6 flex flex-col md:flex-row md:items-center justify-between" data-id="${protocol.id}">
-                    <div class="flex-grow mb-3 md:mb-0 md:mr-4">
-                        <div class="flex items-center mb-1 flex-wrap">
-                            <h2 class="text-xl md:text-2xl font-bold mr-3">${protocol.name}</h2>
-                            ${portDisplayHtml}
-                            <span class="category-badge ml-3 mt-1 md:mt-0" style="background: ${categoryColor}">${protocol.category}</span>
-                        </div>
-                        <p class="text-gray-400 text-sm">${protocol.description}</p>
-                    </div>
-                    <div class="flex items-center justify-between md:justify-start flex-shrink-0">
-                         <div class="mr-4 relative text-center md:text-left">
-                             <div class="text-xs text-gray-400 mb-1">Completion</div>
-                             <div class="progress-container w-24 md:w-32">
-                                 <div class="progress-bar" data-protocol="${protocol.id}" style="width: ${percentage}%"></div>
-                                 <div class="completion-percentage">${percentage}%</div>
-                             </div>
-                         </div>
-                         <button class="expand-btn bg-gray-800 hover:bg-gray-700 p-2 rounded-full transition-all duration-300" aria-expanded="${isExpanded}">
-                             <i class="bx bx-chevron-down text-2xl transition-transform duration-300 ${isExpanded ? 'transform rotate-180' : ''}"></i>
-                         </button>
-                    </div>
-                </div>
-                <div class="card-content">
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6 pt-2 md:pt-4"> 
-                        <div class="glass-inset p-4 content-section">
-                            <h3 class="text-base md:text-lg font-semibold mb-3 flex items-center">
-                                <i class="bx bx-shield-quarter text-red-500 mr-2"></i> Vulnerabilities
-                            </h3>
-                            <ul class="space-y-2">${generateListItems(protocol.vulnerabilities, 'vulnerability')}</ul>
-                        </div>
-                        <div class="glass-inset p-4 content-section">
-                            <h3 class="text-base md:text-lg font-semibold mb-3 flex items-center">
-                                <i class="bx bx-test-tube text-yellow-500 mr-2"></i> Testing
-                            </h3>
-                            <ul class="space-y-2">${generateListItems(protocol.testing, 'testing')}</ul>
-                        </div>
-                        <div class="glass-inset p-4 content-section">
-                            <h3 class="text-base md:text-lg font-semibold mb-3 flex items-center">
-                                <i class="bx bx-wrench text-blue-500 mr-2"></i> Tools
-                            </h3>
-                            <ul class="space-y-2">${generateListItems(protocol.tools, 'tool')}</ul>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            // Add stagger delays for content sections *if* card starts expanded
-             if (isExpanded) {
-                 card.querySelectorAll('.content-section').forEach((section, i) => {
-                     section.style.transitionDelay = `${0.1 + i * 0.05}s`;
-                 });
-                 card.querySelectorAll('.list-item-animate').forEach((item, i) => {
-                    item.style.transitionDelay = `${0.15 + i * 0.02}s`; // Stagger list items too
-                 });
-            }
-            
-            return card;
-        }
-
-        // Filter protocols by category
-        function filterByCategory(category) {
-            debug(`Filtering to category: "${category}"`);
-            if (appState.currentFilter === category) return; // No change
-
-            appState.currentFilter = category;
-            appState.currentPage = 1; // Reset to first page
-            
-            // Update filter button UI
-            document.querySelectorAll('.category-filter').forEach(btn => {
-                btn.classList.toggle('active', btn.getAttribute('data-category') === category);
-            });
-            
-            // Update sidebar nav visibility (optional, but good UX)
-            document.querySelectorAll('.protocol-nav-item').forEach(item => {
-                const itemCategory = item.getAttribute('data-category');
-                item.classList.toggle('hidden', category !== 'all' && itemCategory !== category);
-            });
-            
-            renderProtocolCards(); // Re-render with the new filter
-        }
-
-        // Setup event listeners
-        function setupEventListeners() {
-            debug('Setting up event listeners...');
-            const sidebar = document.getElementById('sidebar');
-            const mainContent = document.getElementById('mainContent'); // Target for closing sidebar
-
-            // Mobile menu toggle
-            document.getElementById('menuToggle')?.addEventListener('click', () => {
-                sidebar?.classList.add('open');
-                debug('Mobile menu opened');
-            });
-            
-            document.getElementById('mobileClose')?.addEventListener('click', () => {
-                sidebar?.classList.remove('open');
-                debug('Mobile menu closed');
-            });
-            
-            // Close sidebar when clicking main content area on mobile
-             mainContent?.addEventListener('click', (e) => {
-                if (appState.isMobile && sidebar?.classList.contains('open')) {
-                    // Check if the click was outside the sidebar itself
-                    if (!sidebar.contains(e.target) && e.target.id !== 'menuToggle' && !e.target.closest('#menuToggle')) {
-                         sidebar.classList.remove('open');
-                         debug('Mobile menu closed via content click');
-                    }
-                }
-             });
-
-            // Search input
-            document.getElementById('search')?.addEventListener('input', debounce((e) => {
-                appState.searchTerm = e.target.value.trim();
-                appState.currentPage = 1;
-                debug(`Search term updated: "${appState.searchTerm}"`);
-                renderProtocolCards();
-            }, 300)); // 300ms debounce
-            
-            // Card expansion (using event delegation on the container)
-            document.getElementById('protocolCards')?.addEventListener('click', (e) => {
-                // Find the closest header or button that triggers expansion
-                const trigger = e.target.closest('.card-header, .expand-btn');
-                if (trigger) {
-                    const card = trigger.closest('.protocol-card');
-                    if (card) {
-                        toggleCardExpansion(card);
-                    }
-                }
-            });
-            
-            // Checkbox handling (using event delegation)
-            document.getElementById('protocolCards')?.addEventListener('change', (e) => {
-                if (e.target.classList.contains('toggle-input')) {
-                    handleCheckboxChange(e.target);
-                }
-            });
-            
-            // Category filter clicks
-            document.getElementById('categoryFilters')?.addEventListener('click', (e) => {
-                const categoryBtn = e.target.closest('.category-filter');
-                if (categoryBtn && !categoryBtn.classList.contains('active')) { // Prevent re-filtering same category
-                    filterByCategory(categoryBtn.getAttribute('data-category'));
-                }
-            });
-            
-            // Protocol navigation clicks
-            document.getElementById('protocolNav')?.addEventListener('click', (e) => {
-                const protocolItem = e.target.closest('[data-protocol-id]');
-                if (protocolItem) {
-                    const id = protocolItem.getAttribute('data-protocol-id');
-                    debug(`Protocol navigation clicked: ${id}`);
-                    scrollToProtocol(id);
-                    if (appState.isMobile) { // Close sidebar on mobile after click
-                        sidebar?.classList.remove('open');
-                    }
-                }
-            });
-            
-             // Window resize handler
-             window.addEventListener('resize', debounce(updateDeviceState, 250));
-
-            // Keyboard navigation for pagination (optional)
-             document.addEventListener('keydown', (e) => {
-                const paginationContainer = document.getElementById('paginationContainer');
-                 if (!paginationContainer || paginationContainer.style.display === 'none') return; // Only when pagination is visible
-
-                 if (e.key === 'ArrowLeft') {
-                     const prevBtn = paginationContainer.querySelector('button:first-child:not(:disabled)');
-                     if (prevBtn) goToPage(appState.currentPage - 1);
-                 } else if (e.key === 'ArrowRight') {
-                     const nextBtn = paginationContainer.querySelector('button:last-child:not(:disabled)');
-                      if (nextBtn) goToPage(appState.currentPage + 1);
-                 }
-             });
-            
-            debug('Event listeners setup complete');
-        }
-
-        // Handle checkbox state change
-        function handleCheckboxChange(checkbox) {
-             const protocol = checkbox.getAttribute('data-protocol');
-             const type = checkbox.getAttribute('data-type');
-             const index = checkbox.getAttribute('data-index');
-             const key = `${protocol}-${type}-${index}`;
-             const isChecked = checkbox.checked;
-
-             appState.checkedItems[key] = isChecked;
-             debug(`Checkbox changed: ${key} = ${isChecked}`);
-             
-             // Save to localStorage safely
-             try {
-                 localStorage.setItem('checkedItems', JSON.stringify(appState.checkedItems));
-             } catch (e) {
-                 console.error("Error saving checked items to localStorage:", e);
-             }
-             
-             // Update text styling
-             const listItem = checkbox.closest('li');
-             const textElement = listItem?.querySelector('span.checkmark-animate');
-             if (textElement) {
-                 textElement.classList.toggle('line-through', isChecked);
-                 textElement.classList.toggle('text-gray-500', isChecked);
-             }
-             
-             // Update progress for the specific card
-             updateProgressForCard(protocol);
-        }
-
-        // Use Web Animations API for smoother animations
-        function animateElement(element, keyframes, options) {
-            if (!element || typeof element.animate !== 'function') {
-                // Fallback or skip if not supported/element invalid
-                if (element && keyframes.length > 0) {
-                     Object.assign(element.style, keyframes[keyframes.length - 1]); // Apply final state
-                 }
-                return { finished: Promise.resolve() }; // Return promise-like object
-            }
-            
-            const effectiveOptions = { ...options }; // Copy options
-             // Respect reduced motion preference
-             if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-                 effectiveOptions.duration = (options.duration || 300) * 0.1; // Significantly reduce duration
-                 effectiveOptions.delay = (options.delay || 0) * 0.1;
-             }
-             
-            return element.animate(keyframes, effectiveOptions);
-        }
-
-        // Toggle card expansion with smoother animation
-        function toggleCardExpansion(card) {
-            if (!card) return;
-            
-            const cardContent = card.querySelector('.card-content');
-            const icon = card.querySelector('.expand-btn i');
-            const button = card.querySelector('.expand-btn');
-            const id = card.id;
-            if (!cardContent || !icon || !button) return;
-
-            const wasExpanded = card.classList.contains('expanded');
-            debug(`Toggling card expansion: ${id} (was expanded: ${wasExpanded})`);
-
-            // Update state *before* animation
-            if (wasExpanded) {
-                appState.expandedCards.delete(id);
-            } else {
-                appState.expandedCards.add(id);
-            }
-            button.setAttribute('aria-expanded', !wasExpanded); // Update ARIA state
-
-            if (wasExpanded) {
-                // --- Collapse ---
-                 // 1. Animate content sections out first
-                card.querySelectorAll('.content-section').forEach((section, index) => {
-                     animateElement(section, [ { opacity: 1, transform: 'translateY(0)' }, { opacity: 0, transform: 'translateY(10px)' } ], 
-                         { duration: 150, easing: 'ease-out', fill: 'forwards' } // Faster out
-                     );
-                 });
-                 card.querySelectorAll('.list-item-animate').forEach(item => {
-                     item.style.opacity = 0; // Hide list items immediately for collapse
-                 });
-
-                // 2. Animate the container height and opacity
-                const collapseAnimation = animateElement(cardContent, [
-                    { height: cardContent.scrollHeight + 'px', opacity: 1, transform: 'translateY(0)', paddingBottom: '20px' }, // Start from current state
-                    { height: '0px', opacity: 0, transform: 'translateY(10px)', paddingBottom: '0px' } // End collapsed
-                 ], { duration: 350, easing: 'cubic-bezier(0.4, 0, 0.2, 1)', fill: 'forwards' });
-
-                // 3. Rotate icon
-                animateElement(icon, [ { transform: 'rotate(180deg)' }, { transform: 'rotate(0deg)' } ], 
-                    { duration: 300, easing: 'ease-out', fill: 'forwards' });
-                
-                // 4. After animation, remove class and reset styles if needed
-                collapseAnimation.finished.then(() => {
-                     card.classList.remove('expanded');
-                 }).catch(e => console.warn("Collapse animation interrupted", e)); // Catch interruptions
-
-            } else {
-                // --- Expand ---
-                card.classList.add('expanded'); // Add class first to apply target styles
-
-                 // 1. Animate container height and opacity
-                 const expandAnimation = animateElement(cardContent, [
-                     { height: '0px', opacity: 0, transform: 'translateY(10px)', paddingBottom: '0px' },
-                     { height: cardContent.scrollHeight + 'px', opacity: 1, transform: 'translateY(0)', paddingBottom: '20px' } // Use scrollHeight for accurate height
-                 ], { duration: 400, easing: 'cubic-bezier(0.2, 0, 0.1, 1)', fill: 'forwards' }); // Smooth ease-out
-
-                // 2. Rotate icon
-                 animateElement(icon, [ { transform: 'rotate(0deg)' }, { transform: 'rotate(180deg)' } ], 
-                    { duration: 350, easing: 'ease-in-out', fill: 'forwards' });
-
-                 // 3. Animate content sections and list items in *after* container starts expanding
-                 expandAnimation.finished.then(() => {
-                     // Ensure animation didn't get cancelled
-                     if (!card.classList.contains('expanded')) return;
-
-                     card.querySelectorAll('.content-section').forEach((section, index) => {
-                         animateElement(section, [ { opacity: 0, transform: 'translateY(15px)' }, { opacity: 1, transform: 'translateY(0)' } ], 
-                             { duration: 300, easing: 'ease-out', fill: 'forwards', delay: index * 50 }
-                         );
-                     });
-                     card.querySelectorAll('.list-item-animate').forEach((item, index) => {
-                          animateElement(item, [ { opacity: 0, transform: 'translateX(15px)' }, { opacity: 1, transform: 'translateX(0)' } ], 
-                             { duration: 300, easing: 'ease-out', fill: 'forwards', delay: 100 + index * 20 } // Start after sections, faster stagger
-                         );
-                     });
-                 }).catch(e => console.warn("Expand animation interrupted", e));
-            }
-        }
-
-        // Scroll to a specific protocol card
-        function scrollToProtocol(id) {
-            const protocol = protocolData.find(p => p.id === id);
-            if (!protocol) {
-                debug(`Protocol not found: ${id}`);
-                return;
-            }
-            
-            // If filtering is active, ensure the protocol's category is selected
-            if (appState.currentFilter !== 'all' && protocol.category !== appState.currentFilter) {
-                 debug(`Switching filter to '${protocol.category}' for protocol ${id}`);
-                 filterByCategory(protocol.category); // This will trigger a re-render
-                 // Need to wait for re-render before scrolling
-                 setTimeout(() => findAndScrollToProtocol(id), 100); // Delay slightly
-                 return;
-            }
-            
-            // If already on the correct filter, proceed directly
-            findAndScrollToProtocol(id);
-        }
-
-        // Helper function to find the page and scroll after potential re-render
-        function findAndScrollToProtocol(id) {
-            const filteredProtocols = getFilteredProtocols();
-            const protocolIndex = filteredProtocols.findIndex(p => p.id === id);
-            
-            if (protocolIndex === -1) {
-                debug(`Protocol ${id} not found in current filtered results after potential filter change.`);
-                return; // Protocol not visible with current filters/search
-            }
-            
-            const targetPage = Math.floor(protocolIndex / appState.itemsPerPage) + 1;
-            
-            // Go to the correct page if not already there
-            if (targetPage !== appState.currentPage) {
-                debug(`Navigating to page ${targetPage} for protocol ${id}`);
-                 appState.currentPage = targetPage;
-                 renderProtocolCards(); // Re-render the correct page
-                 // Wait for render before scrolling
-                 setTimeout(() => scrollAndHighlight(id), 150); // Increased delay after page change
-            } else {
-                 // Already on the correct page
-                 scrollAndHighlight(id);
-            }
-        }
-        
-        // Helper function to perform the scroll and highlight/expand
-        function scrollAndHighlight(id) {
-             const element = document.getElementById(id);
-             if (!element) {
-                 debug(`Element ${id} not found in DOM after rendering page.`);
-                 return;
-             }
-             
-             debug(`Scrolling to protocol element: ${id}`);
-             element.scrollIntoView({
-                 behavior: 'smooth',
-                 block: 'center' // Scroll to center for better visibility
-             });
-             
-             // Expand the card if not already expanded, and highlight
-             setTimeout(() => {
-                 if (!element.classList.contains('expanded')) {
-                     toggleCardExpansion(element); // Expand it
-                 }
-                 
-                 // Highlight effect
-                 const originalShadow = element.style.boxShadow;
-                 element.style.transition = 'box-shadow 0.3s ease-in-out'; // Add transition for highlight
-                 element.style.boxShadow = `0 0 30px rgba(139, 92, 246, 0.6)`;
-                 
-                 setTimeout(() => {
-                      // Restore original shadow or default if none was set
-                     element.style.boxShadow = originalShadow || ''; 
-                     // Remove explicit transition after effect finishes
-                     setTimeout(() => element.style.transition = '', 300); 
-                 }, 1500); // Highlight duration
-             }, 350); // Delay after scroll settles
-        }
-
-        // Update progress bar for a specific protocol
-        function updateProgressForCard(protocolId) {
-            const protocol = protocolData.find(p => p.id === protocolId);
-            if (!protocol) return;
-
-            const totalItems = (protocol.vulnerabilities?.length || 0) + 
-                               (protocol.testing?.length || 0) + 
-                               (protocol.tools?.length || 0);
-            if (totalItems === 0) return; // Avoid division by zero
-
-            let checkedCount = 0;
-            const checkItem = (type, i) => {
-                 if (appState.checkedItems[`${protocol.id}-${type}-${i}`]) checkedCount++;
-            };
-            protocol.vulnerabilities?.forEach((_, i) => checkItem('vulnerability', i));
-            protocol.testing?.forEach((_, i) => checkItem('testing', i));
-            protocol.tools?.forEach((_, i) => checkItem('tool', i));
-            
-            const percentage = Math.round((checkedCount / totalItems) * 100);
-
-            // Find the progress bar and percentage text *only within the specific card*
-            const cardElement = document.getElementById(protocolId);
-            if (!cardElement) return; // Card might not be rendered currently
-
-             const progressBar = cardElement.querySelector(`.progress-bar[data-protocol="${protocolId}"]`);
-             const percentageText = cardElement.querySelector('.completion-percentage');
-
-             if (progressBar) {
-                 animateElement(progressBar, [{ width: progressBar.style.width || '0%' }, { width: `${percentage}%` }], 
-                     { duration: 600, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', fill: 'forwards' });
-             }
-             if (percentageText) {
-                 percentageText.textContent = `${percentage}%`;
-             }
-        }
-        
-        // Update all visible progress bars
-        function updateProgress() {
-            debug('Updating all visible progress bars');
-             // Get all currently rendered protocol IDs
-            const visibleProtocolIds = [...document.querySelectorAll('.protocol-card')].map(card => card.id);
-            visibleProtocolIds.forEach(id => updateProgressForCard(id));
-        }
-
-        // Initialize Intersection Observer for scroll animations
-        function initializeAnimations() {
-            debug('Initializing Intersection Observer for animations');
-            
-            const options = {
-                root: null, // Use the viewport as root
-                rootMargin: '0px',
-                threshold: 0.1 // Trigger when 10% of the element is visible
-            };
-
-            appState.observer = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        // Add small delay based on index for staggered effect (optional)
-                        const cardElement = entry.target;
-                        // const delay = (parseInt(cardElement.getAttribute('data-index') || '0', 10) % appState.itemsPerPage) * 50; // Stagger within page items
-                        // setTimeout(() => {
-                             cardElement.classList.add('visible');
-                        // }, delay);
-
-                        // Optional: Once visible, no need to observe anymore if not needed for other effects
-                        // observer.unobserve(entry.target); 
-                    } else {
-                        // Optional: Remove 'visible' if you want elements to fade out when scrolled out of view
-                        // entry.target.classList.remove('visible');
-                    }
-                });
-            }, options);
-
-            // Observe initially rendered cards (if any) - handled in renderProtocolCards now
-            // document.querySelectorAll('.protocol-card.section-animate').forEach(card => {
-            //     if (appState.observer) appState.observer.observe(card);
-            // });
-
-            // Initial check for elements already in view
-            requestAnimationFrame(handleScrollAnimations); 
-        }
-
-        // Handle scroll-triggered animations (called by observer and manually)
-        function handleScrollAnimations() {
-            // This function now primarily ensures elements rendered *already in view* get the visible class,
-            // as the IntersectionObserver handles elements scrolling *into* view.
-            const elements = document.querySelectorAll('.section-animate:not(.visible)');
-            const viewportHeight = window.innerHeight;
-
-            elements.forEach(element => {
-                const rect = element.getBoundingClientRect();
-                // Check if element is partially or fully in the viewport
-                // Simplified check: if top is above bottom of viewport and bottom is below top of viewport
-                if (rect.top < viewportHeight && rect.bottom > 0) { 
-                     // Check if not already being animated by observer
-                     if (!element.classList.contains('visible')) {
-                        element.classList.add('visible');
-                        debug(`Made initially visible element animated: ${element.id || 'no-id'}`);
-                     }
-                }
-            });
-        }
-
-        // Get color for a category
-        function getCategoryColor(category) {
-             const predefinedColors = {
-                 'file': 'linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%)',      // Blue
-                 'remote': 'linear-gradient(135deg, #EC4899 0%, #BE185D 100%)',    // Pink
-                 'mail': 'linear-gradient(135deg, #10B981 0%, #059669 100%)',      // Emerald
-                 'network': 'linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%)',   // Purple (Primary)
-                 'web': 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',       // Amber
-                 'database': 'linear-gradient(135deg, #0EA5E9 0%, #0369A1 100%)', // Sky
-                 'default': 'linear-gradient(135deg, #64748B 0%, #475569 100%)'    // Slate (Fallback)
-             };
-             return predefinedColors[category] || predefinedColors['default'];
-        }
-        
-        // Generate a gradient color based on a string (Fallback if category not predefined)
-        function generateColorFromString(str) {
-            let hash = 0;
-            for (let i = 0; i < str.length; i++) {
-                hash = str.charCodeAt(i) + ((hash << 5) - hash);
-                hash = hash & hash; // Convert to 32bit integer
-            }
-            const h = Math.abs(hash) % 360;
-            const s = 60 + (Math.abs(hash >> 8) % 20); // Saturation 60-80%
-            const l1 = 40 + (Math.abs(hash >> 16) % 10); // Lightness 40-50%
-            const l2 = l1 - 10; // Slightly darker end color
-            return `linear-gradient(135deg, hsl(${h}, ${s}%, ${l1}%) 0%, hsl(${(h + 20) % 360}, ${s - 10}%, ${l2}%) 100%)`;
-        }
-
     </script>
 </body>
 </html>
