@@ -3986,23 +3986,83 @@
               const elements = document.querySelectorAll('.section-animate:not(.visible)'); if (!appState.observer) return; elements.forEach(element => { const rect = element.getBoundingClientRect(); if (rect.top < window.innerHeight && rect.bottom > 0) { appState.observer.observe(element); } });
           }
 
-        // --- DYNAMIC COLOR GENERATION ---
+// --- DYNAMIC COLOR GENERATION (HUE BINNING for DISTINCTNESS) ---
         const categoryColorCache = {};
-        const GOLDEN_ANGLE_RATIO = 0.61803398875;
-        function generateHslColorFromString(str) { // Enhanced variation
-            const baseSaturation = 75; const baseLightness = 55; const lightnessVariation = 15; const saturationVariation = 15;
-            let hash = 0; if (!str || str.length === 0) { hash = 0; } else { for (let i = 0; i < str.length; i++) { const char = str.charCodeAt(i); hash = ((hash << 5) - hash) + char; hash |= 0; } } const absHash = Math.abs(hash);
-            let hue = Math.floor(((absHash * GOLDEN_ANGLE_RATIO) % 1) * 360); const pinkMinHue = 290; const pinkMaxHue = 350; const hueShiftAmount = 60; if (hue >= pinkMinHue && hue <= pinkMaxHue) { hue = (hue + hueShiftAmount) % 360; }
-            const saturationOffset = (absHash % (saturationVariation * 2)) - saturationVariation; const saturation = Math.max(50, Math.min(95, baseSaturation + saturationOffset));
-            const lightnessOffset = (Math.floor(absHash / 13) % (lightnessVariation * 2)) - lightnessVariation; const lightness = Math.max(45, Math.min(75, baseLightness + lightnessOffset));
-            const lightnessDarker = Math.max(25, lightness - 20); return { hue, saturation, lightness, lightnessDarker };
+
+        function generateHslColorFromString(str) {
+            if (!str || str.length === 0) str = 'uncategorized';
+
+            // --- Configuration ---
+            const numSegments = 18;         // How many hue bins (more = finer separation)
+            const segmentSize = 360 / numSegments;
+            const hueVariation = Math.floor(segmentSize / 3); // How much hue can vary within a bin (+/-)
+
+            const baseSaturation = 70;
+            const saturationVariation = 15; // Allow slightly more S variation now
+            const minSaturation = 55;
+            const maxSaturation = 85;
+
+            const baseLightness = 55;
+            const lightnessVariation = 10; // Allow slightly more L variation
+            const minLightness = 45;
+            const maxLightness = 65;
+
+            const primaryHue = 258;         // Approximate hue of your --primary color (#8b5cf6)
+            const hueAvoidanceRange = 25;   // Degrees +/- around primaryHue to avoid
+            const hueShiftAmount = segmentSize * 3; // Shift by multiple segments if too close
+
+            // --- Hashing ---
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                const char = str.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash |= 0;
+            }
+            const absHash = Math.abs(hash);
+
+            // --- Hue Generation (Binning) ---
+            // Determine the segment/bin based on the hash
+            const segmentIndex = absHash % numSegments;
+            const segmentStartHue = segmentIndex * segmentSize;
+
+            // Determine variation within the bin using a different part of the hash
+            const hueOffset = ((absHash >> 8) % (hueVariation * 2 + 1)) - hueVariation;
+            let hue = (segmentStartHue + hueOffset + 360) % 360;
+
+            // --- Primary Color Avoidance ---
+            const hueDiff = Math.abs(hue - primaryHue);
+            if (Math.min(hueDiff, 360 - hueDiff) < hueAvoidanceRange) {
+                const shiftDirection = ((absHash >> 16) % 2 === 0) ? 1 : -1; // Use another hash part
+                hue = (hue + (hueShiftAmount * shiftDirection) + 360) % 360;
+                 debug(`Shifted hue for '${str}' from original near ${primaryHue} to ${hue}`);
+            }
+
+            // --- Saturation & Lightness Generation (within defined ranges) ---
+            const satOffset = ((absHash >> 12) % (saturationVariation * 2 + 1)) - saturationVariation;
+            const saturation = Math.min(maxSaturation, Math.max(minSaturation, baseSaturation + satOffset));
+
+            const lightOffset = ((absHash >> 16) % (lightnessVariation * 2 + 1)) - lightnessVariation;
+            const lightness = Math.min(maxLightness, Math.max(minLightness, baseLightness + lightOffset));
+
+            // Ensure slightly darker version for gradient
+            const lightnessDarker = Math.max(minLightness - 5, Math.min(lightness - 15, maxLightness - 10));
+
+            // --- Construct Gradient String ---
+            const colorGradient = `linear-gradient(135deg, hsl(${hue.toFixed(0)}, ${saturation.toFixed(0)}%, ${lightness.toFixed(0)}%) 0%, hsl(${hue.toFixed(0)}, ${saturation.toFixed(0)}%, ${lightnessDarker.toFixed(0)}%) 100%)`;
+
+            return colorGradient;
         }
+
         function getCategoryColor(category) {
             const categoryKey = (category && typeof category === 'string' && category.trim() !== '') ? category.toLowerCase() : 'uncategorized';
-            if (categoryColorCache[categoryKey]) { return categoryColorCache[categoryKey]; } const hsl = generateHslColorFromString(categoryKey);
-            const colorGradient = `linear-gradient(135deg, hsl(${hsl.hue}, ${hsl.saturation}%, ${hsl.lightness}%) 0%, hsl(${hsl.hue}, ${hsl.saturation}%, ${hsl.lightnessDarker}%) 100%)`;
-            categoryColorCache[categoryKey] = colorGradient; return colorGradient;
-         }
+            if (categoryColorCache[categoryKey]) {
+                return categoryColorCache[categoryKey];
+            }
+            const generatedColor = generateHslColorFromString(categoryKey);
+            debug(`Generated color (Binning) for category '${categoryKey}': ${generatedColor}`);
+            categoryColorCache[categoryKey] = generatedColor;
+            return generatedColor;
+        }
         // --- END DYNAMIC COLOR GENERATION ---
 
         // --- SCROLL/HIGHLIGHT/EXPAND LOGIC ---
