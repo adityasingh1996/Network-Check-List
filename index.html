@@ -3933,10 +3933,54 @@
 
         // Handles expanding and collapsing a protocol card with animation
         function toggleCardExpansion(card) {
-               if (!card) return; const content = card.querySelector('.card-content'); const icon = card.querySelector('.expand-btn i'); const button = card.querySelector('.expand-btn'); const id = card.id; if (!content || !icon || !button) return; const wasExpanded = card.classList.contains('expanded'); debug(`Toggling card: ${id} (was expanded: ${wasExpanded})`); if (wasExpanded) { appState.expandedCards.delete(id); } else { appState.expandedCards.add(id); } button.setAttribute('aria-expanded', !wasExpanded);
-               if (wasExpanded) { card.classList.remove('expanded'); card.querySelectorAll('.content-section').forEach((s) => animateElement(s, [{ opacity: 1, transform: 'translateY(0)' }, { opacity: 0, transform: 'translateY(10px)' }], { duration: 150, easing: 'ease-out', fill: 'forwards' })); card.querySelectorAll('.list-item-animate').forEach(item => item.style.opacity = 0); const anim = animateElement(content, [{ height: content.scrollHeight + 'px', opacity: 1, transform: 'translateY(0)', paddingBottom: '20px', paddingTop: '1rem' }, { height: '0px', opacity: 0, transform: 'translateY(10px)', paddingBottom: '0px', paddingTop: '0px'}], { duration: 350, easing: 'cubic-bezier(0.4, 0, 0.2, 1)', fill: 'forwards' }); animateElement(icon, [{ transform: 'rotate(180deg)' }, { transform: 'rotate(0deg)' }], { duration: 300, easing: 'ease-out', fill: 'forwards' }); anim.finished.catch(e => console.warn("Collapse animation interrupted or failed", e)); }
-               else { card.classList.add('expanded'); content.style.height = '0px'; content.style.opacity = '0'; content.style.paddingTop = '0px'; content.style.paddingBottom = '0px'; const anim = animateElement(content, [{ height: '0px', opacity: 0, transform: 'translateY(10px)', paddingBottom: '0px', paddingTop: '0px' }, { height: content.scrollHeight + 'px', opacity: 1, transform: 'translateY(0)', paddingBottom: '20px', paddingTop: '1rem' }], { duration: 400, easing: 'cubic-bezier(0.2, 0, 0.1, 1)', fill: 'forwards' }); animateElement(icon, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(180deg)' }], { duration: 350, easing: 'ease-in-out', fill: 'forwards' }); anim.finished.then(() => { if (!appState.expandedCards.has(id)) return; card.querySelectorAll('.content-section').forEach((s, i) => animateElement(s, [{ opacity: 0, transform: 'translateY(15px)' }, { opacity: 1, transform: 'translateY(0)' }], { duration: 300, easing: 'ease-out', fill: 'forwards', delay: i * 50 })); card.querySelectorAll('.list-item-animate').forEach((item, i) => animateElement(item, [{ opacity: 0, transform: 'translateX(15px)' }, { opacity: 1, transform: 'translateX(0)' }], { duration: 300, easing: 'ease-out', fill: 'forwards', delay: 100 + i * 20 })); }).catch(e => { console.warn("Expand animation interrupted or failed", e); if (appState.expandedCards.has(id)) { content.style.height = ''; content.style.opacity = '1'; content.style.transform = 'translateY(0)'; content.style.paddingBottom = '20px'; content.style.paddingTop = '1rem'; card.querySelectorAll('.content-section, .list-item-animate').forEach(el => { el.style.opacity = '1'; el.style.transform = 'translate(0, 0)'; }); } else { card.classList.remove('expanded'); } }); }
-           }
+            if (!card) return; const content = card.querySelector('.card-content'); const icon = card.querySelector('.expand-btn i'); const button = card.querySelector('.expand-btn'); const id = card.id; if (!content || !icon || !button) return; const wasExpanded = card.classList.contains('expanded'); debug(`Toggling card: ${id} (was expanded: ${wasExpanded})`); if (wasExpanded) { appState.expandedCards.delete(id); } else { appState.expandedCards.add(id); } button.setAttribute('aria-expanded', !wasExpanded);
+
+            if (wasExpanded) {
+                // --- Collapse Animation ---
+                card.classList.remove('expanded'); // Remove class early for collapse
+                // Animate inner content out first
+                card.querySelectorAll('.content-section').forEach((s) => animateElement(s, [{ opacity: 1, transform: 'translateY(0)' }, { opacity: 0, transform: 'translateY(10px)' }], { duration: 150, easing: 'ease-out', fill: 'forwards' }));
+                card.querySelectorAll('.list-item-animate').forEach(item => item.style.opacity = 0); // Hide list items quickly
+
+                // Animate container height
+                const anim = animateElement(content, [{ height: content.scrollHeight + 'px', opacity: 1, transform: 'translateY(0)', paddingBottom: '20px', paddingTop: '1rem' }, { height: '0px', opacity: 0, transform: 'translateY(10px)', paddingBottom: '0px', paddingTop: '0px'}], { duration: 350, easing: 'cubic-bezier(0.4, 0, 0.2, 1)', fill: 'forwards' });
+                animateElement(icon, [{ transform: 'rotate(180deg)' }, { transform: 'rotate(0deg)' }], { duration: 300, easing: 'ease-out', fill: 'forwards' });
+                anim.finished.catch(e => console.warn("Collapse animation interrupted or failed", e)); // Catch errors
+
+            } else {
+                // --- Expand Animation ---
+                card.classList.add('expanded'); // Add class immediately
+                content.style.height = '0px'; content.style.opacity = '0'; content.style.paddingTop = '0px'; content.style.paddingBottom = '0px'; // Set initial state for animation
+
+                // Animate container height
+                const anim = animateElement(content, [{ height: '0px', opacity: 0, transform: 'translateY(10px)', paddingBottom: '0px', paddingTop: '0px' }, { height: content.scrollHeight + 'px', opacity: 1, transform: 'translateY(0)', paddingBottom: '20px', paddingTop: '1rem' }], { duration: 400, easing: 'cubic-bezier(0.2, 0, 0.1, 1)', fill: 'forwards' });
+                animateElement(icon, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(180deg)' }], { duration: 350, easing: 'ease-in-out', fill: 'forwards' });
+
+                // Animate inner content *after* main animation finishes, with adjusted delays
+                anim.finished.then(() => {
+                    if (!appState.expandedCards.has(id)) return; // Check state hasn't changed back
+                    card.querySelectorAll('.content-section').forEach((s, i) => animateElement(s,
+                       [{ opacity: 0, transform: 'translateY(15px)' }, { opacity: 1, transform: 'translateY(0)' }],
+                       // *** INCREASED DELAY ***
+                       { duration: 300, easing: 'ease-out', fill: 'forwards', delay: 50 + i * 75 } // Start slightly later, bigger stagger
+                   ));
+                    card.querySelectorAll('.list-item-animate').forEach((item, i) => animateElement(item,
+                       [{ opacity: 0, transform: 'translateX(15px)' }, { opacity: 1, transform: 'translateX(0)' }],
+                        // *** INCREASED DELAY ***
+                       { duration: 300, easing: 'ease-out', fill: 'forwards', delay: 150 + i * 30 } // Start list items even later
+                   ));
+                }).catch(e => {
+                   console.warn("Expand animation interrupted or failed", e);
+                   // Fallback to ensure visibility if animation fails but card should be expanded
+                   if (appState.expandedCards.has(id)) {
+                       content.style.height = ''; content.style.opacity = '1'; content.style.transform = 'translateY(0)'; content.style.paddingBottom = '20px'; content.style.paddingTop = '1rem';
+                       card.querySelectorAll('.content-section, .list-item-animate').forEach(el => { el.style.opacity = '1'; el.style.transform = 'translate(0, 0)'; });
+                   } else {
+                       card.classList.remove('expanded'); // Ensure consistency if cancelled
+                   }
+                });
+            }
+        }
 
         // Initializes IntersectionObserver for scroll animations
         function initializeAnimations() {
