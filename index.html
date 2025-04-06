@@ -72,7 +72,7 @@
 
         .glass-dark {
             background: rgba(2, 6, 23, 0.8);
-            backdrop-filter: blur(16px);
+            backdrop-filter: blur(16px); /* Base blur for dark elements */
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.03);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
@@ -80,7 +80,7 @@
 
         .glass-card {
             background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(16px);
+            backdrop-filter: blur(16px); /* Base blur for cards */
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.05);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
@@ -96,7 +96,7 @@
 
         .glass-inset {
             background: rgba(2, 6, 23, 0.5);
-            backdrop-filter: blur(10px); 
+            backdrop-filter: blur(10px); /* Base blur for inset */
             -webkit-backdrop-filter: blur(10px);
             border-radius: 16px;
             box-shadow: 
@@ -132,7 +132,8 @@
         }
 
         .sidebar {
-            background: var(--sidebar-bg);
+            /* Inherits blur from .glass-dark */
+            background: var(--sidebar-bg); 
             height: 100vh;
             position: fixed;
             top: 0; 
@@ -166,15 +167,31 @@
         @media (max-width: 768px) {
             .content-area { padding: 1.5rem 1rem; }
             header h1 { font-size: 1.75rem !important; }
-            .glass-card { background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2); }
-            .glass-card:hover { box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25); }
-            .glass-inset { backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
-            .sidebar { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+
+            /* Blur Reverted: Restore original blur values */
+            .glass-card { 
+                 background: rgba(15, 23, 42, 0.7); /* Adjusted background slightly */
+                 backdrop-filter: blur(16px); /* Restored blur */
+                 -webkit-backdrop-filter: blur(16px);
+                 box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2); /* Restored shadow */
+            }
+            .glass-card:hover {
+                 /* Keep original hover if desired, or simplify */
+                 box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3), 0 0 20px rgba(139, 92, 246, 0.2);
+            }
+            .glass-inset {
+                backdrop-filter: blur(10px); /* Restored blur */
+                -webkit-backdrop-filter: blur(10px);
+            }
+            /* No need to specify sidebar blur here, it uses .glass-dark base */
+            
             .card-header { flex-direction: column !important; align-items: flex-start !important; padding: 1.5rem 1rem !important; }
             .card-header > div:last-child { width: 100%; justify-content: space-between; margin-top: 1rem; }
             .progress-container { width: 100% !important; }
             #protocolCards { min-height: 200px; }
         }
+
+        /* --- Rest of the CSS remains the same as the previous version --- */
 
         .protocol-card {
             transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1), transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s ease; 
@@ -298,19 +315,18 @@
         .completion-percentage { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 0.75rem; font-weight: 600; color: white; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5); opacity: 0; transition: opacity 0.3s ease; pointer-events: none; }
         .progress-container:hover .completion-percentage { opacity: 1; }
         
-        /* Checkmark */
+        /* Checkmark - Including text wrap fix */
         .checkmark-animate { 
             transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); 
             display: inline-block; 
-            /* Fix: Allow long strings (like URLs/code) to break and wrap */
             overflow-wrap: break-word; 
-            word-wrap: break-word; /* Older alias for broader compatibility */
-            vertical-align: top; /* Improves alignment with toggle */
+            word-wrap: break-word; 
+            vertical-align: top; 
         }
         .toggle-input:checked ~ .checkmark-animate { transform: scale(1.1) rotate(5deg); }
         
         /* List item hover */
-        li.list-item-animate { transition: background 0.3s ease, transform 0.3s ease, opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1), transform 0.5s cubic-bezier(0.22, 1, 0.36, 1); border-radius: 8px; padding: 0.5rem; align-items: flex-start; /* Ensure top alignment */ }
+        li.list-item-animate { transition: background 0.3s ease, transform 0.3s ease, opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1), transform 0.5s cubic-bezier(0.22, 1, 0.36, 1); border-radius: 8px; padding: 0.5rem; align-items: flex-start; }
         li.list-item-animate:hover { background: rgba(255, 255, 255, 0.05); transform: translateX(5px) translateY(0); }
 
         /* Section Headers */
@@ -365,7 +381,7 @@
 
         /* Performance: Disable expensive hover effects on touch devices */
         @media (hover: none) and (pointer: coarse) { 
-            .glass-card:hover { transform: none; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2); }
+            .glass-card:hover { transform: none; /* Keep mobile shadow consistent with base mobile */ box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2); }
             .category-filter:hover { transform: none; box-shadow: none; }
             .category-badge:hover::after, .card-header:hover .category-badge::after { animation: none; }
             .category-filter.active:hover::after { animation: none; }
@@ -380,6 +396,7 @@
     </style>
 </head>
 <body>
+    <!-- HTML Body and Script Tag remain identical to the previous version -->
     <!-- Background Animation Elements -->
     <div class="animated-bg" id="animatedBg"></div>
 
@@ -390,7 +407,6 @@
 
     <!-- Sidebar -->
     <aside class="sidebar glass-dark" id="sidebar">
-        <!-- Sidebar content unchanged -->
         <div class="flex flex-col mb-8">
             <div class="flex items-center justify-between">
                 <h1 class="text-2xl font-bold tracking-tight logo">
@@ -428,15 +444,12 @@
 
     <!-- Main content -->
     <main class="content-area" id="mainContent">
-        <!-- Header unchanged -->
         <header class="mb-6 md:mb-10 fade-in" style="animation-delay: 0.1s;">
             <h1 class="text-3xl md:text-4xl font-bold mb-2">Protocol Security Checklist</h1>
             <p class="text-gray-400">Track vulnerabilities, testing procedures, and security tools for network protocols.</p>
         </header>
-        <!-- Protocol cards container unchanged -->
         <div class="grid grid-cols-1 gap-6" id="protocolCards">
         </div>
-        <!-- Pagination unchanged -->
         <div class="pagination-container" id="paginationContainer">
         </div>
     </main>
