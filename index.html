@@ -57,16 +57,24 @@
         .toggle-container { position: relative; width: 50px; height: 26px; flex-shrink: 0; min-width: 50px; } .toggle-input { opacity: 0; width: 0; height: 0; } .toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(15, 23, 42, 0.7); transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1); border-radius: 34px; box-shadow: inset 2px 2px 4px var(--glass-dark), inset -2px -2px 4px var(--glass-light); overflow: hidden; } .toggle-slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 4px; background: var(--light); transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); border-radius: 50%; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); z-index: 2; } .toggle-slider::after { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, var(--primary-dark) 0%, var(--primary) 100%); transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1); opacity: 0; } .toggle-input:checked + .toggle-slider::after { left: 0; opacity: 1; } .toggle-input:checked + .toggle-slider:before { transform: translateX(24px); background: white; } .toggle-input:checked + .toggle-slider { box-shadow: 0 0 8px var(--primary-alpha); }
         .progress-container { width: 100%; height: 12px; background: rgba(15, 23, 42, 0.5); border-radius: 10px; box-shadow: inset 2px 2px 4px var(--glass-dark), inset -2px -2px 4px var(--glass-light); margin: 1rem 0; overflow: hidden; position: relative; } .progress-container::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.1) 50%, transparent 100%); opacity: 0.5; } .progress-bar { height: 100%; background: linear-gradient(90deg, var(--primary-dark), var(--primary), var(--primary-light)); border-radius: 10px; transition: width 1s cubic-bezier(0.22, 1, 0.36, 1); position: relative; overflow: hidden; width: 0; } .progress-bar::after { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%); animation: progressShine 2s infinite; } @keyframes progressShine { to { left: 100%; } }
         .category-badge { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); box-shadow: 0 2px 10px rgba(139, 92, 246, 0.3); position: relative; overflow: hidden; color: white; } .category-badge::after { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0) 100%); transform: skewX(-25deg); transition: all 0.8s ease; } @keyframes shine { 0% { left: -100%; } 100% { left: 100%; } }
-        .category-filters { display: flex; gap: 0.75rem; flex-wrap: wrap; } .category-filter { padding: 0.4rem 1rem; border-radius: 9999px; cursor: pointer; transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1); background: rgba(15, 23, 42, 0.3); border: 1px solid rgba(255, 255, 255, 0.05); position: relative; overflow: hidden; font-weight: 500; will-change: transform; font-size: 0.85rem; } .category-filter:hover { background: rgba(15, 23, 42, 0.5); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); } .category-filter.active { background: var(--primary); box-shadow: 0 0 20px rgba(139, 92, 246, 0.3); transform: translateY(-2px); color: white; } .category-filter.active::after { content: ''; position: absolute; top: 0; left: -100%; width: 200%; height: 100%; background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%); animation: shine 3s infinite; }
+        .category-filters { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+        .category-filter { padding: 0.4rem 1rem; border-radius: 9999px; cursor: pointer; transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1); background: rgba(15, 23, 42, 0.3); border: 1px solid rgba(255, 255, 255, 0.05); position: relative; overflow: hidden; font-weight: 500; will-change: transform; font-size: 0.85rem; }
+        .category-filter:hover { background: rgba(15, 23, 42, 0.5); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); }
+        /* --- MODIFIED: Use CSS variable for active background --- */
+        .category-filter.active {
+            background: var(--active-filter-bg, var(--primary)); /* Use variable, fallback to primary */
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+            transform: translateY(-2px);
+            color: white;
+        }
+        .category-filter.active::after { content: ''; position: absolute; top: 0; left: -100%; width: 200%; height: 100%; background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%); animation: shine 3s infinite; }
         .fade-in { animation: fadeIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards; opacity: 0; } @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } } .slide-in-right { animation: slideInRight 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards; } @keyframes slideInRight { from { transform: translateX(30px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         ::-webkit-scrollbar { width: 8px; } ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.2); border-radius: 10px; } ::-webkit-scrollbar-thumb { background: var(--primary-dark); border-radius: 10px; transition: all 0.3s ease; } ::-webkit-scrollbar-thumb:hover { background: var(--primary); box-shadow: 0 0 10px var(--primary); }
         .section-animate { transform: translateY(20px); transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1), transform 0.6s cubic-bezier(0.22, 1, 0.36, 1); will-change: opacity, transform; } .section-animate.visible { opacity: 1; transform: translateY(0); } .protocol-card.section-animate { opacity: 0; } .protocol-card.section-animate.visible { opacity: 1; }
         .list-item-animate { opacity: 0; transform: translateX(20px); transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1); will-change: opacity, transform; } .list-item-no-checkbox { margin-left: 0.5rem; padding-left: 0; }
         .search-container { position: relative; margin-bottom: 1.25rem; } .search-input { width: 100%; padding: 0.75rem 1rem 0.75rem 3rem; border-radius: 12px; background: rgba(15, 23, 42, 0.3); border: 1px solid rgba(255, 255, 255, 0.05); color: var(--light); transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); } .search-input:focus { outline: none; box-shadow: 0 0 0 2px var(--primary-alpha), 0 0 15px rgba(139, 92, 246, 0.3); background: rgba(15, 23, 42, 0.5); border-color: rgba(139, 92, 246, 0.3); } .search-icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--neutral); transition: color 0.3s ease; } .search-input:focus + .search-icon { color: var(--primary); }
-        .nav-links { flex: 1; overflow-y: auto; padding-right: 5px; margin-bottom: 1rem; max-height: calc(100vh - 130px); } /* Adjusted height */
-        .protocol-nav-item { position: relative; overflow: hidden; padding-left: 1rem; margin-bottom: 0.6rem; border-radius: 12px; transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1); will-change: transform, box-shadow, background; } .protocol-nav-item::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--nav-item-color, var(--primary)); border-top-left-radius: inherit; border-bottom-left-radius: inherit; } .protocol-nav-item:hover { transform: translateX(5px); background: rgba(15, 23, 42, 0.8) !important; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1), 0 0 5px rgba(139, 92, 246, 0.2); } .protocol-nav-item.hidden { display: none; } .protocol-nav-item > div { }
-        /* Removed sidebar category-section styling */
-        #mainCategoryFiltersContainer { margin-bottom: 1.5rem; md:margin-bottom: 2rem; } /* Added margin below filters in main */
+        .nav-links { flex: 1; overflow-y: auto; padding-right: 5px; margin-bottom: 1rem; max-height: calc(100vh - 130px); } .protocol-nav-item { position: relative; overflow: hidden; padding-left: 1rem; margin-bottom: 0.6rem; border-radius: 12px; transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1); will-change: transform, box-shadow, background; } .protocol-nav-item::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--nav-item-color, var(--primary)); border-top-left-radius: inherit; border-bottom-left-radius: inherit; } .protocol-nav-item:hover { transform: translateX(5px); background: rgba(15, 23, 42, 0.8) !important; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1), 0 0 5px rgba(139, 92, 246, 0.2); } .protocol-nav-item.hidden { display: none; } .protocol-nav-item > div { }
+        #mainCategoryFiltersContainer { margin-bottom: 1.5rem; md:margin-bottom: 2rem; }
         .category-indicator { position: absolute; left: 0; top: 0; bottom: 0; width: 4px; border-top-left-radius: 16px; border-bottom-left-radius: 16px; }
         .expand-btn { position: relative; overflow: hidden; transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1); } .expand-btn:hover { box-shadow: 0 0 15px rgba(139, 92, 246, 0.3); transform: translateY(-2px); } .expand-btn::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle, rgba(139, 92, 246, 0.2) 0%, transparent 70%); opacity: 0; transition: opacity 0.3s ease; } .expand-btn:hover::after { opacity: 1; } .expand-btn i { transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
         .no-results { text-align: center; padding: 3rem; background: rgba(15, 23, 42, 0.5); border-radius: 1rem; margin: 2rem 0; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.03); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1); } .no-results:hover { box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2), 0 0 20px rgba(139, 92, 246, 0.1); transform: translateY(-5px); }
@@ -80,7 +88,7 @@
         .pagination-container { display: flex; justify-content: center; align-items: center; margin-top: 2rem; gap: 0.5rem; flex-wrap: wrap; } .pagination-btn { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: rgba(15, 23, 42, 0.3); border: 1px solid rgba(255, 255, 255, 0.05); color: var(--light); font-weight: 500; cursor: pointer; transition: all 0.3s ease; } .pagination-btn:hover:not(:disabled) { background: rgba(15, 23, 42, 0.5); box-shadow: 0 0 15px rgba(139, 92, 246, 0.2); transform: translateY(-2px); } .pagination-btn.active { background: var(--primary); color: white; font-weight: 600; box-shadow: 0 0 20px rgba(139, 92, 246, 0.3); } .pagination-btn:disabled { opacity: 0.5; cursor: not-allowed; } .pagination-ellipsis { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; color: var(--neutral); }
         .port-badge { font-family: 'Courier New', monospace; background: rgba(15, 23, 42, 0.5); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.8rem; margin-left: 0.5rem; border: 1px solid rgba(255, 255, 255, 0.1); display: inline-block; }
         .loading-indicator { display: flex; justify-content: center; align-items: center; padding: 2rem; font-weight: 500; color: var(--neutral); } .loading-spinner { width: 24px; height: 24px; border: 3px solid rgba(139, 92, 246, 0.2); border-radius: 50%; border-top-color: var(--primary); animation: spin 1s linear infinite; margin-right: 10px; } @keyframes spin { to { transform: rotate(360deg); } }
-        @media (max-width: 640px) { .category-filter { padding: 0.3rem 0.8rem; font-size: 0.75rem; } .category-badge { font-size: 0.65rem; padding: 0.2rem 0.6rem; } .progress-container { height: 10px; } .card-header { padding: 1.2rem 1rem !important; } .card-header h2 { font-size: 1.5rem !important; } .protocol-card .grid { grid-template-columns: 1fr !important; display: block !important; } .glass-inset { margin-bottom: 1rem; } .toggle-container { min-width: 40px; width: 40px; height: 22px; } .toggle-slider:before { height: 14px; width: 14px; } .toggle-input:checked + .toggle-slider:before { transform: translateX(18px); } .nav-links { max-height: calc(100vh - 110px); } /* Adjusted mobile height */ .list-item-no-checkbox { margin-left: 0.25rem; } .protocol-nav-item { padding-left: 0.75rem !important; padding-top: 0.75rem !important; padding-bottom: 0.75rem !important; padding-right: 0.75rem !important; } }
+        @media (max-width: 640px) { .category-filter { padding: 0.3rem 0.8rem; font-size: 0.75rem; } .category-badge { font-size: 0.65rem; padding: 0.2rem 0.6rem; } .progress-container { height: 10px; } .card-header { padding: 1.2rem 1rem !important; } .card-header h2 { font-size: 1.5rem !important; } .protocol-card .grid { grid-template-columns: 1fr !important; display: block !important; } .glass-inset { margin-bottom: 1rem; } .toggle-container { min-width: 40px; width: 40px; height: 22px; } .toggle-slider:before { height: 14px; width: 14px; } .toggle-input:checked + .toggle-slider:before { transform: translateX(18px); } .nav-links { max-height: calc(100vh - 110px); } .list-item-no-checkbox { margin-left: 0.25rem; } .protocol-nav-item { padding-left: 0.75rem !important; padding-top: 0.75rem !important; padding-bottom: 0.75rem !important; padding-right: 0.75rem !important; } }
         @media (max-width: 768px) { .card-content { transition-duration: 0.4s; padding: 0 15px 0 15px; } .protocol-card.expanded .card-content { padding: 0 15px 15px 15px; } .content-section { transition-delay: 0.05s !important; } }
         @media (max-width: 640px) { li.list-item-animate { padding: 0.75rem 0.5rem; margin-bottom: 0.75rem; } .pagination-btn { width: 36px; height: 36px; } .expand-btn { padding: 0.75rem !important; } }
         @media (hover: none) and (pointer: coarse) { .glass-card:hover { transform: none; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2); } .category-filter:hover { transform: none; box-shadow: none; } .category-badge:hover::after, .card-header:hover .category-badge::after { animation: none; } .category-filter.active:hover::after { animation: none; } .expand-btn:hover { transform: none; box-shadow: none; } .expand-btn:hover::after { opacity: 0; } .pagination-btn:hover:not(:disabled) { transform: none; box-shadow: none; } .protocol-nav-item:hover { transform: none; box-shadow: none; background: rgba(15, 23, 42, 0.8) !important; } .no-results:hover { transform: none; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); } li.list-item-animate:hover { transform: translateX(0) translateY(0); background: transparent; } }
@@ -122,7 +130,7 @@
             <input type="text" id="search" class="search-input" placeholder="Search protocols or ports...">
             <i class="bx bx-search search-icon"></i>
         </div>
-        <!-- Protocols -->
+        <!-- Protocols List -->
         <div class="protocol-section flex-grow flex flex-col min-h-0">
             <h2 class="text-lg font-semibold mb-2 text-neutral-300 flex-shrink-0">Protocols</h2>
             <div class="nav-links space-y-2" id="protocolNav">
@@ -3649,7 +3657,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             debug('App initializing...');
             const loadingIndicator = document.getElementById('loadingIndicator');
-            if (!loadingIndicator || !document.getElementById('protocolCards') || !document.getElementById('paginationContainer') || !document.getElementById('protocolNav') || !document.getElementById('sidebar')) {
+            if (!loadingIndicator || !document.getElementById('protocolCards') || !document.getElementById('paginationContainer') || !document.getElementById('protocolNav') || !document.getElementById('sidebar') || !document.getElementById('categoryFilters')) {
                  console.error("Initialization failed: Required DOM elements not found.");
                  const body = document.body || document.createElement('body');
                  body.innerHTML = `<div style="color: red; padding: 20px; font-family: sans-serif; text-align: center;">Error: Core UI elements missing. Cannot initialize application.</div>`;
@@ -3660,11 +3668,11 @@
                 updateDeviceState();
                 createBackgroundParticles();
                 loadCheckedItems();
-                initializeSidebar(); // Populates sidebar protocol list
-                initializeMainCategoryFilters(); // Populates main category filters
+                initializeSidebar();
+                initializeMainCategoryFilters(); // Init filters in main content
                 setupEventListeners();
                 initializeAnimations();
-                renderProtocolCards(); // Initial render hides loader
+                renderProtocolCards();
                 setTimeout(updateProgress, 300);
                 debug('App initialized.');
              } catch (error) {
@@ -3755,6 +3763,8 @@
              let allCategoryBtn = categoryFilters.querySelector('[data-category="all"]');
              if (!allCategoryBtn) { console.warn("'All' category button not found in HTML, creating dynamically."); allCategoryBtn = document.createElement('button'); allCategoryBtn.className = 'category-filter active'; allCategoryBtn.setAttribute('data-category', 'all'); allCategoryBtn.textContent = 'All'; categoryFilters.insertBefore(allCategoryBtn, categoryFilters.firstChild); }
              else { const existingFilters = categoryFilters.querySelectorAll('.category-filter:not([data-category="all"])'); existingFilters.forEach(btn => btn.remove()); allCategoryBtn.classList.add('active'); }
+             // Set 'All' button initial background
+             allCategoryBtn.style.setProperty('--active-filter-bg', 'var(--primary)');
              categories.forEach(category => { const categoryBtn = document.createElement('button'); categoryBtn.className = 'category-filter'; categoryBtn.setAttribute('data-category', category); categoryBtn.textContent = category.charAt(0).toUpperCase() + category.slice(1); categoryFilters.appendChild(categoryBtn); });
              debug('Main category filters initialized');
         }
@@ -3779,27 +3789,11 @@
              if (!portStr || !searchStr) return false;
              const searchPorts = searchStr.split(',').map(p => p.trim()).filter(p => p !== '');
              if (searchPorts.length === 0) return false;
-
              for (const singleSearchPort of searchPorts) {
-                 if (portStr === singleSearchPort) return true; // Direct match
-                 if (portStr.includes(',')) { // Protocol port is list
-                     const protocolPortList = portStr.split(',').map(p => p.trim());
-                     if (protocolPortList.includes(singleSearchPort)) return true;
-                 }
-                 if (portStr.includes('-')) { // Protocol port is range
-                     const [minPort, maxPort] = portStr.split('-').map(p => parseInt(p.trim(), 10));
-                     if (!isNaN(minPort) && !isNaN(maxPort)) {
-                         const searchNum = parseInt(singleSearchPort, 10);
-                         if (!isNaN(searchNum) && searchNum >= minPort && searchNum <= maxPort) return true;
-                     }
-                 }
-                 if (singleSearchPort.includes('-')) { // Search term is range
-                      const [minSearch, maxSearch] = singleSearchPort.split('-').map(p => parseInt(p.trim(), 10));
-                      if (!isNaN(minSearch) && !isNaN(maxSearch)) {
-                          const protocolPortNum = parseInt(portStr, 10);
-                          if (!isNaN(protocolPortNum) && protocolPortNum >= minSearch && protocolPortNum <= maxSearch) return true;
-                      }
-                 }
+                 if (portStr === singleSearchPort) return true;
+                 if (portStr.includes(',')) { const protocolPortList = portStr.split(',').map(p => p.trim()); if (protocolPortList.includes(singleSearchPort)) return true; }
+                 if (portStr.includes('-')) { const [minPort, maxPort] = portStr.split('-').map(p => parseInt(p.trim(), 10)); if (!isNaN(minPort) && !isNaN(maxPort)) { const searchNum = parseInt(singleSearchPort, 10); if (!isNaN(searchNum) && searchNum >= minPort && searchNum <= maxPort) return true; } }
+                 if (singleSearchPort.includes('-')) { const [minSearch, maxSearch] = singleSearchPort.split('-').map(p => parseInt(p.trim(), 10)); if (!isNaN(minSearch) && !isNaN(maxSearch)) { const protocolPortNum = parseInt(portStr, 10); if (!isNaN(protocolPortNum) && protocolPortNum >= minSearch && protocolPortNum <= maxSearch) return true; } }
              }
              return false;
         }
@@ -3889,13 +3883,44 @@
              } catch (error) { console.error(`Error creating card for protocol ${protocol?.id}:`, error); return null; }
           }
 
+        // *** MODIFIED: Sets category button background color ***
         function filterByCategory(category) {
-             debug(`Filtering category: "${category}"`); if (appState.currentFilter === category) return;
-             appState.currentFilter = category; appState.currentPage = 1;
-             document.querySelectorAll('.category-filter').forEach(btn => { btn.classList.toggle('active', btn.getAttribute('data-category') === category); });
-             document.querySelectorAll('.protocol-nav-item').forEach(item => { const itemCat = item.getAttribute('data-category'); item.classList.toggle('hidden', category !== 'all' && itemCat !== category); });
-             renderProtocolCards();
-         }
+            debug(`Filtering category: "${category}"`);
+            if (appState.currentFilter === category) return;
+
+            appState.currentFilter = category;
+            appState.currentPage = 1;
+
+            // Update filter button active state AND color
+            document.querySelectorAll('#categoryFilters .category-filter').forEach(btn => {
+                const btnCategory = btn.getAttribute('data-category');
+                const isActive = (btnCategory === category);
+
+                btn.classList.toggle('active', isActive);
+
+                if (isActive) {
+                    const activeColor = (category === 'all')
+                        ? 'var(--primary)' // Use the primary CSS variable value
+                        : getCategoryColor(category); // Get the dynamic gradient
+
+                    btn.style.setProperty('--active-filter-bg', activeColor); // Set the CSS variable
+                    debug(`Set active color for filter '${category}': ${activeColor}`);
+                } else {
+                     // Optional: Reset the variable if needed, but removing class is key
+                     // btn.style.removeProperty('--active-filter-bg');
+                }
+            });
+
+            // Sidebar nav item visibility (if used for filtering, otherwise remove)
+            /*
+            document.querySelectorAll('.protocol-nav-item').forEach(item => {
+                const itemCat = item.getAttribute('data-category');
+                item.classList.toggle('hidden', category !== 'all' && itemCat !== category);
+            });
+            */
+
+            renderProtocolCards();
+        }
 
         function setupEventListeners() {
             debug('Setting up event listeners...');
@@ -3906,7 +3931,7 @@
             document.getElementById('search')?.addEventListener('input', debounce((e) => { appState.searchTerm = e.target.value.trim(); appState.currentPage = 1; renderProtocolCards(); }, 300));
             document.getElementById('protocolCards')?.addEventListener('click', (e) => { const trigger = e.target.closest('.card-header, .expand-btn'); if (trigger) { const card = trigger.closest('.protocol-card'); if (card) { toggleCardExpansion(card); } } });
             document.getElementById('protocolCards')?.addEventListener('change', (e) => { if (e.target.classList.contains('toggle-input') && e.target.type === 'checkbox') { handleCheckboxChange(e.target); } });
-            categoryFilters?.addEventListener('click', (e) => { const btn = e.target.closest('.category-filter'); if (btn && !btn.classList.contains('active')) { filterByCategory(btn.getAttribute('data-category')); } }); // Listener now targets filters in main
+            categoryFilters?.addEventListener('click', (e) => { const btn = e.target.closest('.category-filter'); if (btn && !btn.classList.contains('active')) { filterByCategory(btn.getAttribute('data-category')); } });
             document.getElementById('protocolNav')?.addEventListener('click', (e) => { const item = e.target.closest('[data-protocol-id]'); if (item) { const id = item.getAttribute('data-protocol-id'); scrollToProtocol(id); if (appState.isMobile) { sidebar?.classList.remove('open'); } } });
             window.addEventListener('resize', debounce(updateDeviceState, 250));
             document.addEventListener('keydown', (e) => { const paginationContainer = document.getElementById('paginationContainer'); if (!paginationContainer || paginationContainer.style.display === 'none') return; if (e.key === 'ArrowLeft') { const btn = paginationContainer.querySelector('button:first-child:not(:disabled)'); if (btn) goToPage(appState.currentPage - 1); } else if (e.key === 'ArrowRight') { const btn = paginationContainer.querySelector('button:last-child:not(:disabled)'); if (btn) goToPage(appState.currentPage + 1); } });
@@ -3956,11 +3981,24 @@
               const elements = document.querySelectorAll('.section-animate:not(.visible)'); if (!appState.observer) return; elements.forEach(element => { const rect = element.getBoundingClientRect(); if (rect.top < window.innerHeight && rect.bottom > 0) { appState.observer.observe(element); } });
           }
 
+        // --- DYNAMIC COLOR GENERATION ---
+        const categoryColorCache = {};
+        function generateHslColorFromString(str, saturation = 70, lightness = 55) {
+            let hash = 0; if (!str || str.length === 0) { return Math.floor(Math.random() * 360); }
+            for (let i = 0; i < str.length; i++) { const char = str.charCodeAt(i); hash = ((hash << 5) - hash) + char; hash |= 0; }
+            const hue = Math.abs(hash % 360); return { hue, saturation, lightness };
+        }
         function getCategoryColor(category) {
-             if (!category || typeof category !== 'string') { category = 'default'; }
-             const colors = { 'file': 'linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%)', 'remote': 'linear-gradient(135deg, #EC4899 0%, #BE185D 100%)', 'mail': 'linear-gradient(135deg, #10B981 0%, #059669 100%)', 'network': 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)', 'web': 'linear-gradient(135deg, #EF4444 0%, #B91C1C 100%)', 'database': 'linear-gradient(135deg, #0EA5E9 0%, #0369A1 100%)', 'directory': 'linear-gradient(135deg, #A855F7 0%, #7E22CE 100%)', 'default': 'linear-gradient(135deg, #64748B 0%, #475569 100%)' };
-             return colors[category.toLowerCase()] || colors['default'];
+            const categoryKey = (category && typeof category === 'string' && category.trim() !== '') ? category.toLowerCase() : 'default';
+            if (categoryColorCache[categoryKey]) { return categoryColorCache[categoryKey]; }
+            const saturation = 75; const lightnessBase = 50; const lightnessDarker = 35; let hue;
+            if (categoryKey === 'default') { hue = 220; }
+            else { const hsl = generateHslColorFromString(categoryKey, saturation, lightnessBase); hue = hsl.hue; }
+            const colorGradient = `linear-gradient(135deg, hsl(${hue}, ${saturation}%, ${lightnessBase}%) 0%, hsl(${hue}, ${saturation}%, ${lightnessDarker}%) 100%)`;
+            categoryColorCache[categoryKey] = colorGradient; debug(`Generated color for category '${categoryKey}': ${colorGradient}`); return colorGradient;
          }
+        // --- END DYNAMIC COLOR GENERATION ---
+
 
         function scrollToProtocol(id) {
              const protocol = protocolData.find(p => p && p.id === id); if (!protocol) { debug(`Protocol not found for scroll: ${id}`); return; }
