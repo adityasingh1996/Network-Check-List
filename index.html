@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <title>SecureCheck - Protocol Checklist</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css">
@@ -45,7 +45,6 @@
                 radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 20%),
                 radial-gradient(circle at 50% 50%, rgba(15, 23, 42, 0.8) 0%, var(--darker) 100%);
         }
-
 
         /* Glass Morphism Base Styles */
         .glass {
@@ -185,6 +184,30 @@
             
             .progress-container {
                 width: 100% !important;
+            }
+            
+            /* Disable expensive visual effects on mobile */
+            .glass, .glass-dark, .glass-card, .glass-inset {
+                backdrop-filter: none;
+                -webkit-backdrop-filter: none;
+            }
+            
+            /* Simplify animations on mobile */
+            .protocol-card, .card-content, .toggle-slider, .progress-bar, .category-badge,
+            .expand-btn, .card-header, .content-section, .list-item-animate {
+                transition-duration: 0.2s !important;
+                will-change: auto !important;
+            }
+            
+            /* Reduce shadow complexity */
+            .glass-card:hover, .protocol-card:hover, .no-results:hover {
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+                transform: translateY(-2px);
+            }
+            
+            /* Reduce animation delay times */
+            .list-item-animate, .content-section {
+                transition-delay: 0ms !important;
             }
         }
 
@@ -801,12 +824,23 @@
         /* Virtual list styles */
         .virtual-list-container {
             position: relative;
+            min-height: 300px;
         }
 
-        .virtual-list-spacer {
+        .virtual-list-viewport {
             position: relative;
+            overflow: hidden;
+        }
+
+        .virtual-list-items {
+            position: relative;
+        }
+
+        .virtual-card {
+            position: absolute;
             width: 100%;
-            visibility: hidden;
+            left: 0;
+            transform: translateZ(0);
         }
 
         /* Loading indicator */
@@ -880,6 +914,14 @@
                 transform: translateX(18px);
             }
         }
+
+        /* Hardware acceleration for key elements */
+        .protocol-card, .card-content, .progress-bar {
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            perspective: 1000px;
+            will-change: transform, opacity;
+        }
         
         /* Protocol card mobile optimizations */
         @media (max-width: 768px) {
@@ -927,6 +969,29 @@
                 padding: 0.75rem !important;
             }
         }
+
+        /* Optimized cards for different screen sizes */
+        @media (max-width: 768px) {
+            /* Simplified styles for mobile */
+            .protocol-card-simple {
+                display: block;
+            }
+            
+            .protocol-card-full {
+                display: none;
+            }
+        }
+
+        @media (min-width: 769px) {
+            /* Full styles for desktop */
+            .protocol-card-simple {
+                display: none;
+            }
+            
+            .protocol-card-full {
+                display: block;
+            }
+        }
     </style>
 </head>
 <body>
@@ -943,23 +1008,23 @@
     <!-- Sidebar -->
     <aside class="sidebar glass-dark" id="sidebar">
         <div class="flex flex-col mb-8">
-    <div class="flex items-center justify-between">
-        <h1 class="text-2xl font-bold tracking-tight logo">
-            <span class="text-primary">Secure</span>Check
-        </h1>
-        <button id="mobileClose" class="lg:hidden p-1 rounded-full hover:bg-gray-700 focus:outline-none">
-            <i class="bx bx-x text-2xl"></i>
-        </button>
-    </div>
-    <div class="flex items-center mt-2">
-        <p class="text-xs text-gray-400 tracking-wide relative group">
-            <span class="text-primary">◈</span> Created by <span class="underline cursor-pointer text-gray-300 hover:text-primary transition-colors duration-300">Aditya Singh</span>
-            <span class="absolute bottom-full left-0 mb-2 w-48 p-2 bg-gray-800 rounded-md shadow-lg text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-                https://www.youtube.com/watch?v=dQw4w9WgXcQ<br>© 2025 All Rights Reserved
-            </span>
-        </p>
-    </div>
-</div>
+            <div class="flex items-center justify-between">
+                <h1 class="text-2xl font-bold tracking-tight logo">
+                    <span class="text-primary">Secure</span>Check
+                </h1>
+                <button id="mobileClose" class="lg:hidden p-1 rounded-full hover:bg-gray-700 focus:outline-none">
+                    <i class="bx bx-x text-2xl"></i>
+                </button>
+            </div>
+            <div class="flex items-center mt-2">
+                <p class="text-xs text-gray-400 tracking-wide relative group">
+                    <span class="text-primary">◈</span> Created by <span class="underline cursor-pointer text-gray-300 hover:text-primary transition-colors duration-300">Aditya Singh</span>
+                    <span class="absolute bottom-full left-0 mb-2 w-48 p-2 bg-gray-800 rounded-md shadow-lg text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                        https://www.youtube.com/watch?v=dQw4w9WgXcQ<br>© 2025 All Rights Reserved
+                    </span>
+                </p>
+            </div>
+        </div>
         
         <div class="search-container">
             <input type="text" id="search" class="search-input" placeholder="Search protocols or ports...">
@@ -993,6 +1058,15 @@
             <!-- Protocol cards will be populated dynamically -->
         </div>
 
+        <!-- Virtual list container -->
+        <div id="virtualListContainer" class="hidden"></div>
+
+        <!-- Loading indicator -->
+        <div id="loadingIndicator" class="loading-indicator hidden">
+            <div class="loading-spinner"></div>
+            <span>Loading protocols...</span>
+        </div>
+
         <!-- Pagination -->
         <div class="pagination-container" id="paginationContainer">
             <!-- Pagination will be generated dynamically -->
@@ -1000,12 +1074,81 @@
     </main>
 
     <script>
+        // Global application state
+        const appState = {
+            currentFilter: 'all',
+            searchTerm: '',
+            checkedItems: {},
+            currentPage: 1,
+            itemsPerPage: 5,
+            expandedCards: new Set(),
+            isMobile: false,
+            isLargeDataset: false,
+            useVirtualList: false,
+            virtualScrolling: true,
+            virtualBufferSize: 5,
+            reducedAnimations: false,
+            debug: false
+        };
+
+        // Detect mobile devices and set appropriate flags
+        function detectDevice() {
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            
+            appState.isMobile = isMobile;
+            appState.reducedAnimations = isMobile || prefersReducedMotion;
+            
+            // Adjust items per page based on device
+            if (isMobile) {
+                appState.itemsPerPage = 3;
+            } else if (window.innerWidth < 1280) {
+                appState.itemsPerPage = 4;
+            } else {
+                appState.itemsPerPage = 5;
+            }
+            
+            return isMobile;
+        }
+
+        // Debug logging function
+        function debug(message) {
+            if (!appState.debug) return;
+            console.log(`[DEBUG] ${message}`);
+        }
+
+        // Create a large dataset for testing
+        function createLargeDataset(baseData, size) {
+            debug(`Creating large dataset with ${size} items`);
+            const largeData = [];
+            
+            for (let i = 0; i < size; i++) {
+                // Clone a random item from base data
+                const baseItem = JSON.parse(JSON.stringify(baseData[Math.floor(Math.random() * baseData.length)]));
+                
+                // Modify ID and name to make unique
+                baseItem.id = `${baseItem.id}-${i}`;
+                baseItem.name = `${baseItem.name} ${i + 1}`;
+                
+                // Randomly modify some properties
+                baseItem.port = String(1000 + Math.floor(Math.random() * 9000));
+                
+                // Assign to a random category from the predetermined list
+                const categories = ['file', 'remote', 'mail', 'network', 'web', 'database', 'messaging', 'auth', 'storage'];
+                baseItem.category = categories[Math.floor(Math.random() * categories.length)];
+                
+                largeData.push(baseItem);
+            }
+            
+            return largeData;
+        }
+
         // Sample data for demonstration
-        const protocolData = [
+        const baseProtocolData = [
             {
                 id: 'ftp',
                 name: 'FTP',
-                port: '21',
+                port: 21,
                 category: 'file',
                 description: 'File Transfer Protocol used for transferring files between client and server.',
                 vulnerabilities: [
@@ -1034,7 +1177,7 @@
             {
                 id: 'ssh',
                 name: 'SSH',
-                port: '22',
+                port: 22,
                 category: 'remote',
                 description: 'Secure Shell protocol used for secure remote login and other secure network services.',
                 vulnerabilities: [
@@ -1064,7 +1207,7 @@
             {
                 id: 'telnet',
                 name: 'Telnet',
-                port: '23',
+                port: 23,
                 category: 'remote',
                 description: 'Legacy unencrypted protocol for remote terminal connections.',
                 vulnerabilities: [
@@ -4463,33 +4606,48 @@
 }
         ];
 
-        // Global application state
-        const appState = {
-            currentFilter: 'all',
-            searchTerm: '',
-            checkedItems: {},
-            currentPage: 1,
-            itemsPerPage: 5,
-            debug: false,
-            expandedCards: new Set(), // Track expanded cards for animation purposes
-            isMobile: window.innerWidth < 768 // Track device type
-        };
-
-        // Debug logging function
-        function debug(message) {
-            if (!appState.debug) return;
-            console.log(`[DEBUG] ${message}`);
-        }
+        // Create protocol data - optionally generate large dataset
+        let protocolData = baseProtocolData;
 
         // Initialize the app when DOM is loaded
         document.addEventListener('DOMContentLoaded', () => {
             debug('Application initializing...');
             
-            // Check if we're on mobile
-            appState.isMobile = window.innerWidth < 768;
-            if (appState.isMobile) {
-                appState.itemsPerPage = 3; // Show fewer items per page on mobile
+            // Detect device type
+            detectDevice();
+            
+            // Check URL for data size parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const dataSize = urlParams.get('dataSize');
+            
+            if (dataSize && !isNaN(parseInt(dataSize))) {
+                const size = parseInt(dataSize);
+                if (size > 5) {
+                    // Show loading indicator
+                    document.getElementById('loadingIndicator').classList.remove('hidden');
+                    
+                    // Use setTimeout to allow loading indicator to render
+                    setTimeout(() => {
+                        protocolData = createLargeDataset(baseProtocolData, size);
+                        appState.isLargeDataset = true;
+                        
+                        if (size > 100) {
+                            appState.useVirtualList = true;
+                        }
+                        
+                        completeInitialization();
+                    }, 10);
+                } else {
+                    completeInitialization();
+                }
+            } else {
+                completeInitialization();
             }
+        });
+        
+        function completeInitialization() {
+            // Hide loading indicator if visible
+            document.getElementById('loadingIndicator').classList.add('hidden');
             
             // Create background particles
             createBackgroundParticles();
@@ -4508,7 +4666,7 @@
             initializeAnimations();
             
             debug('Application initialized successfully');
-        });
+        }
         
         // Create animated background particles
         function createBackgroundParticles() {
@@ -4577,8 +4735,12 @@
                 categoryFilters.appendChild(categoryBtn);
             });
             
+            // Limit the number of protocols in the sidebar for very large datasets
+            const maxSidebarItems = appState.isLargeDataset ? 100 : protocolData.length;
+            const sidebarProtocols = protocolData.slice(0, maxSidebarItems);
+            
             // Create protocol navigation links
-            protocolData.forEach((protocol, index) => {
+            sidebarProtocols.forEach((protocol, index) => {
                 const navItem = document.createElement('div');
                 navItem.className = 'glass-card p-3 cursor-pointer transition-all duration-300 protocol-nav-item';
                 navItem.setAttribute('data-protocol-id', protocol.id);
@@ -4604,6 +4766,14 @@
                     navItem.classList.add('fade-in');
                 }, 50 + (index * 50));
             });
+            
+            // Add message if showing limited protocols
+            if (protocolData.length > maxSidebarItems) {
+                const limitMessage = document.createElement('div');
+                limitMessage.className = 'text-center text-sm text-gray-500 mt-4';
+                limitMessage.textContent = `Showing ${maxSidebarItems} of ${protocolData.length} protocols in sidebar`;
+                protocolNav.appendChild(limitMessage);
+            }
             
             debug('Sidebar initialized successfully');
         }
@@ -4655,22 +4825,41 @@
             return protocolPort.toString().includes(searchTerm);
         }
 
+        // Utility function for debouncing
+        function debounce(func, wait) {
+            let timeout;
+            return function(...args) {
+                const context = this;
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(context, args), wait);
+            };
+        }
+
         // Render protocol cards based on current filter, search, and page
         function renderProtocolCards() {
             const protocolCards = document.getElementById('protocolCards');
+            const virtualListContainer = document.getElementById('virtualListContainer');
             
             debug(`Rendering protocol cards with filter: "${appState.currentFilter}" and search: "${appState.searchTerm}"`);
             
-            // Clear the container completely before adding new cards
-            protocolCards.innerHTML = '';
-            
             // Get filtered protocols
             const filteredProtocols = getFilteredProtocols();
-            
             debug(`Filter results: ${filteredProtocols.length} protocols match current criteria`);
+            
+            // Decide whether to use virtual scrolling for this render
+            const useVirtual = appState.useVirtualList && filteredProtocols.length > 50;
+            
+            // Clear containers
+            protocolCards.innerHTML = '';
+            virtualListContainer.innerHTML = '';
+            virtualListContainer.className = useVirtual ? 'virtual-list-container' : 'hidden';
+            protocolCards.className = useVirtual ? 'hidden' : 'grid grid-cols-1 gap-6';
             
             // Display message if no results
             if (filteredProtocols.length === 0) {
+                protocolCards.className = 'grid grid-cols-1 gap-6';
+                virtualListContainer.className = 'hidden';
+                
                 protocolCards.innerHTML = `
                     <div class="no-results section-animate">
                         <i class="bx bx-search text-4xl mb-2 text-gray-500"></i>
@@ -4698,41 +4887,132 @@
             const startIndex = (appState.currentPage - 1) * appState.itemsPerPage;
             const endIndex = Math.min(startIndex + appState.itemsPerPage, filteredProtocols.length);
             
-            // Create and append protocol cards for current page
-            for (let i = startIndex; i < endIndex; i++) {
-                const card = createProtocolCard(filteredProtocols[i], i - startIndex);
-                protocolCards.appendChild(card);
-            }
-            
-            // Update pagination UI
-            updatePagination(totalPages);
-            
-            // Trigger animations for newly added cards
-            setTimeout(() => {
-                document.querySelectorAll('.protocol-card').forEach((card, index) => {
-                    setTimeout(() => {
-                        card.classList.add('visible');
+            if (useVirtual) {
+                // Setup virtual list container
+                const viewport = document.createElement('div');
+                viewport.className = 'virtual-list-viewport';
+                virtualListContainer.appendChild(viewport);
+                
+                const itemsContainer = document.createElement('div');
+                itemsContainer.className = 'virtual-list-items';
+                itemsContainer.style.height = `${filteredProtocols.length * 200}px`; // Approximate height
+                viewport.appendChild(itemsContainer);
+                
+                // Function to render visible cards based on scroll position
+                const renderVisibleItems = () => {
+                    // Calculate visible range
+                    const scrollTop = window.scrollY;
+                    const viewportHeight = window.innerHeight;
+                    const bufferSize = appState.virtualBufferSize; // Cards to render outside viewport
+                    const cardHeight = 200; // Approximate height of a card in pixels
+                    
+                    // Calculate visible range with buffer
+                    const firstVisibleIndex = Math.max(0, Math.floor((scrollTop - 300) / cardHeight) - bufferSize);
+                    const lastVisibleIndex = Math.min(
+                        filteredProtocols.length - 1, 
+                        Math.ceil((scrollTop + viewportHeight + 300) / cardHeight) + bufferSize
+                    );
+                    
+                    // Get current page range
+                    const pageFirstIndex = startIndex;
+                    const pageLastIndex = endIndex - 1;
+                    
+                    // Only render cards that are both visible and in the current page
+                    const visibleStart = Math.max(firstVisibleIndex, pageFirstIndex);
+                    const visibleEnd = Math.min(lastVisibleIndex, pageLastIndex);
+                    
+                    // Get existing cards
+                    const existingCards = {};
+                    itemsContainer.querySelectorAll('.virtual-card').forEach(card => {
+                        existingCards[card.id] = card;
+                    });
+                    
+                    // Track which cards should remain
+                    const cardsToKeep = new Set();
+                    
+                    // Render visible cards
+                    for (let i = visibleStart; i <= visibleEnd; i++) {
+                        const protocol = filteredProtocols[i];
+                        const cardId = protocol.id;
+                        cardsToKeep.add(cardId);
                         
-                        // Restore expanded state if needed
-                        if (appState.expandedCards.has(card.id)) {
-                            card.classList.add('expanded');
-                            
-                            // Also rotate the icon properly
-                            const icon = card.querySelector('.expand-btn i');
-                            if (icon) {
-                                icon.style.transform = 'rotate(180deg)';
-                            }
-                            
-                            // Make list items visible 
-                            card.querySelectorAll('.list-item-animate').forEach((item, i) => {
-                                setTimeout(() => {
-                                    item.classList.add('list-item-visible');
-                                }, 50 + (i * 20));
-                            });
+                        if (existingCards[cardId]) {
+                            // Card already exists, update its position if needed
+                            existingCards[cardId].style.top = `${(i - pageFirstIndex) * cardHeight}px`;
+                        } else {
+                            // Create new card
+                            const card = createProtocolCard(protocol, i - pageFirstIndex);
+                            card.classList.add('virtual-card');
+                            card.style.top = `${(i - pageFirstIndex) * cardHeight}px`;
+                            itemsContainer.appendChild(card);
                         }
-                    }, index * 100);
-                });
-            }, 50);
+                    }
+                    
+                    // Remove cards that are no longer visible
+                    Object.keys(existingCards).forEach(cardId => {
+                        if (!cardsToKeep.has(cardId)) {
+                            existingCards[cardId].remove();
+                        }
+                    });
+                };
+                
+                // Set initial height of container based on visible items
+                itemsContainer.style.height = `${(endIndex - startIndex) * 200}px`;
+                
+                // Initial render
+                renderVisibleItems();
+                
+                // Add scroll event listener for virtual scrolling
+                if (!window.virtualScrollHandler) {
+                    window.virtualScrollHandler = debounce(renderVisibleItems, 100);
+                    window.addEventListener('scroll', window.virtualScrollHandler);
+                    
+                    // Cleanup handler if needed
+                    if (!window.virtualScrollCleanup) {
+                        window.virtualScrollCleanup = () => {
+                            window.removeEventListener('scroll', window.virtualScrollHandler);
+                        };
+                    }
+                }
+                
+                // Show pagination
+                document.getElementById('paginationContainer').style.display = 'flex';
+                
+                // Update pagination UI
+                updatePagination(totalPages);
+                
+            } else {
+                // Standard rendering for desktop or small lists
+                for (let i = startIndex; i < endIndex; i++) {
+                    const card = createProtocolCard(filteredProtocols[i], i - startIndex);
+                    protocolCards.appendChild(card);
+                }
+                
+                // Show pagination
+                document.getElementById('paginationContainer').style.display = 'flex';
+                
+                // Update pagination UI
+                updatePagination(totalPages);
+                
+                // Trigger animations for newly added cards
+                setTimeout(() => {
+                    document.querySelectorAll('.protocol-card').forEach((card, index) => {
+                        setTimeout(() => {
+                            card.classList.add('visible');
+                            
+                            if (appState.expandedCards.has(card.id)) {
+                                card.classList.add('expanded');
+                                const icon = card.querySelector('.expand-btn i');
+                                if (icon) icon.style.transform = 'rotate(180deg)';
+                                
+                                card.querySelectorAll('.list-item-animate').forEach((item, i) => {
+                                    setTimeout(() => item.classList.add('list-item-visible'), 50 + (i * 20));
+                                });
+                            }
+                        }, index * 100);
+                    });
+                }, 50);
+            }
             
             // Update progress bars
             setTimeout(updateProgress, 100);
@@ -4845,8 +5125,24 @@
             paginationContainer.appendChild(nextBtn);
         }
         
+        // Clean up resources for memory optimization
+        function cleanupHiddenElements() {
+            debug('Cleaning up hidden elements');
+            
+            // Remove event listeners from hidden elements
+            document.querySelectorAll('.protocol-card:not(.visible)').forEach(card => {
+                card.remove(); // Completely remove from DOM to free memory
+            });
+            
+            // Force garbage collection hint (not guaranteed but can help)
+            if (window.gc) window.gc();
+        }
+        
         // Navigate to a specific page
         function goToPage(page) {
+            // Clean up hidden elements before changing page
+            cleanupHiddenElements();
+            
             appState.currentPage = page;
             renderProtocolCards();
             window.scrollTo({
@@ -4890,98 +5186,207 @@
             // Format port display for multiple ports
             let portDisplay = getPortDisplay(protocol.port);
             
-            card.innerHTML = `
-                <div class="category-indicator" style="background: ${categoryColor}"></div>
-                <div class="card-header p-6 flex flex-col md:flex-row md:items-center justify-between" data-id="${protocol.id}">
-                    <div>
-                        <div class="flex items-center mb-2 flex-wrap">
-                            <h2 class="text-2xl font-bold">${protocol.name}</h2>
-                            <span class="ml-3 text-sm px-3 py-1 rounded-full glass-inset">${portDisplay}</span>
-                            <span class="category-badge ml-3 mt-1 md:mt-0" style="background: ${categoryColor}">${protocol.category}</span>
+            // Use optimized card for mobile or large datasets
+            if (appState.isMobile || appState.isLargeDataset) {
+                // Create a simplified card with lazy loading
+                card.innerHTML = `
+                    <div class="category-indicator" style="background: ${categoryColor}"></div>
+                    <div class="card-header p-4 flex flex-col justify-between" data-id="${protocol.id}">
+                        <div class="flex items-center justify-between flex-wrap">
+                            <h2 class="text-xl font-bold">${protocol.name}</h2>
+                            <span class="ml-2 text-sm px-2 py-1 rounded-full glass-inset">${portDisplay}</span>
                         </div>
-                        <p class="text-gray-400">${protocol.description}</p>
-                    </div>
-                    <div class="flex items-center mt-4 md:mt-0">
-                        <div class="mr-4 relative">
-                            <div class="text-sm text-gray-400 mb-1">Completion</div>
-                            <div class="progress-container w-32">
-                                <div class="progress-bar" data-protocol="${protocol.id}" style="width: ${percentage}%"></div>
-                                <div class="completion-percentage">${percentage}%</div>
+                        <p class="text-gray-400 text-sm mt-2">${protocol.description}</p>
+                        <div class="flex items-center justify-between mt-3">
+                            <div class="category-badge" style="background: ${categoryColor}">${protocol.category}</div>
+                            <div class="flex items-center">
+                                <div class="progress-container w-24 mr-2 relative">
+                                    <div class="progress-bar" data-protocol="${protocol.id}" style="width: ${percentage}%"></div>
+                                    <div class="completion-percentage">${percentage}%</div>
+                                </div>
+                                <button class="expand-btn bg-gray-800 hover:bg-gray-700 p-2 rounded-full">
+                                    <i class="bx bx-chevron-down text-xl transition-transform duration-300"></i>
+                                </button>
                             </div>
                         </div>
-                        <button class="expand-btn bg-gray-800 hover:bg-gray-700 p-2 rounded-full transition-all duration-300">
-                            <i class="bx bx-chevron-down text-2xl transition-transform duration-300"></i>
-                        </button>
                     </div>
-                </div>
-                <div class="card-content">
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-4">
-                        <div class="glass-inset p-4 content-section" style="transition-delay: 0.1s">
-                            <h3 class="text-lg font-semibold mb-3 flex items-center">
-                                <i class="bx bx-shield-quarter text-red-500 mr-2"></i>
-                                Vulnerabilities
-                            </h3>
-                            <ul class="space-y-3">
-                                ${protocol.vulnerabilities.map((vulnerability, i) => `
-                                    <li class="flex items-start list-item-animate" style="transition-delay: ${i * 50}ms">
-                                        <label class="toggle-container inline-flex mr-2 mt-0.5">
-                                            <input type="checkbox" class="toggle-input vulnerability-check" 
-                                                data-protocol="${protocol.id}" 
-                                                data-type="vulnerability" 
-                                                data-index="${i}"
-                                                ${appState.checkedItems[`${protocol.id}-vulnerability-${i}`] ? 'checked' : ''}>
-                                            <span class="toggle-slider"></span>
-                                        </label>
-                                        <span class="checkmark-animate ${appState.checkedItems[`${protocol.id}-vulnerability-${i}`] ? 'line-through text-gray-500' : ''}">${vulnerability}</span>
-                                    </li>
-                                `).join('')}
-                            </ul>
+                    <div class="card-content" data-loaded="false">
+                        <!-- Content will be loaded dynamically when expanded -->
+                    </div>
+                `;
+                
+                // Add click handler for lazy loading
+                card.addEventListener('click', function(e) {
+                    if (e.target.closest('.card-header') || e.target.closest('.expand-btn')) {
+                        const content = this.querySelector('.card-content');
+                        
+                        // Load content only if not already loaded
+                        if (content.getAttribute('data-loaded') === 'false') {
+                            content.innerHTML = `
+                                <div class="glass-inset p-3 content-section mb-3">
+                                    <h3 class="text-base font-semibold mb-2 flex items-center">
+                                        <i class="bx bx-shield-quarter text-red-500 mr-1"></i>
+                                        Vulnerabilities
+                                    </h3>
+                                    <ul class="space-y-2">
+                                        ${protocol.vulnerabilities.map((vulnerability, i) => `
+                                            <li class="flex items-start list-item-animate text-sm">
+                                                <label class="toggle-container inline-flex mr-2 mt-0.5">
+                                                    <input type="checkbox" class="toggle-input vulnerability-check" 
+                                                        data-protocol="${protocol.id}" 
+                                                        data-type="vulnerability" 
+                                                        data-index="${i}"
+                                                        ${appState.checkedItems[`${protocol.id}-vulnerability-${i}`] ? 'checked' : ''}>
+                                                    <span class="toggle-slider"></span>
+                                                </label>
+                                                <span class="checkmark-animate ${appState.checkedItems[`${protocol.id}-vulnerability-${i}`] ? 'line-through text-gray-500' : ''}">${vulnerability}</span>
+                                            </li>
+                                        `).join('')}
+                                    </ul>
+                                </div>
+                                <div class="glass-inset p-3 content-section mb-3">
+                                    <h3 class="text-base font-semibold mb-2 flex items-center">
+                                        <i class="bx bx-test-tube text-yellow-500 mr-1"></i>
+                                        Testing Procedures
+                                    </h3>
+                                    <ul class="space-y-2">
+                                        ${protocol.testing.map((test, i) => `
+                                            <li class="flex items-start list-item-animate text-sm">
+                                                <label class="toggle-container inline-flex mr-2 mt-0.5">
+                                                    <input type="checkbox" class="toggle-input testing-check" 
+                                                        data-protocol="${protocol.id}" 
+                                                        data-type="testing" 
+                                                        data-index="${i}"
+                                                        ${appState.checkedItems[`${protocol.id}-testing-${i}`] ? 'checked' : ''}>
+                                                    <span class="toggle-slider"></span>
+                                                </label>
+                                                <span class="checkmark-animate ${appState.checkedItems[`${protocol.id}-testing-${i}`] ? 'line-through text-gray-500' : ''}">${test}</span>
+                                            </li>
+                                        `).join('')}
+                                    </ul>
+                                </div>
+                                <div class="glass-inset p-3 content-section">
+                                    <h3 class="text-base font-semibold mb-2 flex items-center">
+                                        <i class="bx bx-wrench text-blue-500 mr-1"></i>
+                                        Tools
+                                    </h3>
+                                    <ul class="space-y-2">
+                                        ${protocol.tools.map((tool, i) => `
+                                            <li class="flex items-start list-item-animate text-sm">
+                                                <label class="toggle-container inline-flex mr-2 mt-0.5">
+                                                    <input type="checkbox" class="toggle-input tool-check" 
+                                                        data-protocol="${protocol.id}" 
+                                                        data-type="tool" 
+                                                        data-index="${i}"
+                                                        ${appState.checkedItems[`${protocol.id}-tool-${i}`] ? 'checked' : ''}>
+                                                    <span class="toggle-slider"></span>
+                                                </label>
+                                                <span class="checkmark-animate ${appState.checkedItems[`${protocol.id}-tool-${i}`] ? 'line-through text-gray-500' : ''}">${tool}</span>
+                                            </li>
+                                        `).join('')}
+                                    </ul>
+                                </div>
+                            `;
+                            content.setAttribute('data-loaded', 'true');
+                        }
+                    }
+                });
+                
+            } else {
+                // Use richer card for desktop
+                card.innerHTML = `
+                    <div class="category-indicator" style="background: ${categoryColor}"></div>
+                    <div class="card-header p-6 flex flex-col md:flex-row md:items-center justify-between" data-id="${protocol.id}">
+                        <div>
+                            <div class="flex items-center mb-2 flex-wrap">
+                                <h2 class="text-2xl font-bold">${protocol.name}</h2>
+                                <span class="ml-3 text-sm px-3 py-1 rounded-full glass-inset">${portDisplay}</span>
+                                <span class="category-badge ml-3 mt-1 md:mt-0" style="background: ${categoryColor}">${protocol.category}</span>
+                            </div>
+                            <p class="text-gray-400">${protocol.description}</p>
                         </div>
-                        <div class="glass-inset p-4 content-section" style="transition-delay: 0.2s">
-                            <h3 class="text-lg font-semibold mb-3 flex items-center">
-                                <i class="bx bx-test-tube text-yellow-500 mr-2"></i>
-                                Testing Procedures
-                            </h3>
-                            <ul class="space-y-3">
-                                ${protocol.testing.map((test, i) => `
-                                    <li class="flex items-start list-item-animate" style="transition-delay: ${i * 50}ms">
-                                        <label class="toggle-container inline-flex mr-2 mt-0.5">
-                                            <input type="checkbox" class="toggle-input testing-check" 
-                                                data-protocol="${protocol.id}" 
-                                                data-type="testing" 
-                                                data-index="${i}"
-                                                ${appState.checkedItems[`${protocol.id}-testing-${i}`] ? 'checked' : ''}>
-                                            <span class="toggle-slider"></span>
-                                        </label>
-                                        <span class="checkmark-animate ${appState.checkedItems[`${protocol.id}-testing-${i}`] ? 'line-through text-gray-500' : ''}">${test}</span>
-                                    </li>
-                                `).join('')}
-                            </ul>
-                        </div>
-                        <div class="glass-inset p-4 content-section" style="transition-delay: 0.3s">
-                            <h3 class="text-lg font-semibold mb-3 flex items-center">
-                                <i class="bx bx-wrench text-blue-500 mr-2"></i>
-                                Tools
-                            </h3>
-                            <ul class="space-y-3">
-                                ${protocol.tools.map((tool, i) => `
-                                    <li class="flex items-start list-item-animate" style="transition-delay: ${i * 50}ms">
-                                        <label class="toggle-container inline-flex mr-2 mt-0.5">
-                                            <input type="checkbox" class="toggle-input tool-check" 
-                                                data-protocol="${protocol.id}" 
-                                                data-type="tool" 
-                                                data-index="${i}"
-                                                ${appState.checkedItems[`${protocol.id}-tool-${i}`] ? 'checked' : ''}>
-                                            <span class="toggle-slider"></span>
-                                        </label>
-                                        <span class="checkmark-animate ${appState.checkedItems[`${protocol.id}-tool-${i}`] ? 'line-through text-gray-500' : ''}">${tool}</span>
-                                    </li>
-                                `).join('')}
-                            </ul>
+                        <div class="flex items-center mt-4 md:mt-0">
+                            <div class="mr-4 relative">
+                                <div class="text-sm text-gray-400 mb-1">Completion</div>
+                                <div class="progress-container w-32">
+                                    <div class="progress-bar" data-protocol="${protocol.id}" style="width: ${percentage}%"></div>
+                                    <div class="completion-percentage">${percentage}%</div>
+                                </div>
+                            </div>
+                            <button class="expand-btn bg-gray-800 hover:bg-gray-700 p-2 rounded-full transition-all duration-300">
+                                <i class="bx bx-chevron-down text-2xl transition-transform duration-300"></i>
+                            </button>
                         </div>
                     </div>
-                </div>
-            `;
+                    <div class="card-content">
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-4">
+                            <div class="glass-inset p-4 content-section" style="transition-delay: 0.1s">
+                                <h3 class="text-lg font-semibold mb-3 flex items-center">
+                                    <i class="bx bx-shield-quarter text-red-500 mr-2"></i>
+                                    Vulnerabilities
+                                </h3>
+                                <ul class="space-y-3">
+                                    ${protocol.vulnerabilities.map((vulnerability, i) => `
+                                        <li class="flex items-start list-item-animate" style="transition-delay: ${i * 50}ms">
+                                            <label class="toggle-container inline-flex mr-2 mt-0.5">
+                                                <input type="checkbox" class="toggle-input vulnerability-check" 
+                                                    data-protocol="${protocol.id}" 
+                                                    data-type="vulnerability" 
+                                                    data-index="${i}"
+                                                    ${appState.checkedItems[`${protocol.id}-vulnerability-${i}`] ? 'checked' : ''}>
+                                                <span class="toggle-slider"></span>
+                                            </label>
+                                            <span class="checkmark-animate ${appState.checkedItems[`${protocol.id}-vulnerability-${i}`] ? 'line-through text-gray-500' : ''}">${vulnerability}</span>
+                                        </li>
+                                    `).join('')}
+                                </ul>
+                            </div>
+                            <div class="glass-inset p-4 content-section" style="transition-delay: 0.2s">
+                                <h3 class="text-lg font-semibold mb-3 flex items-center">
+                                    <i class="bx bx-test-tube text-yellow-500 mr-2"></i>
+                                    Testing Procedures
+                                </h3>
+                                <ul class="space-y-3">
+                                    ${protocol.testing.map((test, i) => `
+                                        <li class="flex items-start list-item-animate" style="transition-delay: ${i * 50}ms">
+                                            <label class="toggle-container inline-flex mr-2 mt-0.5">
+                                                <input type="checkbox" class="toggle-input testing-check" 
+                                                    data-protocol="${protocol.id}" 
+                                                    data-type="testing" 
+                                                    data-index="${i}"
+                                                    ${appState.checkedItems[`${protocol.id}-testing-${i}`] ? 'checked' : ''}>
+                                                <span class="toggle-slider"></span>
+                                            </label>
+                                            <span class="checkmark-animate ${appState.checkedItems[`${protocol.id}-testing-${i}`] ? 'line-through text-gray-500' : ''}">${test}</span>
+                                        </li>
+                                    `).join('')}
+                                </ul>
+                            </div>
+                            <div class="glass-inset p-4 content-section" style="transition-delay: 0.3s">
+                                <h3 class="text-lg font-semibold mb-3 flex items-center">
+                                    <i class="bx bx-wrench text-blue-500 mr-2"></i>
+                                    Tools
+                                </h3>
+                                <ul class="space-y-3">
+                                    ${protocol.tools.map((tool, i) => `
+                                        <li class="flex items-start list-item-animate" style="transition-delay: ${i * 50}ms">
+                                            <label class="toggle-container inline-flex mr-2 mt-0.5">
+                                                <input type="checkbox" class="toggle-input tool-check" 
+                                                    data-protocol="${protocol.id}" 
+                                                    data-type="tool" 
+                                                    data-index="${i}"
+                                                    ${appState.checkedItems[`${protocol.id}-tool-${i}`] ? 'checked' : ''}>
+                                                <span class="toggle-slider"></span>
+                                            </label>
+                                            <span class="checkmark-animate ${appState.checkedItems[`${protocol.id}-tool-${i}`] ? 'line-through text-gray-500' : ''}">${tool}</span>
+                                        </li>
+                                    `).join('')}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
             
             return card;
         }
@@ -5012,22 +5417,14 @@
                 }
             });
             
+            // Clean up resources
+            cleanupHiddenElements();
+            
             // Force reflow before rendering to prevent race conditions
             document.body.offsetHeight;
             
             // Render new protocol cards
             renderProtocolCards();
-            
-            // Auto-scroll to first result
-            setTimeout(() => {
-                const firstCard = document.querySelector('.protocol-card');
-                if (firstCard) {
-                    window.scrollTo({
-                        top: firstCard.offsetTop - 20,
-                        behavior: 'smooth'
-                    });
-                }
-            }, 100);
             
             debug(`Category filter applied: "${category}"`);
         }
@@ -5048,16 +5445,6 @@
             });
             
             // Search functionality with debounce
-            const debounce = (func, delay) => {
-                let timeout;
-                return function() {
-                    const context = this;
-                    const args = arguments;
-                    clearTimeout(timeout);
-                    timeout = setTimeout(() => func.apply(context, args), delay);
-                };
-            };
-            
             document.getElementById('search').addEventListener('input', debounce((e) => {
                 appState.searchTerm = e.target.value.trim();
                 appState.currentPage = 1; // Reset to first page when search changes
@@ -5065,7 +5452,7 @@
                 renderProtocolCards();
             }, 300));
             
-            // Card expansion
+            // Card expansion with event delegation
             document.addEventListener('click', (e) => {
                 if (e.target.closest('.card-header') || e.target.closest('.expand-btn')) {
                     const card = e.target.closest('.protocol-card');
@@ -5075,19 +5462,7 @@
                 }
             });
             
-            // Keyboard navigation for pagination
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'ArrowLeft' && appState.currentPage > 1) {
-                    goToPage(appState.currentPage - 1);
-                } else if (e.key === 'ArrowRight') {
-                    const totalPages = Math.ceil(getFilteredProtocols().length / appState.itemsPerPage);
-                    if (appState.currentPage < totalPages) {
-                        goToPage(appState.currentPage + 1);
-                    }
-                }
-            });
-            
-            // Checkbox handling
+            // Checkbox handling with event delegation
             document.addEventListener('change', (e) => {
                 if (e.target.classList.contains('toggle-input')) {
                     const protocol = e.target.getAttribute('data-protocol');
@@ -5140,6 +5515,18 @@
                 }
             });
             
+            // Keyboard navigation for pagination
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowLeft' && appState.currentPage > 1) {
+                    goToPage(appState.currentPage - 1);
+                } else if (e.key === 'ArrowRight') {
+                    const totalPages = Math.ceil(getFilteredProtocols().length / appState.itemsPerPage);
+                    if (appState.currentPage < totalPages) {
+                        goToPage(appState.currentPage + 1);
+                    }
+                }
+            });
+            
             // Scroll animations
             window.addEventListener('scroll', debounce(handleScrollAnimations, 100));
             
@@ -5157,19 +5544,10 @@
             window.addEventListener('resize', debounce(() => {
                 // Update mobile state
                 const wasMobile = appState.isMobile;
-                appState.isMobile = window.innerWidth < 768;
+                detectDevice();
                 
                 // Only update if state changed
                 if (wasMobile !== appState.isMobile) {
-                    // Recalculate items per page based on screen size
-                    if (appState.isMobile) {
-                        appState.itemsPerPage = 3;
-                    } else if (window.innerWidth < 1280) {
-                        appState.itemsPerPage = 4;
-                    } else {
-                        appState.itemsPerPage = 5;
-                    }
-                    
                     // Re-render without changing page
                     renderProtocolCards();
                 }
@@ -5178,39 +5556,7 @@
             debug('Event listeners setup complete');
         }
 
-        // Add this utility function somewhere in your script
-        function animateElement(element, keyframes, options) {
-            // Check if Web Animations API is supported
-            if ('animate' in element) {
-                // Use reduced motion setting if user prefers it
-                if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-                    options.duration = options.duration / 2;
-                }
-                
-                return element.animate(keyframes, options);
-            } else {
-                // Fallback for browsers without Web Animations API
-                const animation = { finished: Promise.resolve() };
-                
-                // Apply the first keyframe immediately
-                const firstFrame = keyframes[0];
-                Object.keys(firstFrame).forEach(property => {
-                    element.style[property] = firstFrame[property];
-                });
-                
-                // Use setTimeout to apply the last keyframe
-                setTimeout(() => {
-                    const lastFrame = keyframes[keyframes.length - 1];
-                    Object.keys(lastFrame).forEach(property => {
-                        element.style[property] = lastFrame[property];
-                    });
-                }, options.duration || 300);
-                
-                return animation;
-            }
-        }
-
-        // Enhanced toggleCardExpansion function with advanced animation
+        // Enhanced toggleCardExpansion function with simplified animation for mobile
         function toggleCardExpansion(card) {
             if (!card) return;
             
@@ -5228,102 +5574,67 @@
                 appState.expandedCards.add(id);
             }
             
-            // Use the Web Animations API for smoother animation
-            if (wasExpanded) {
-                // 1. Animate content sections out
-                const sections = card.querySelectorAll('.content-section');
-                sections.forEach((section, index) => {
-                    animateElement(section, [
-                        { opacity: 1, transform: 'translateY(0)' },
-                        { opacity: 0, transform: 'translateY(15px)' }
-                    ], {
-                        duration: 200,
-                        easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
-                        fill: 'forwards',
-                        delay: index * 30
-                    });
-                });
-                
-                // 2. Animate icon rotation
-                animateElement(icon, [
-                    { transform: 'rotate(180deg)' },
-                    { transform: 'rotate(0deg)' }
-                ], {
-                    duration: 300,
-                    easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
-                    fill: 'forwards'
-                });
-                
-                // 3. Wait a bit then collapse the card content
-                setTimeout(() => {
+            // Use simplified animations on mobile
+            if (appState.reducedAnimations) {
+                // Simple toggle without complex animations
+                if (wasExpanded) {
                     card.classList.remove('expanded');
+                    icon.style.transform = '';
+                } else {
+                    card.classList.add('expanded');
+                    icon.style.transform = 'rotate(180deg)';
                     
-                    // Smooth animation with GPU acceleration
-                    animateElement(cardContent, [
-                        { opacity: 1, maxHeight: `${cardContent.scrollHeight}px`, transform: 'translateY(0)' },
-                        { opacity: 0, maxHeight: '0px', transform: 'translateY(10px)' }
-                    ], {
-                        duration: 300,
-                        easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
-                        fill: 'forwards'
+                    // Make list items visible immediately
+                    card.querySelectorAll('.list-item-animate').forEach(item => {
+                        item.classList.add('list-item-visible');
                     });
-                }, 80);
-                
+                }
             } else {
-                // 1. Expand the card
-                card.classList.add('expanded');
-                
-                // 2. Animate content expansion
-                animateElement(cardContent, [
-                    { opacity: 0, maxHeight: '0px', transform: 'translateY(10px)' },
-                    { opacity: 1, maxHeight: '2000px', transform: 'translateY(0)' }
-                ], {
-                    duration: appState.isMobile ? 400 : 500,
-                    easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
-                    fill: 'forwards'
-                });
-                
-                // 3. Animate icon rotation
-                animateElement(icon, [
-                    { transform: 'rotate(0deg)' },
-                    { transform: 'rotate(180deg)' }
-                ], {
-                    duration: 400,
-                    easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
-                    fill: 'forwards'
-                });
-                
-                // 4. Animate content sections in with staggered delay
-                const sections = card.querySelectorAll('.content-section');
-                const sectionDelay = appState.isMobile ? 80 : 150;
-                
-                sections.forEach((section, index) => {
-                    animateElement(section, [
-                        { opacity: 0, transform: 'translateY(15px)' },
-                        { opacity: 1, transform: 'translateY(0)' }
-                    ], {
-                        duration: 400,
-                        easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
-                        fill: 'forwards',
-                        delay: sectionDelay + (index * 80)
+                // Richer animations for desktop
+                if (wasExpanded) {
+                    // 1. Animate content sections out
+                    const sections = card.querySelectorAll('.content-section');
+                    sections.forEach((section, index) => {
+                        section.style.opacity = '0';
+                        section.style.transform = 'translateY(15px)';
                     });
-                });
-                
-                // 5. Animate list items with staggered delay
-                const listItems = card.querySelectorAll('.list-item-animate');
-                const itemDelay = appState.isMobile ? 10 : 30;
-                
-                listItems.forEach((item, index) => {
-                    animateElement(item, [
-                        { opacity: 0, transform: 'translateX(20px)' },
-                        { opacity: 1, transform: 'translateX(0)' }
-                    ], {
-                        duration: 400,
-                        easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
-                        fill: 'forwards',
-                        delay: 200 + (index * itemDelay)
+                    
+                    // 2. Animate icon rotation
+                    icon.style.transform = '';
+                    
+                    // 3. Collapse the card content
+                    setTimeout(() => {
+                        card.classList.remove('expanded');
+                    }, 80);
+                    
+                } else {
+                    // 1. Expand the card
+                    card.classList.add('expanded');
+                    
+                    // 2. Animate icon rotation
+                    icon.style.transform = 'rotate(180deg)';
+                    
+                    // 3. Animate content sections in with staggered delay
+                    const sections = card.querySelectorAll('.content-section');
+                    const sectionDelay = 150;
+                    
+                    sections.forEach((section, index) => {
+                        setTimeout(() => {
+                            section.style.opacity = '1';
+                            section.style.transform = 'translateY(0)';
+                        }, sectionDelay + (index * 80));
                     });
-                });
+                    
+                    // 4. Animate list items with staggered delay
+                    const listItems = card.querySelectorAll('.list-item-animate');
+                    const itemDelay = 30;
+                    
+                    listItems.forEach((item, index) => {
+                        setTimeout(() => {
+                            item.classList.add('list-item-visible');
+                        }, 200 + (index * itemDelay));
+                    });
+                }
             }
         }
 
@@ -5372,7 +5683,7 @@
                 
                 window.scrollTo({
                     top: element.offsetTop - 20,
-                    behavior: 'smooth'
+                    behavior: appState.reducedAnimations ? 'auto' : 'smooth'
                 });
                 
                 // Highlight and expand the card
@@ -5396,7 +5707,13 @@
         function updateProgress() {
             debug('Updating progress bars');
             
-            protocolData.forEach(protocol => {
+            document.querySelectorAll('.progress-bar').forEach(bar => {
+                const protocolId = bar.getAttribute('data-protocol');
+                if (!protocolId) return;
+                
+                const protocol = protocolData.find(p => p.id === protocolId);
+                if (!protocol) return;
+                
                 const totalItems = protocol.vulnerabilities.length + protocol.testing.length + protocol.tools.length;
                 let checkedCount = 0;
                 
@@ -5418,24 +5735,14 @@
                 // Calculate percentage
                 const percentage = totalItems > 0 ? Math.round((checkedCount / totalItems) * 100) : 0;
                 
-                // Update protocol progress bar with smooth animation
-                const progressBars = document.querySelectorAll(`.progress-bar[data-protocol="${protocol.id}"]`);
-                progressBars.forEach(bar => {
-                    animateElement(bar, [
-                        { width: bar.style.width || '0%' },
-                        { width: `${percentage}%` }
-                    ], {
-                        duration: 500,
-                        easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
-                        fill: 'forwards'
-                    });
-                    
-                    // Update percentage text if present
-                    const percentageText = bar.closest('.progress-container').querySelector('.completion-percentage');
-                    if (percentageText) {
-                        percentageText.textContent = `${percentage}%`;
-                    }
-                });
+                // Update progress bar width
+                bar.style.width = `${percentage}%`;
+                
+                // Update percentage text if present
+                const percentageText = bar.closest('.progress-container').querySelector('.completion-percentage');
+                if (percentageText) {
+                    percentageText.textContent = `${percentage}%`;
+                }
             });
         }
 
@@ -5443,16 +5750,19 @@
         function initializeAnimations() {
             debug('Initializing animations');
             
-            // Stagger the initial card animations
-            document.querySelectorAll('.protocol-card').forEach((card, index) => {
-                // Use less delay on mobile for snappier response
-                const delay = appState.isMobile ? 50 : 100;
-                card.style.transitionDelay = `${index * 0.1}s`;
-                
-                setTimeout(() => {
+            if (appState.reducedAnimations) {
+                // Simple fade-in for all cards at once
+                document.querySelectorAll('.protocol-card').forEach(card => {
                     card.classList.add('visible');
-                }, delay + (index * delay));
-            });
+                });
+            } else {
+                // Stagger the initial card animations
+                document.querySelectorAll('.protocol-card').forEach((card, index) => {
+                    setTimeout(() => {
+                        card.classList.add('visible');
+                    }, 100 + (index * 100));
+                });
+            }
             
             // Trigger section animations that are initially visible
             handleScrollAnimations();
@@ -5491,7 +5801,10 @@
                 'mail': 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
                 'network': 'linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%)',
                 'web': 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
-                'database': 'linear-gradient(135deg, #0EA5E9 0%, #0369A1 100%)'
+                'database': 'linear-gradient(135deg, #0EA5E9 0%, #0369A1 100%)',
+                'messaging': 'linear-gradient(135deg, #14B8A6 0%, #0F766E 100%)',
+                'auth': 'linear-gradient(135deg, #F472B6 0%, #DB2777 100%)',
+                'storage': 'linear-gradient(135deg, #4ADE80 0%, #16A34A 100%)'
             };
             
             // If we have a predefined color, use it
@@ -5528,9 +5841,23 @@
                 hsl(${h2}, ${s2}%, ${l2}%) 100%)`;
         }
         
-        // Update progress on initial load
+        // Add helper text to page
+        function addHelperText() {
+            const helperText = document.createElement('div');
+            helperText.className = 'text-center py-4 text-gray-400 text-sm';
+            helperText.innerHTML = `
+                <p>To test with large data sets, add <code>?dataSize=100</code> to the URL.</p>
+                <p class="mt-1">For example: <code>yourpage.html?dataSize=100</code> will generate 100 protocols.</p>
+            `;
+            document.getElementById('paginationContainer').after(helperText);
+        }
+        
+        // After everything is set up, add helper text if in dev mode
         window.addEventListener('load', () => {
             setTimeout(updateProgress, 300);
+            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                addHelperText();
+            }
         });
     </script>
 </body>
