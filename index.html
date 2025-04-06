@@ -60,13 +60,7 @@
         .category-filters { display: flex; gap: 0.75rem; flex-wrap: wrap; }
         .category-filter { padding: 0.4rem 1rem; border-radius: 9999px; cursor: pointer; transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1); background: rgba(15, 23, 42, 0.3); border: 1px solid rgba(255, 255, 255, 0.05); position: relative; overflow: hidden; font-weight: 500; will-change: transform; font-size: 0.85rem; }
         .category-filter:hover { background: rgba(15, 23, 42, 0.5); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); }
-        /* --- MODIFIED: Use CSS variable for active background --- */
-        .category-filter.active {
-            background: var(--active-filter-bg, var(--primary)); /* Use variable, fallback to primary */
-            box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
-            transform: translateY(-2px);
-            color: white;
-        }
+        .category-filter.active { background: var(--active-filter-bg, var(--primary)); box-shadow: 0 0 20px rgba(139, 92, 246, 0.3); transform: translateY(-2px); color: white; }
         .category-filter.active::after { content: ''; position: absolute; top: 0; left: -100%; width: 200%; height: 100%; background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%); animation: shine 3s infinite; }
         .fade-in { animation: fadeIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards; opacity: 0; } @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } } .slide-in-right { animation: slideInRight 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards; } @keyframes slideInRight { from { transform: translateX(30px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         ::-webkit-scrollbar { width: 8px; } ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.2); border-radius: 10px; } ::-webkit-scrollbar-thumb { background: var(--primary-dark); border-radius: 10px; transition: all 0.3s ease; } ::-webkit-scrollbar-thumb:hover { background: var(--primary); box-shadow: 0 0 10px var(--primary); }
@@ -3643,7 +3637,7 @@
             checkedItems: {},
             currentPage: 1,
             itemsPerPage: 5,
-            debug: true, // Enable debug logging
+            debug: false, // Set to true for console logs
             expandedCards: new Set(),
             isMobile: false,
             observer: null
@@ -3668,11 +3662,11 @@
                 updateDeviceState();
                 createBackgroundParticles();
                 loadCheckedItems();
-                initializeSidebar();
-                initializeMainCategoryFilters(); // Init filters in main content
+                renderSidebarProtocols(); // Render sidebar list initially
+                initializeMainCategoryFilters(); // Populate category filters
                 setupEventListeners();
                 initializeAnimations();
-                renderProtocolCards();
+                renderProtocolCards(); // Render main content cards
                 setTimeout(updateProgress, 300);
                 debug('App initialized.');
              } catch (error) {
@@ -3692,8 +3686,10 @@
             else if (window.innerWidth < 1280) { appState.itemsPerPage = 4; }
             else { appState.itemsPerPage = 5; }
             debug(`Device state: isMobile=${appState.isMobile}, itemsPerPage=${appState.itemsPerPage}`);
+            // Re-render if device type changes after load, which might affect layout/itemsPerPage
             if (document.readyState === 'complete' && wasMobile !== appState.isMobile) {
                  renderProtocolCards();
+                 renderSidebarProtocols(); // Sidebar might need update if filtering logic changes based on screen (though unlikely here)
             }
          }
 
@@ -3712,16 +3708,10 @@
             const particleCount = appState.isMobile ? 4 : 8;
             container.innerHTML = '';
             for (let i = 0; i < particleCount; i++) {
-                 const size = Math.random() * 100 + 30;
-                 const particle = document.createElement('div');
-                 particle.className = 'floating-particle';
-                 particle.style.width = `${size}px`; particle.style.height = `${size}px`;
-                 particle.style.left = `${Math.random() * 100}vw`; particle.style.bottom = `-${size}px`;
-                 particle.style.animationDuration = `${Math.random() * 25 + 20}s`;
-                 particle.style.animationDelay = `${Math.random() * 18}s`;
-                 particle.style.setProperty('--x-travel', Math.random() * 0.2 - 0.1);
-                 particle.style.background = Math.random() > 0.5 ? 'var(--primary-alpha)' : 'var(--secondary-alpha)';
-                 container.appendChild(particle);
+                 const size = Math.random() * 100 + 30; const particle = document.createElement('div'); particle.className = 'floating-particle';
+                 particle.style.width = `${size}px`; particle.style.height = `${size}px`; particle.style.left = `${Math.random() * 100}vw`; particle.style.bottom = `-${size}px`;
+                 particle.style.animationDuration = `${Math.random() * 25 + 20}s`; particle.style.animationDelay = `${Math.random() * 18}s`; particle.style.setProperty('--x-travel', Math.random() * 0.2 - 0.1);
+                 particle.style.background = Math.random() > 0.5 ? 'var(--primary-alpha)' : 'var(--secondary-alpha)'; container.appendChild(particle);
              }
         }
 
@@ -3733,28 +3723,27 @@
              return '';
          }
 
-        function initializeSidebar() {
-            debug('Initializing sidebar protocol list...');
+        // Renders the filtered list of protocols in the sidebar
+        function renderSidebarProtocols() {
+            debug('Rendering sidebar protocol list...');
             const protocolNav = document.getElementById('protocolNav');
-            if (!protocolNav) { console.error("Sidebar initialization failed: Nav container not found."); return; }
+            if (!protocolNav) { console.error("Sidebar render failed: Nav container not found."); return; }
             protocolNav.innerHTML = '';
-             const sortedProtocols = [...protocolData].sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+            const filteredProtocols = getFilteredProtocols();
+            if (filteredProtocols.length === 0) { protocolNav.innerHTML = '<p class="text-sm text-neutral-500 px-3">No matching protocols.</p>'; return; }
+            const sortedProtocols = [...filteredProtocols].sort((a, b) => (a.name || '').localeCompare(b.name || ''));
              sortedProtocols.forEach((protocol, index) => {
-                 if (!protocol || !protocol.id) { console.warn(`Skipping invalid protocol data at index ${index}:`, protocol); return; }
-                 const navItem = document.createElement('div');
-                 navItem.className = 'glass-inset py-3 pr-3 cursor-pointer transition-all duration-300 protocol-nav-item fade-in';
-                 navItem.setAttribute('data-protocol-id', protocol.id);
-                 navItem.setAttribute('data-category', protocol.category || 'default');
-                 navItem.style.animationDelay = `${index * 0.05}s`;
-                 const categoryColor = getCategoryColor(protocol.category);
-                 navItem.style.setProperty('--nav-item-color', categoryColor);
-                 let portDisplayHtml = getPortDisplay(protocol.port);
-                 navItem.innerHTML = `<div class="flex items-center justify-between text-sm"><div class="flex items-center overflow-hidden whitespace-nowrap text-ellipsis"><i class="bx bx-chevron-right mr-1 text-primary flex-shrink-0"></i><span class="overflow-hidden whitespace-nowrap text-ellipsis">${protocol.name || 'Unnamed'}</span></div> ${portDisplayHtml}</div>`;
+                 if (!protocol || !protocol.id) return;
+                 const navItem = document.createElement('div'); navItem.className = 'glass-inset py-3 pr-3 cursor-pointer transition-all duration-300 protocol-nav-item fade-in';
+                 navItem.setAttribute('data-protocol-id', protocol.id); navItem.setAttribute('data-category', protocol.category || 'default'); navItem.style.animationDelay = `${index * 0.03}s`;
+                 const categoryColor = getCategoryColor(protocol.category); navItem.style.setProperty('--nav-item-color', categoryColor);
+                 navItem.innerHTML = `<div class="flex items-center justify-between text-sm"><div class="flex items-center overflow-hidden whitespace-nowrap text-ellipsis"><i class="bx bx-chevron-right mr-1 text-primary flex-shrink-0"></i><span class="overflow-hidden whitespace-nowrap text-ellipsis">${protocol.name || 'Unnamed'}</span></div></div>`;
                  protocolNav.appendChild(navItem);
             });
-            debug('Sidebar protocol list initialized');
+            debug(`Sidebar protocol list rendered with ${filteredProtocols.length} items.`);
         }
 
+        // Populates the category filter buttons in the main content area
         function initializeMainCategoryFilters() {
             debug('Initializing main category filters...');
             const categoryFilters = document.getElementById('categoryFilters');
@@ -3763,18 +3752,19 @@
              let allCategoryBtn = categoryFilters.querySelector('[data-category="all"]');
              if (!allCategoryBtn) { console.warn("'All' category button not found in HTML, creating dynamically."); allCategoryBtn = document.createElement('button'); allCategoryBtn.className = 'category-filter active'; allCategoryBtn.setAttribute('data-category', 'all'); allCategoryBtn.textContent = 'All'; categoryFilters.insertBefore(allCategoryBtn, categoryFilters.firstChild); }
              else { const existingFilters = categoryFilters.querySelectorAll('.category-filter:not([data-category="all"])'); existingFilters.forEach(btn => btn.remove()); allCategoryBtn.classList.add('active'); }
-             // Set 'All' button initial background
-             allCategoryBtn.style.setProperty('--active-filter-bg', 'var(--primary)');
+             allCategoryBtn.style.setProperty('--active-filter-bg', 'var(--primary)'); // Set initial 'All' color
              categories.forEach(category => { const categoryBtn = document.createElement('button'); categoryBtn.className = 'category-filter'; categoryBtn.setAttribute('data-category', category); categoryBtn.textContent = category.charAt(0).toUpperCase() + category.slice(1); categoryFilters.appendChild(categoryBtn); });
              debug('Main category filters initialized');
         }
 
+        // Gets the list of protocols matching current filters and search term
         function getFilteredProtocols() {
              try {
                  const lowerSearchTerm = appState.searchTerm.toLowerCase();
                  const filtered = protocolData.filter(protocol => {
                      if (!protocol || typeof protocol.name !== 'string' || typeof protocol.description !== 'string' ) { return false; }
-                     const matchesCategory = appState.currentFilter === 'all' || protocol.category === appState.currentFilter;
+                     const currentCategory = appState.currentFilter === 'all' ? null : appState.currentFilter; const protocolCategory = protocol.category || 'default';
+                     const matchesCategory = !currentCategory || protocolCategory === currentCategory;
                      const matchesSearch = !lowerSearchTerm || protocol.name.toLowerCase().includes(lowerSearchTerm) || protocol.description.toLowerCase().includes(lowerSearchTerm) || matchesPort(protocol.port, lowerSearchTerm);
                      return matchesCategory && matchesSearch;
                  });
@@ -3782,13 +3772,11 @@
              } catch (error) { console.error("Error during protocol filtering:", error); return []; }
          }
 
+         // Checks if a protocol's port matches the (potentially multi-port) search term
          function matchesPort(protocolPort, searchTerm) {
              if (protocolPort === null || typeof protocolPort === 'undefined' || !searchTerm) return false;
-             const portStr = String(protocolPort).toLowerCase();
-             const searchStr = String(searchTerm).toLowerCase().trim();
-             if (!portStr || !searchStr) return false;
-             const searchPorts = searchStr.split(',').map(p => p.trim()).filter(p => p !== '');
-             if (searchPorts.length === 0) return false;
+             const portStr = String(protocolPort).toLowerCase(); const searchStr = String(searchTerm).toLowerCase().trim(); if (!portStr || !searchStr) return false;
+             const searchPorts = searchStr.split(',').map(p => p.trim()).filter(p => p !== ''); if (searchPorts.length === 0) return false;
              for (const singleSearchPort of searchPorts) {
                  if (portStr === singleSearchPort) return true;
                  if (portStr.includes(',')) { const protocolPortList = portStr.split(',').map(p => p.trim()); if (protocolPortList.includes(singleSearchPort)) return true; }
@@ -3798,10 +3786,9 @@
              return false;
         }
 
+        // Renders the protocol cards in the main content area based on current state
         function renderProtocolCards() {
-            const container = document.getElementById('protocolCards');
-            const pagination = document.getElementById('paginationContainer');
-            const loadingIndicator = document.getElementById('loadingIndicator');
+            const container = document.getElementById('protocolCards'); const pagination = document.getElementById('paginationContainer'); const loadingIndicator = document.getElementById('loadingIndicator');
             if (!container || !pagination || !loadingIndicator) { console.error("Render failed: Essential elements not found during render call."); return; }
             const currentPageForRender = appState.currentPage; const currentFilterForRender = appState.currentFilter; const currentSearchForRender = appState.searchTerm;
             debug(`renderProtocolCards START: Filter="${currentFilterForRender}", Search="${currentSearchForRender}", Page=${currentPageForRender}`);
@@ -3811,16 +3798,11 @@
                 try {
                     if (appState.observer) appState.observer.disconnect();
                     const filtered = getFilteredProtocols();
-                    if (filtered.length === 0) {
-                         container.innerHTML = `<div class="no-results section-animate visible col-span-full"><i class="bx bx-search text-4xl mb-2 text-gray-500"></i><h3 class="text-xl font-semibold mb-2">No protocols found</h3><p class="text-gray-400">Try adjusting your search or category filter.</p></div>`;
-                         pagination.style.display = 'none'; requestAnimationFrame(() => container.querySelector('.no-results')?.classList.add('visible')); debug('No results found.');
-                    } else {
-                        const totalPages = Math.ceil(filtered.length / appState.itemsPerPage);
-                        let validatedPage = Math.max(1, Math.min(currentPageForRender, totalPages));
+                    if (filtered.length === 0) { container.innerHTML = `<div class="no-results section-animate visible col-span-full"><i class="bx bx-search text-4xl mb-2 text-gray-500"></i><h3 class="text-xl font-semibold mb-2">No protocols found</h3><p class="text-gray-400">Try adjusting your search or category filter.</p></div>`; pagination.style.display = 'none'; requestAnimationFrame(() => container.querySelector('.no-results')?.classList.add('visible')); debug('No results found.'); }
+                    else {
+                        const totalPages = Math.ceil(filtered.length / appState.itemsPerPage); let validatedPage = Math.max(1, Math.min(currentPageForRender, totalPages));
                          if (validatedPage !== currentPageForRender) { debug(`Page validation changed page number from ${currentPageForRender} to ${validatedPage} (totalPages: ${totalPages})`); if(appState.currentPage !== validatedPage) { appState.currentPage = validatedPage; debug(`Global appState.currentPage corrected to ${validatedPage}`); } }
-                        debug(`renderProtocolCards SLICING: Using page ${validatedPage}`);
-                        const start = (validatedPage - 1) * appState.itemsPerPage; const end = Math.min(start + appState.itemsPerPage, filtered.length);
-                        debug(`Calculated start: ${start}, end: ${end}, totalFiltered: ${filtered.length}`);
+                        debug(`renderProtocolCards SLICING: Using page ${validatedPage}`); const start = (validatedPage - 1) * appState.itemsPerPage; const end = Math.min(start + appState.itemsPerPage, filtered.length); debug(`Calculated start: ${start}, end: ${end}, totalFiltered: ${filtered.length}`);
                         const toRender = filtered.slice(start, end);
                         if (toRender.length === 0 && filtered.length > 0) { console.warn(`Pagination issue? Page ${validatedPage}, start ${start}, end ${end} resulted in empty slice from ${filtered.length} items.`); container.innerHTML = `<div class="no-results section-animate visible col-span-full"><i class='bx bx-error text-4xl text-yellow-500 mb-2'></i><h3 class="text-xl font-semibold mb-2 text-yellow-400">Pagination Error</h3><p class="text-gray-400">Could not display items for this page.</p></div>`; }
                         else { toRender.forEach((protocol, index) => { const card = createProtocolCard(protocol, index); if (card) { container.appendChild(card); if (appState.observer) appState.observer.observe(card); } }); updatePagination(totalPages); }
@@ -3831,6 +3813,7 @@
              });
         }
 
+        // Updates the pagination controls based on the total number of pages
         function updatePagination(totalPages) {
              const container = document.getElementById('paginationContainer'); if (!container) return; container.innerHTML = ''; if (totalPages <= 1) { container.style.display = 'none'; return; } container.style.display = 'flex';
              const prevBtn = document.createElement('button'); prevBtn.className = 'pagination-btn'; prevBtn.innerHTML = '<i class="bx bx-chevron-left pointer-events-none"></i>'; prevBtn.disabled = appState.currentPage === 1; prevBtn.setAttribute('aria-label', 'Previous page'); prevBtn.addEventListener('click', () => goToPage(appState.currentPage - 1)); container.appendChild(prevBtn);
@@ -3841,6 +3824,7 @@
              const nextBtn = document.createElement('button'); nextBtn.className = 'pagination-btn'; nextBtn.innerHTML = '<i class="bx bx-chevron-right pointer-events-none"></i>'; nextBtn.disabled = appState.currentPage === totalPages; nextBtn.setAttribute('aria-label', 'Next page'); nextBtn.addEventListener('click', () => goToPage(appState.currentPage + 1)); container.appendChild(nextBtn);
          }
 
+        // Navigates to a specific page number
         function goToPage(page) {
             debug(`goToPage called with requested page: ${page}, current page: ${appState.currentPage}`); if (page < 1 || page === appState.currentPage) { debug(`goToPage ignored: Page ${page} is invalid or same as current.`); return; }
             const filtered = getFilteredProtocols(); const totalPages = Math.ceil(filtered.length / appState.itemsPerPage);
@@ -3850,6 +3834,7 @@
             const mainContent = document.getElementById('mainContent'); if (mainContent) { mainContent.scrollIntoView({ behavior: 'smooth', block: 'start' }); } else { window.scrollTo({ top: 0, behavior: 'smooth' }); }
         }
 
+        // Generates HTML for list items (vulnerabilities, testing, tools)
         function generateListItems(items, type, protocolId) {
               if (!items || items.length === 0) return '<li class="text-gray-500 text-sm list-item-no-checkbox">None listed.</li>';
               const includeCheckbox = (type === 'testing');
@@ -3863,6 +3848,7 @@
               }).join('');
           }
 
+        // Creates the HTML structure for a single protocol card
         function createProtocolCard(protocol, indexOnPage) {
              try {
                  if (!protocol || !protocol.id || !protocol.name) { console.warn("Skipping card creation: invalid protocol data:", protocol); return null; }
@@ -3872,6 +3858,7 @@
                  const percentage = totalItems > 0 ? Math.round((checkedCount / totalItems) * 100) : 0; let portDisplayHtml = getPortDisplay(protocol.port); const isExpanded = appState.expandedCards.has(protocol.id);
                  const vulnerabilitiesList = generateListItems(protocol.vulnerabilities, 'vulnerability', protocol.id); const testingList = generateListItems(protocol.testing, 'testing', protocol.id); const toolsList = generateListItems(protocol.tools, 'tool', protocol.id);
                  card.innerHTML = `<div class="category-indicator" style="background: ${categoryColor}"></div> <div class="card-header p-4 md:p-6 flex flex-col md:flex-row md:items-center justify-between" data-id="${protocol.id}"> <div class="flex-grow mb-3 md:mb-0 md:mr-4"><div class="flex items-center mb-1 flex-wrap"><h2 class="text-xl md:text-2xl font-bold mr-3">${protocol.name}</h2>${portDisplayHtml}<span class="category-badge ml-3 mt-1 md:mt-0" style="background: ${categoryColor};">${protocol.category || 'other'}</span></div><p class="text-gray-400 text-sm">${protocol.description || ''}</p></div> <div class="flex items-center justify-between md:justify-start flex-shrink-0"><div class="mr-4 relative text-center md:text-left"><div class="text-xs text-gray-400 mb-1">Testing Progress</div><div class="progress-container w-24 md:w-32"><div class="progress-bar" data-protocol="${protocol.id}" style="width: ${percentage}%"></div><div class="completion-percentage">${percentage}%</div></div></div><button class="expand-btn bg-gray-800 hover:bg-gray-700 p-2 rounded-full transition-all duration-300" aria-expanded="${isExpanded}"><i class="bx bx-chevron-down text-2xl transition-transform duration-300 ${isExpanded ? 'transform rotate-180' : ''}"></i></button></div> </div> <div class="card-content"><div class="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6 pt-2 md:pt-4"><div class="glass-inset p-4 content-section"><h3 class="text-base md:text-lg font-semibold mb-3 flex items-center"><i class="bx bx-shield-quarter text-red-500 mr-2"></i> Vulnerabilities</h3><ul class="space-y-2">${vulnerabilitiesList}</ul></div><div class="glass-inset p-4 content-section"><h3 class="text-base md:text-lg font-semibold mb-3 flex items-center"><i class="bx bx-test-tube text-yellow-500 mr-2"></i> Testing</h3><ul class="space-y-2">${testingList}</ul></div><div class="glass-inset p-4 content-section"><h3 class="text-base md:text-lg font-semibold mb-3 flex items-center"><i class="bx bx-wrench text-blue-500 mr-2"></i> Tools</h3><ul class="space-y-2">${toolsList}</ul></div></div></div>`;
+                 // Apply expanded styles immediately if needed, without transition
                  if (isExpanded) {
                      card.classList.add('expanded'); const content = card.querySelector('.card-content');
                      if (content) { const originalTransition = content.style.transition; content.style.transition = 'none'; content.style.maxHeight = '2000px'; content.style.opacity = '1'; content.style.visibility = 'visible'; content.style.transform = 'translateY(0)'; content.style.paddingTop = '1rem'; content.style.paddingBottom = '20px';
@@ -3883,52 +3870,25 @@
              } catch (error) { console.error(`Error creating card for protocol ${protocol?.id}:`, error); return null; }
           }
 
-        // *** MODIFIED: Sets category button background color ***
+        // Filters the view by category
         function filterByCategory(category) {
-            debug(`Filtering category: "${category}"`);
-            if (appState.currentFilter === category) return;
-
-            appState.currentFilter = category;
-            appState.currentPage = 1;
-
-            // Update filter button active state AND color
+            debug(`Filtering category: "${category}"`); if (appState.currentFilter === category) return;
+            appState.currentFilter = category; appState.currentPage = 1;
             document.querySelectorAll('#categoryFilters .category-filter').forEach(btn => {
-                const btnCategory = btn.getAttribute('data-category');
-                const isActive = (btnCategory === category);
-
-                btn.classList.toggle('active', isActive);
-
-                if (isActive) {
-                    const activeColor = (category === 'all')
-                        ? 'var(--primary)' // Use the primary CSS variable value
-                        : getCategoryColor(category); // Get the dynamic gradient
-
-                    btn.style.setProperty('--active-filter-bg', activeColor); // Set the CSS variable
-                    debug(`Set active color for filter '${category}': ${activeColor}`);
-                } else {
-                     // Optional: Reset the variable if needed, but removing class is key
-                     // btn.style.removeProperty('--active-filter-bg');
-                }
+                const btnCategory = btn.getAttribute('data-category'); const isActive = (btnCategory === category); btn.classList.toggle('active', isActive);
+                if (isActive) { const activeColor = (category === 'all') ? 'var(--primary)' : getCategoryColor(category); btn.style.setProperty('--active-filter-bg', activeColor); debug(`Set active color for filter '${category}': ${activeColor}`); }
             });
-
-            // Sidebar nav item visibility (if used for filtering, otherwise remove)
-            /*
-            document.querySelectorAll('.protocol-nav-item').forEach(item => {
-                const itemCat = item.getAttribute('data-category');
-                item.classList.toggle('hidden', category !== 'all' && itemCat !== category);
-            });
-            */
-
-            renderProtocolCards();
+            renderProtocolCards(); renderSidebarProtocols();
         }
 
+        // Sets up all application event listeners
         function setupEventListeners() {
             debug('Setting up event listeners...');
             const sidebar = document.getElementById('sidebar'); const mainContent = document.getElementById('mainContent'); const categoryFilters = document.getElementById('categoryFilters');
             document.getElementById('menuToggle')?.addEventListener('click', () => sidebar?.classList.add('open'));
             document.getElementById('mobileClose')?.addEventListener('click', () => sidebar?.classList.remove('open'));
             mainContent?.addEventListener('click', (e) => { if (appState.isMobile && sidebar?.classList.contains('open') && !sidebar.contains(e.target) && !e.target.closest('#menuToggle')) { sidebar.classList.remove('open'); } });
-            document.getElementById('search')?.addEventListener('input', debounce((e) => { appState.searchTerm = e.target.value.trim(); appState.currentPage = 1; renderProtocolCards(); }, 300));
+            document.getElementById('search')?.addEventListener('input', debounce((e) => { appState.searchTerm = e.target.value.trim(); appState.currentPage = 1; renderProtocolCards(); renderSidebarProtocols(); }, 300));
             document.getElementById('protocolCards')?.addEventListener('click', (e) => { const trigger = e.target.closest('.card-header, .expand-btn'); if (trigger) { const card = trigger.closest('.protocol-card'); if (card) { toggleCardExpansion(card); } } });
             document.getElementById('protocolCards')?.addEventListener('change', (e) => { if (e.target.classList.contains('toggle-input') && e.target.type === 'checkbox') { handleCheckboxChange(e.target); } });
             categoryFilters?.addEventListener('click', (e) => { const btn = e.target.closest('.category-filter'); if (btn && !btn.classList.contains('active')) { filterByCategory(btn.getAttribute('data-category')); } });
@@ -3938,6 +3898,7 @@
             debug('Event listeners setup complete');
         }
 
+        // Handles changes to the 'testing' item checkboxes
         function handleCheckboxChange(checkbox) {
               const protocol = checkbox.getAttribute('data-protocol'); const type = checkbox.getAttribute('data-type'); const index = checkbox.getAttribute('data-index'); const key = `${protocol}-${type}-${index}`; const isChecked = checkbox.checked;
               appState.checkedItems[key] = isChecked; debug(`Testing Checkbox changed: ${key} = ${isChecked}`);
@@ -3946,6 +3907,7 @@
               updateProgressForCard(protocol);
           }
 
+        // Updates the progress bar for a specific protocol card
         function updateProgressForCard(protocolId) {
               const protocol = protocolData.find(p => p && p.id === protocolId); if (!protocol) return;
               const totalItems = protocol.testing?.length || 0; const cardElement = document.getElementById(protocolId); if (!cardElement) return;
@@ -3957,118 +3919,61 @@
               if (text) { text.textContent = `${percentage}%`; }
           }
 
+        // Updates progress for all currently visible cards
         function updateProgress() {
               debug('Updating all visible progress bars'); const visibleCards = document.querySelectorAll('#protocolCards .protocol-card'); visibleCards.forEach(card => { if (card.id) { updateProgressForCard(card.id); } });
           }
 
+        // Utility to animate elements using Web Animations API with fallback and reduced motion support
         function animateElement(element, keyframes, options) {
               if (!element || typeof element.animate !== 'function') { if (element && keyframes.length > 0) Object.assign(element.style, keyframes[keyframes.length - 1]); return { finished: Promise.resolve() }; }
               const effectiveOptions = { ...options }; if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { effectiveOptions.duration = (options.duration || 300) * 0.1; effectiveOptions.delay = (options.delay || 0) * 0.1; }
               try { return element.animate(keyframes, effectiveOptions); } catch (e) { console.error("Animation error:", e, element); if (element && keyframes.length > 0) Object.assign(element.style, keyframes[keyframes.length - 1]); return { finished: Promise.resolve() }; }
           }
 
+        // Handles expanding and collapsing a protocol card with animation
         function toggleCardExpansion(card) {
                if (!card) return; const content = card.querySelector('.card-content'); const icon = card.querySelector('.expand-btn i'); const button = card.querySelector('.expand-btn'); const id = card.id; if (!content || !icon || !button) return; const wasExpanded = card.classList.contains('expanded'); debug(`Toggling card: ${id} (was expanded: ${wasExpanded})`); if (wasExpanded) { appState.expandedCards.delete(id); } else { appState.expandedCards.add(id); } button.setAttribute('aria-expanded', !wasExpanded);
-               if (wasExpanded) { card.querySelectorAll('.content-section').forEach((s) => animateElement(s, [{ opacity: 1, transform: 'translateY(0)' }, { opacity: 0, transform: 'translateY(10px)' }], { duration: 150, easing: 'ease-out', fill: 'forwards' })); card.querySelectorAll('.list-item-animate').forEach(item => item.style.opacity = 0); const anim = animateElement(content, [{ height: content.scrollHeight + 'px', opacity: 1, transform: 'translateY(0)', paddingBottom: '20px', paddingTop: '1rem' }, { height: '0px', opacity: 0, transform: 'translateY(10px)', paddingBottom: '0px', paddingTop: '0px'}], { duration: 350, easing: 'cubic-bezier(0.4, 0, 0.2, 1)', fill: 'forwards' }); animateElement(icon, [{ transform: 'rotate(180deg)' }, { transform: 'rotate(0deg)' }], { duration: 300, easing: 'ease-out', fill: 'forwards' }); anim.finished.then(() => { if (!appState.expandedCards.has(id)) { card.classList.remove('expanded'); } }).catch(e => { console.warn("Collapse animation interrupted or failed", e); card.classList.remove('expanded'); }); }
+               if (wasExpanded) { card.classList.remove('expanded'); card.querySelectorAll('.content-section').forEach((s) => animateElement(s, [{ opacity: 1, transform: 'translateY(0)' }, { opacity: 0, transform: 'translateY(10px)' }], { duration: 150, easing: 'ease-out', fill: 'forwards' })); card.querySelectorAll('.list-item-animate').forEach(item => item.style.opacity = 0); const anim = animateElement(content, [{ height: content.scrollHeight + 'px', opacity: 1, transform: 'translateY(0)', paddingBottom: '20px', paddingTop: '1rem' }, { height: '0px', opacity: 0, transform: 'translateY(10px)', paddingBottom: '0px', paddingTop: '0px'}], { duration: 350, easing: 'cubic-bezier(0.4, 0, 0.2, 1)', fill: 'forwards' }); animateElement(icon, [{ transform: 'rotate(180deg)' }, { transform: 'rotate(0deg)' }], { duration: 300, easing: 'ease-out', fill: 'forwards' }); anim.finished.catch(e => console.warn("Collapse animation interrupted or failed", e)); }
                else { card.classList.add('expanded'); content.style.height = '0px'; content.style.opacity = '0'; content.style.paddingTop = '0px'; content.style.paddingBottom = '0px'; const anim = animateElement(content, [{ height: '0px', opacity: 0, transform: 'translateY(10px)', paddingBottom: '0px', paddingTop: '0px' }, { height: content.scrollHeight + 'px', opacity: 1, transform: 'translateY(0)', paddingBottom: '20px', paddingTop: '1rem' }], { duration: 400, easing: 'cubic-bezier(0.2, 0, 0.1, 1)', fill: 'forwards' }); animateElement(icon, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(180deg)' }], { duration: 350, easing: 'ease-in-out', fill: 'forwards' }); anim.finished.then(() => { if (!appState.expandedCards.has(id)) return; card.querySelectorAll('.content-section').forEach((s, i) => animateElement(s, [{ opacity: 0, transform: 'translateY(15px)' }, { opacity: 1, transform: 'translateY(0)' }], { duration: 300, easing: 'ease-out', fill: 'forwards', delay: i * 50 })); card.querySelectorAll('.list-item-animate').forEach((item, i) => animateElement(item, [{ opacity: 0, transform: 'translateX(15px)' }, { opacity: 1, transform: 'translateX(0)' }], { duration: 300, easing: 'ease-out', fill: 'forwards', delay: 100 + i * 20 })); }).catch(e => { console.warn("Expand animation interrupted or failed", e); if (appState.expandedCards.has(id)) { content.style.height = ''; content.style.opacity = '1'; content.style.transform = 'translateY(0)'; content.style.paddingBottom = '20px'; content.style.paddingTop = '1rem'; card.querySelectorAll('.content-section, .list-item-animate').forEach(el => { el.style.opacity = '1'; el.style.transform = 'translate(0, 0)'; }); } else { card.classList.remove('expanded'); } }); }
            }
 
+        // Initializes IntersectionObserver for scroll animations
         function initializeAnimations() {
               debug('Initializing Intersection Observer for scroll animations'); const options = { root: null, rootMargin: '0px', threshold: 0.1 }; if (appState.observer) appState.observer.disconnect(); appState.observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); } }); }, options); requestAnimationFrame(handleScrollAnimations);
           }
 
+        // Callback for IntersectionObserver to add 'visible' class
         function handleScrollAnimations() {
               const elements = document.querySelectorAll('.section-animate:not(.visible)'); if (!appState.observer) return; elements.forEach(element => { const rect = element.getBoundingClientRect(); if (rect.top < window.innerHeight && rect.bottom > 0) { appState.observer.observe(element); } });
           }
 
         // --- DYNAMIC COLOR GENERATION ---
-        // Cache for generated category colors
         const categoryColorCache = {};
-        const GOLDEN_ANGLE_RATIO = 0.61803398875; // Approximation for golden ratio conjugate
-
-        // Helper function to generate an HSL color from a string hash using Golden Angle
-        // Helper function to generate an HSL color from a string hash using Golden Angle, excluding pink hues
-          function generateHslColorFromString(str) {
-            // Base values - adjust these defaults as needed
-            const baseSaturation = 75;
-            const baseLightness = 55; // Base for the lighter end of gradient
-            const lightnessVariation = 10; // Max +/- variation for lightness
-            const saturationVariation = 10; // Max +/- variation for saturation
-
-            let hash = 0;
-            if (!str || str.length === 0) {
-                hash = 0; // Fallback hash
-            } else {
-                for (let i = 0; i < str.length; i++) {
-                    const char = str.charCodeAt(i);
-                    hash = ((hash << 5) - hash) + char;
-                    hash |= 0; // Convert to 32bit integer
-                }
-            }
-            const absHash = Math.abs(hash);
-
-            // --- Hue Calculation (Golden Angle + Pink Exclusion) ---
-            let hue = Math.floor(((absHash * GOLDEN_ANGLE_RATIO) % 1) * 360);
-            const pinkMinHue = 290;
-            const pinkMaxHue = 350;
-            const hueShiftAmount = 60;
-            if (hue >= pinkMinHue && hue <= pinkMaxHue) {
-                hue = (hue + hueShiftAmount) % 360;
-            }
-
-            // --- Saturation Calculation (Add variation) ---
-            // Use a different part/transform of hash for saturation offset
-            const saturationOffset = (absHash % (saturationVariation * 2)) - saturationVariation; // Range: -variation to +variation
-            // Clamp saturation between reasonable values (e.g., 40% to 90%)
-            const saturation = Math.max(40, Math.min(90, baseSaturation + saturationOffset));
-
-
-            // --- Lightness Calculation (Add variation) ---
-            // Use another different part/transform of hash
-            const lightnessOffset = (Math.floor(absHash / 100) % (lightnessVariation * 2)) - lightnessVariation; // Range: -variation to +variation
-            // Clamp lightness (e.g., 40% to 70% for the lighter end)
-            const lightness = Math.max(40, Math.min(70, baseLightness + lightnessOffset));
-
-            // Calculate the darker end of the gradient based on the adjusted lightness
-            const lightnessDarker = Math.max(25, lightness - 15); // Ensure darker end is sufficiently dark but not black
-
-            return { hue, saturation, lightness, lightnessDarker };
+        const GOLDEN_ANGLE_RATIO = 0.61803398875;
+        function generateHslColorFromString(str) { // Generates HSL, excluding pinks, with S/L variation
+            const baseSaturation = 75; const baseLightness = 55; const lightnessVariation = 10; const saturationVariation = 10; let hash = 0;
+            if (!str || str.length === 0) { hash = 0; } else { for (let i = 0; i < str.length; i++) { const char = str.charCodeAt(i); hash = ((hash << 5) - hash) + char; hash |= 0; } } const absHash = Math.abs(hash);
+            let hue = Math.floor(((absHash * GOLDEN_ANGLE_RATIO) % 1) * 360); const pinkMinHue = 290; const pinkMaxHue = 350; const hueShiftAmount = 60; if (hue >= pinkMinHue && hue <= pinkMaxHue) { hue = (hue + hueShiftAmount) % 360; }
+            const saturationOffset = (absHash % (saturationVariation * 2)) - saturationVariation; const saturation = Math.max(40, Math.min(90, baseSaturation + saturationOffset));
+            const lightnessOffset = (Math.floor(absHash / 100) % (lightnessVariation * 2)) - lightnessVariation; const lightness = Math.max(40, Math.min(70, baseLightness + lightnessOffset));
+            const lightnessDarker = Math.max(25, lightness - 15); return { hue, saturation, lightness, lightnessDarker };
         }
-
-        // *** NEW Dynamic Color Generation Function (No Predefined Colors) ***
-        function getCategoryColor(category) {
-             // Use 'uncategorized' string if input is invalid/missing, ensuring it gets its own consistent color
-             const categoryKey = (category && typeof category === 'string' && category.trim() !== '') ? category.toLowerCase() : 'uncategorized'; // Changed default key
-
-            // Check cache first
-            if (categoryColorCache[categoryKey]) {
-                return categoryColorCache[categoryKey];
-            }
-
-            // Define base saturation and lightness for consistency
-            const saturation = 75; // Vibrant colors
-            const lightnessBase = 55; // Adjusted for slightly better brightness
-            const lightnessDarker = 40; // Adjusted for better gradient contrast
-
-            // Generate HSL based on hash and golden angle
-            const hsl = generateHslColorFromString(categoryKey, saturation, lightnessBase);
-
-            // Create the linear gradient string
-const colorGradient = `linear-gradient(135deg, hsl(${hsl.hue}, ${hsl.saturation}%, ${hsl.lightness}%) 0%, hsl(${hsl.hue}, ${hsl.saturation}%, ${hsl.lightnessDarker}%) 100%)`;
-            // Store in cache and return
-            categoryColorCache[categoryKey] = colorGradient;
-            // debug(`Generated color for category '${categoryKey}': HSL(${hsl.hue}, ${saturation}%, ${lightnessBase}%)`); // Log HSL for debugging
-            return colorGradient;
-        }
+        function getCategoryColor(category) { // Gets cached or generates new dynamic color gradient
+            const categoryKey = (category && typeof category === 'string' && category.trim() !== '') ? category.toLowerCase() : 'uncategorized';
+            if (categoryColorCache[categoryKey]) { return categoryColorCache[categoryKey]; } const hsl = generateHslColorFromString(categoryKey);
+            const colorGradient = `linear-gradient(135deg, hsl(${hsl.hue}, ${hsl.saturation}%, ${hsl.lightness}%) 0%, hsl(${hsl.hue}, ${hsl.saturation}%, ${hsl.lightnessDarker}%) 100%)`;
+            categoryColorCache[categoryKey] = colorGradient; return colorGradient;
+         }
         // --- END DYNAMIC COLOR GENERATION ---
 
 
+        // --- SCROLL/HIGHLIGHT/EXPAND LOGIC ---
         function scrollToProtocol(id) {
              const protocol = protocolData.find(p => p && p.id === id); if (!protocol) { debug(`Protocol not found for scroll: ${id}`); return; }
-             if (appState.currentFilter !== 'all' && protocol.category !== appState.currentFilter) {
-                 debug(`Switching filter to '${protocol.category}' for scrolling to ${id}`);
-                 filterByCategory(protocol.category); setTimeout(() => findAndScrollToProtocol(id), 200); return;
-              }
+             // Optional: Reset filter to 'all' when jumping?
+             // if (appState.currentFilter !== 'all') { filterByCategory('all'); }
+             if (appState.currentFilter !== 'all' && protocol.category !== appState.currentFilter) { debug(`Switching filter to '${protocol.category}' for scrolling to ${id}`); filterByCategory(protocol.category); setTimeout(() => findAndScrollToProtocol(id), 200); return; }
              findAndScrollToProtocol(id);
          }
 
@@ -4076,31 +3981,30 @@ const colorGradient = `linear-gradient(135deg, hsl(${hsl.hue}, ${hsl.saturation}
              const filtered = getFilteredProtocols(); const index = filtered.findIndex(p => p && p.id === id);
              if (index === -1) { debug(`Protocol ${id} not found in current filtered results for scrolling.`); return; }
              const targetPage = Math.floor(index / appState.itemsPerPage) + 1;
-             if (targetPage !== appState.currentPage) {
-                 debug(`Navigating to page ${targetPage} for scrolling to ${id}`);
-                 appState.currentPage = targetPage; renderProtocolCards(); setTimeout(() => scrollAndHighlight(id), 300);
-             } else { scrollAndHighlight(id); }
+             if (targetPage !== appState.currentPage) { debug(`Navigating to page ${targetPage} for scrolling to ${id}`); appState.currentPage = targetPage; renderProtocolCards(); renderSidebarProtocols(); setTimeout(() => scrollAndHighlight(id), 300); }
+             else { scrollAndHighlight(id); }
          }
 
         function scrollAndHighlight(id) {
-             requestAnimationFrame(() => {
+             requestAnimationFrame(() => { // Wait for potential re-render
                  const element = document.getElementById(id);
                  if (!element) { setTimeout(() => { const elementRetry = document.getElementById(id); if (!elementRetry) { debug(`Element ${id} not found for highlight even after delay.`); return; } performScrollAndHighlight(elementRetry); }, 150); return; }
                  performScrollAndHighlight(element);
             });
         }
 
-        function performScrollAndHighlight(element) {
+        function performScrollAndHighlight(element) { // The actual scroll/expand/highlight actions
             const id = element.id; debug(`Scrolling to element: ${id}`);
             element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-             setTimeout(() => {
-                  if (!document.getElementById(id)) return;
-                  if (!element.classList.contains('expanded')) { toggleCardExpansion(element); }
-                  const originalShadow = element.style.boxShadow; element.style.transition = 'box-shadow 0.3s ease-in-out';
+             setTimeout(() => { // Wait for scroll + buffer
+                  if (!document.getElementById(id)) return; // Check element still exists
+                  if (!element.classList.contains('expanded')) { toggleCardExpansion(element); } // Expand if needed
+                  const originalShadow = element.style.boxShadow; element.style.transition = 'box-shadow 0.3s ease-in-out'; // Animate highlight
                   element.style.boxShadow = `0 0 30px rgba(139, 92, 246, 0.6), ${originalShadow || ''}`;
-                  setTimeout(() => { element.style.boxShadow = originalShadow || ''; setTimeout(() => element.style.transition = '', 300); }, 1500);
-             }, 400);
+                  setTimeout(() => { element.style.boxShadow = originalShadow || ''; setTimeout(() => element.style.transition = '', 300); }, 1500); // Remove highlight
+             }, 400); // Delay allows scroll and potentially expand animation to start
          }
+        // --- END SCROLL/HIGHLIGHT/EXPAND LOGIC ---
 
     </script>
 </body>
