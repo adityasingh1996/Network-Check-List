@@ -150,7 +150,10 @@
         @media (max-width: 768px) { .card-content { transition-duration: 0.4s; padding: 0 15px 0 15px; } .protocol-card.expanded .card-content { padding: 0 15px 15px 15px; } .content-section { transition-delay: 0.05s !important; } }
         @media (hover: none) and (pointer: coarse) { .glass-card:hover { transform: none; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2); } .category-filter:hover { transform: none; box-shadow: none; } .category-badge:hover::after, .card-header:hover .category-badge::after { animation: none; } .category-filter.active:hover::after { animation: none; } .expand-btn:hover { transform: none; box-shadow: none; } .expand-btn:hover::after { opacity: 0; } .pagination-btn:hover:not(:disabled) { transform: none; box-shadow: none; } .protocol-nav-item:hover { transform: none; box-shadow: none; background: rgba(15, 23, 42, 0.8) !important; } .no-results:hover { transform: none; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); } li.list-item-animate:hover { transform: translateX(0) translateY(0); background: transparent; } }
         .command-inline { font-family: 'Courier New', Courier, monospace; background-color: rgba(2, 6, 23, 0.7); color: var(--primary-light); padding: 0.15em 0.5em; border-radius: 5px; font-size: 0.875em; border: 1px solid rgba(255, 255, 255, 0.08); display: inline-block; vertical-align: baseline; word-break: break-word; margin: 0 0.1em; box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.3); }
-    </style>
+		.protocol-card.highlighting {
+            transition: box-shadow 0.3s ease-in-out !important; /* Override base transition specifically for highlight */
+			}
+	</style>
 </head>
 <body>
     <!-- Background Animation Elements -->
@@ -4086,16 +4089,72 @@
             });
         }
         function performScrollAndHighlight(element) {
-            const id = element.id; debug(`Scrolling & Highlighting: ${id}`);
-            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-             setTimeout(() => {
-                  if (!document.getElementById(id)) return;
-                  if (!element.classList.contains('expanded')) { toggleCardExpansion(element); }
-                  const originalShadow = element.style.boxShadow; element.style.transition = 'box-shadow 0.3s ease-in-out';
-                  element.style.boxShadow = `0 0 30px rgba(139, 92, 246, 0.6), ${originalShadow || ''}`;
-                  setTimeout(() => { element.style.boxShadow = originalShadow || ''; setTimeout(() => element.style.transition = '', 300); }, 1500);
-             }, 400);
-         }
+            const id = element.id;
+            debug(`Scrolling & Highlighting: ${id}`);
+
+            // --- Step 1: Initial Instant Scroll (Get Close) ---
+            // Scrolls instantly to the top of the element. 'nearest' is also an option.
+            element.scrollIntoView({ behavior: 'auto', block: 'start' });
+            debug(`Performed initial 'auto' scroll to start for ${id}`);
+
+            // Small delay to let the initial scroll settle before animation/highlight
+            setTimeout(() => {
+                if (!document.getElementById(id)) {
+                    debug(`Element ${id} disappeared after initial scroll.`);
+                    return;
+                }
+
+                const needsExpansion = !element.classList.contains('expanded');
+                const expansionAnimationDuration = 400; // From toggleCardExpansion CSS/JS (approx)
+                const highlightDelay = 50; // Start highlight quickly after initial positioning
+                const finalScrollDelay = needsExpansion ? expansionAnimationDuration + 100 : 50; // Wait for expansion + buffer
+
+                // --- Step 2: Expand if needed ---
+                if (needsExpansion) {
+                    debug(`Triggering expansion for ${id}`);
+                    toggleCardExpansion(element);
+                }
+
+                // --- Step 3: Highlight ---
+                // Apply highlight effect shortly after the initial positioning
+                setTimeout(() => {
+                     if (!document.getElementById(id)) return; // Check again
+                     debug(`Applying highlight for ${id}`);
+                     const originalShadow = getComputedStyle(element).boxShadow;
+                     // Use a specific class for highlighting transition to avoid conflicts
+                     element.classList.add('highlighting');
+                     element.style.boxShadow = `0 0 30px rgba(139, 92, 246, 0.6), ${originalShadow || ''}`;
+
+                     setTimeout(() => {
+                         if (document.getElementById(id)) {
+                             element.style.boxShadow = originalShadow || '';
+                             // Remove class after transition ends
+                            setTimeout(() => {
+                                if(document.getElementById(id)) element.classList.remove('highlighting');
+                             }, 300); // Match transition duration
+                         }
+                     }, 1500); // Highlight duration
+                }, highlightDelay);
+
+
+                // --- Step 4: Final Smooth Scroll (After Expansion Delay) ---
+                debug(`Scheduling final smooth scroll for ${id} in ${finalScrollDelay}ms`);
+                setTimeout(() => {
+                    // Use requestAnimationFrame to ensure layout is likely stable
+                    requestAnimationFrame(() => {
+                         if (!document.getElementById(id)) {
+                              debug(`Element ${id} disappeared before final scroll.`);
+                              return; // Check if element still exists
+                         }
+                         debug(`Performing final 'smooth' scroll for ${id}`);
+                         // Use 'nearest' to minimize scrolling if it's already largely visible
+                         // Or use 'start' again if you always want the top aligned
+                         element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    });
+                }, finalScrollDelay);
+
+            }, 50); // Delay after initial scroll command
+        }
         // --- END SCROLL/HIGHLIGHT/EXPAND LOGIC ---
 
     </script>
