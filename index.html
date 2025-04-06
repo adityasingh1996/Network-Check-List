@@ -3982,21 +3982,84 @@
           }
 
         // --- DYNAMIC COLOR GENERATION ---
+        // Cache for generated category colors
         const categoryColorCache = {};
-        function generateHslColorFromString(str, saturation = 70, lightness = 55) {
-            let hash = 0; if (!str || str.length === 0) { return Math.floor(Math.random() * 360); }
-            for (let i = 0; i < str.length; i++) { const char = str.charCodeAt(i); hash = ((hash << 5) - hash) + char; hash |= 0; }
-            const hue = Math.abs(hash % 360); return { hue, saturation, lightness };
+        const GOLDEN_ANGLE_RATIO = 0.61803398875; // Approximation for golden ratio conjugate
+
+        // Helper function to generate an HSL color from a string hash using Golden Angle
+        // Helper function to generate an HSL color from a string hash using Golden Angle, excluding pink hues
+          function generateHslColorFromString(str) {
+            // Base values - adjust these defaults as needed
+            const baseSaturation = 75;
+            const baseLightness = 55; // Base for the lighter end of gradient
+            const lightnessVariation = 10; // Max +/- variation for lightness
+            const saturationVariation = 10; // Max +/- variation for saturation
+
+            let hash = 0;
+            if (!str || str.length === 0) {
+                hash = 0; // Fallback hash
+            } else {
+                for (let i = 0; i < str.length; i++) {
+                    const char = str.charCodeAt(i);
+                    hash = ((hash << 5) - hash) + char;
+                    hash |= 0; // Convert to 32bit integer
+                }
+            }
+            const absHash = Math.abs(hash);
+
+            // --- Hue Calculation (Golden Angle + Pink Exclusion) ---
+            let hue = Math.floor(((absHash * GOLDEN_ANGLE_RATIO) % 1) * 360);
+            const pinkMinHue = 290;
+            const pinkMaxHue = 350;
+            const hueShiftAmount = 60;
+            if (hue >= pinkMinHue && hue <= pinkMaxHue) {
+                hue = (hue + hueShiftAmount) % 360;
+            }
+
+            // --- Saturation Calculation (Add variation) ---
+            // Use a different part/transform of hash for saturation offset
+            const saturationOffset = (absHash % (saturationVariation * 2)) - saturationVariation; // Range: -variation to +variation
+            // Clamp saturation between reasonable values (e.g., 40% to 90%)
+            const saturation = Math.max(40, Math.min(90, baseSaturation + saturationOffset));
+
+
+            // --- Lightness Calculation (Add variation) ---
+            // Use another different part/transform of hash
+            const lightnessOffset = (Math.floor(absHash / 100) % (lightnessVariation * 2)) - lightnessVariation; // Range: -variation to +variation
+            // Clamp lightness (e.g., 40% to 70% for the lighter end)
+            const lightness = Math.max(40, Math.min(70, baseLightness + lightnessOffset));
+
+            // Calculate the darker end of the gradient based on the adjusted lightness
+            const lightnessDarker = Math.max(25, lightness - 15); // Ensure darker end is sufficiently dark but not black
+
+            return { hue, saturation, lightness, lightnessDarker };
         }
+
+        // *** NEW Dynamic Color Generation Function (No Predefined Colors) ***
         function getCategoryColor(category) {
-            const categoryKey = (category && typeof category === 'string' && category.trim() !== '') ? category.toLowerCase() : 'default';
-            if (categoryColorCache[categoryKey]) { return categoryColorCache[categoryKey]; }
-            const saturation = 75; const lightnessBase = 50; const lightnessDarker = 35; let hue;
-            if (categoryKey === 'default') { hue = 220; }
-            else { const hsl = generateHslColorFromString(categoryKey, saturation, lightnessBase); hue = hsl.hue; }
-            const colorGradient = `linear-gradient(135deg, hsl(${hue}, ${saturation}%, ${lightnessBase}%) 0%, hsl(${hue}, ${saturation}%, ${lightnessDarker}%) 100%)`;
-            categoryColorCache[categoryKey] = colorGradient; debug(`Generated color for category '${categoryKey}': ${colorGradient}`); return colorGradient;
-         }
+             // Use 'uncategorized' string if input is invalid/missing, ensuring it gets its own consistent color
+             const categoryKey = (category && typeof category === 'string' && category.trim() !== '') ? category.toLowerCase() : 'uncategorized'; // Changed default key
+
+            // Check cache first
+            if (categoryColorCache[categoryKey]) {
+                return categoryColorCache[categoryKey];
+            }
+
+            // Define base saturation and lightness for consistency
+            const saturation = 75; // Vibrant colors
+            const lightnessBase = 55; // Adjusted for slightly better brightness
+            const lightnessDarker = 40; // Adjusted for better gradient contrast
+
+            // Generate HSL based on hash and golden angle
+            const hsl = generateHslColorFromString(categoryKey, saturation, lightnessBase);
+
+            // Create the linear gradient string
+const colorGradient = `linear-gradient(135deg, hsl(${hsl.hue}, ${hsl.saturation}%, ${hsl.lightness}%) 0%, hsl(${hsl.hue}, ${hsl.saturation}%, ${hsl.lightnessDarker}%) 100%)`;
+            // Store in cache and return
+            categoryColorCache[categoryKey] = colorGradient;
+            // debug(`Generated color for category '${categoryKey}': HSL(${hsl.hue}, ${saturation}%, ${lightnessBase}%)`); // Log HSL for debugging
+            return colorGradient;
+        }
         // --- END DYNAMIC COLOR GENERATION ---
 
 
