@@ -25,6 +25,7 @@
             --card-bg: rgba(15, 23, 42, 0.7);
             --sidebar-bg: rgba(2, 6, 23, 0.85);
             --glow: 0 0 15px rgba(139, 92, 246, 0.6);
+            --transition-smooth: 0.5s cubic-bezier(0.33, 1, 0.68, 1);
         }
         
         * {
@@ -70,7 +71,7 @@
             border: 1px solid rgba(255, 255, 255, 0.05);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
             border-radius: 16px;
-            transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+            transition: all var(--transition-smooth);
         }
 
         .glass-card:hover {
@@ -161,15 +162,41 @@
             }
         }
 
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+            .content-area {
+                padding: 1.5rem 1rem;
+            }
+            
+            header h1 {
+                font-size: 1.75rem !important;
+            }
+            
+            .card-header {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+            }
+            
+            .card-header > div:last-child {
+                width: 100%;
+                justify-content: space-between;
+                margin-top: 1rem;
+            }
+            
+            .progress-container {
+                width: 100% !important;
+            }
+        }
+
         .protocol-card {
-    transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-    transform-style: preserve-3d;
-    perspective: 1000px;
-    overflow: hidden;
-    transform: translateZ(0); /* Force GPU acceleration */
-    will-change: transform, box-shadow; /* Optimize for animation */
-    backface-visibility: hidden; /* Reduce flickering */
-}
+            transition: all var(--transition-smooth);
+            transform-style: preserve-3d;
+            perspective: 1000px;
+            overflow: hidden;
+            transform: translateZ(0); 
+            will-change: transform, box-shadow, max-height; 
+            backface-visibility: hidden;
+        }
 
         .protocol-card.expanded {
             transform: translateZ(10px);
@@ -189,23 +216,24 @@
         }
 
         .card-content {
-    max-height: 0;
-    overflow: hidden;
-    padding: 0;
-    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1); /* Improved easing curve */
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(10px); /* Slight initial offset */
-    will-change: max-height, opacity, transform; /* Optimize for animation */
-}
+            max-height: 0;
+            overflow: hidden;
+            padding: 0;
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            will-change: max-height, opacity, transform, padding;
+            transform-origin: top;
+        }
 
         .protocol-card.expanded .card-content {
-    max-height: 2000px;
-    opacity: 1;
-    visibility: visible;
-    padding: 0 20px 20px 20px;
-    transform: translateY(0); /* Remove offset when expanded */
-}
+            max-height: 2000px;
+            opacity: 1;
+            visibility: visible;
+            padding: 0 20px 20px 20px;
+            transform: translateY(0);
+        }
 
         /* Elegant Toggle Switch */
         .toggle-container {
@@ -375,11 +403,11 @@
             display: flex;
             gap: 0.75rem;
             flex-wrap: wrap;
-            margin-bottom: 1rem; /* Reduced from 1.5rem */
+            margin-bottom: 1rem;
         }
 
         .category-filter {
-            padding: 0.4rem 1rem; /* Reduced padding */
+            padding: 0.4rem 1rem;
             border-radius: 9999px;
             cursor: pointer;
             transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
@@ -389,7 +417,7 @@
             overflow: hidden;
             font-weight: 500;
             will-change: transform;
-            font-size: 0.85rem; /* Reduced font size */
+            font-size: 0.85rem;
         }
 
         .category-filter:hover {
@@ -486,7 +514,7 @@
         /* Elegant Search bar */
         .search-container {
             position: relative;
-            margin-bottom: 1.25rem; /* Slightly reduced */
+            margin-bottom: 1.25rem;
         }
 
         .search-input {
@@ -527,12 +555,12 @@
             overflow-y: auto;
             padding-right: 5px;
             margin-bottom: 1rem;
-            max-height: calc(100vh - 180px); /* Increased from 230px */
+            max-height: calc(100vh - 180px);
         }
 
         /* Protocol navigation item styling */
         .protocol-nav-item {
-            margin-bottom: 0.6rem; /* Slightly reduced */
+            margin-bottom: 0.6rem;
             border-radius: 12px;
             transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
             will-change: transform, box-shadow, background;
@@ -697,14 +725,14 @@
 
         /* Category section adjustments */
         .category-section h2 {
-            margin-bottom: 0.75rem; /* Reduced from 2rem */
-            font-size: 1rem; /* Reduced size */
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
         }
 
         /* Protocol section adjustments */
         .protocol-section h2 {
             margin-bottom: 0.75rem;
-            font-size: 1.1rem; /* Increased emphasis on protocols */
+            font-size: 1.1rem;
         }
 
         /* Pagination styles */
@@ -714,6 +742,7 @@
             align-items: center;
             margin-top: 2rem;
             gap: 0.5rem;
+            flex-wrap: wrap;
         }
 
         .pagination-btn {
@@ -803,6 +832,101 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
+        
+        /* Mobile responsiveness improvements */
+        @media (max-width: 640px) {
+            .category-filter {
+                padding: 0.3rem 0.8rem;
+                font-size: 0.75rem;
+            }
+            
+            .category-badge {
+                font-size: 0.65rem;
+                padding: 0.2rem 0.6rem;
+            }
+            
+            .progress-container {
+                height: 10px;
+            }
+            
+            .card-header {
+                padding: 1rem !important;
+            }
+            
+            .card-header h2 {
+                font-size: 1.5rem !important;
+            }
+            
+            .protocol-card .grid {
+                display: block !important;
+            }
+            
+            .glass-inset {
+                margin-bottom: 1rem;
+            }
+            
+            .toggle-container {
+                min-width: 40px;
+                width: 40px;
+                height: 22px;
+            }
+            
+            .toggle-slider:before {
+                height: 14px;
+                width: 14px;
+            }
+            
+            .toggle-input:checked + .toggle-slider:before {
+                transform: translateX(18px);
+            }
+        }
+        
+        /* Protocol card mobile optimizations */
+        @media (max-width: 768px) {
+            .card-content {
+                transition-duration: 0.4s;
+            }
+            
+            .protocol-card.expanded .card-content {
+                padding: 0 15px 15px 15px;
+            }
+            
+            .content-section {
+                transition-delay: 0.05s !important;
+            }
+            
+            .list-item-animate {
+                transition-delay: 0ms !important;
+                margin-bottom: 0.5rem;
+            }
+        }
+        
+        /* Prevent content jumping during animation */
+        .card-container {
+            min-height: 0;
+            transition: min-height 0.5s ease;
+        }
+        
+        /* Improved touch targets for mobile */
+        @media (max-width: 640px) {
+            .protocol-nav-item {
+                padding: 0.75rem !important;
+            }
+            
+            li.list-item-animate {
+                padding: 0.75rem 0.5rem;
+                margin-bottom: 0.75rem;
+            }
+            
+            .pagination-btn {
+                width: 36px;
+                height: 36px;
+            }
+            
+            .expand-btn {
+                padding: 0.75rem !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -860,8 +984,8 @@
 
     <!-- Main content -->
     <main class="content-area" id="mainContent">
-        <header class="mb-10 fade-in" style="animation-delay: 0.1s;">
-            <h1 class="text-4xl font-bold mb-2">Protocol Security Checklist</h1>
+        <header class="mb-6 md:mb-10 fade-in" style="animation-delay: 0.1s;">
+            <h1 class="text-3xl md:text-4xl font-bold mb-2">Protocol Security Checklist</h1>
             <p class="text-gray-400">Track vulnerabilities, testing procedures, and security tools for network protocols.</p>
         </header>
         
@@ -4346,7 +4470,9 @@
             checkedItems: {},
             currentPage: 1,
             itemsPerPage: 5,
-            debug: false // Set to false to disable debug functionality
+            debug: false,
+            expandedCards: new Set(), // Track expanded cards for animation purposes
+            isMobile: window.innerWidth < 768 // Track device type
         };
 
         // Debug logging function
@@ -4358,6 +4484,12 @@
         // Initialize the app when DOM is loaded
         document.addEventListener('DOMContentLoaded', () => {
             debug('Application initializing...');
+            
+            // Check if we're on mobile
+            appState.isMobile = window.innerWidth < 768;
+            if (appState.isMobile) {
+                appState.itemsPerPage = 3; // Show fewer items per page on mobile
+            }
             
             // Create background particles
             createBackgroundParticles();
@@ -4381,7 +4513,8 @@
         // Create animated background particles
         function createBackgroundParticles() {
             const container = document.getElementById('animatedBg');
-            const particleCount = 15;
+            // Fewer particles on mobile for better performance
+            const particleCount = appState.isMobile ? 8 : 15;
             
             for (let i = 0; i < particleCount; i++) {
                 const size = Math.random() * 150 + 50; // 50-200px
@@ -4405,17 +4538,19 @@
                 container.appendChild(particle);
             }
         }
-		function getPortDisplay(port) {
-			// Convert port to string if it's a number
-			const portStr = String(port);
-			
-			// Now we can safely use string methods
-			if (portStr.includes(',') || portStr.includes('-')) {
-				return `Ports ${portStr}`;
-			} else {
-				return `Port ${portStr}`;
-			}
-		}
+        
+        function getPortDisplay(port) {
+            // Convert port to string if it's a number
+            const portStr = String(port);
+            
+            // Now we can safely use string methods
+            if (portStr.includes(',') || portStr.includes('-')) {
+                return `Ports ${portStr}`;
+            } else {
+                return `Port ${portStr}`;
+            }
+        }
+        
         // Initialize the sidebar with protocol navigation and category filters
         function initializeSidebar() {
             debug('Initializing sidebar...');
@@ -4475,25 +4610,21 @@
 
         // Get filtered and sorted protocols
         function getFilteredProtocols() {
-    // Filter protocols based on current criteria
-    const filteredProtocols = protocolData.filter(protocol => {
-        const matchesCategory = appState.currentFilter === 'all' || protocol.category === appState.currentFilter;
-        
-        // Enhanced search functionality for ports
-        const matchesSearch = appState.searchTerm === '' || 
-            protocol.name.toLowerCase().includes(appState.searchTerm.toLowerCase()) ||
-            protocol.description.toLowerCase().includes(appState.searchTerm.toLowerCase()) ||
-            matchesPort(protocol.port, appState.searchTerm);
-        
-        return matchesCategory && matchesSearch;
-    });
-    
-    // Return the filtered protocols WITHOUT reversing them
-    return [...filteredProtocols];
-    
-    // Or even simpler:
-    // return filteredProtocols;
-}
+            // Filter protocols based on current criteria
+            const filteredProtocols = protocolData.filter(protocol => {
+                const matchesCategory = appState.currentFilter === 'all' || protocol.category === appState.currentFilter;
+                
+                // Enhanced search functionality for ports
+                const matchesSearch = appState.searchTerm === '' || 
+                    protocol.name.toLowerCase().includes(appState.searchTerm.toLowerCase()) ||
+                    protocol.description.toLowerCase().includes(appState.searchTerm.toLowerCase()) ||
+                    matchesPort(protocol.port, appState.searchTerm);
+                
+                return matchesCategory && matchesSearch;
+            });
+            
+            return [...filteredProtocols];
+        }
         
         // Check if a port matches the search term
         function matchesPort(protocolPort, searchTerm) {
@@ -4533,7 +4664,7 @@
             // Clear the container completely before adding new cards
             protocolCards.innerHTML = '';
             
-            // Get filtered protocols (already reversed in the function)
+            // Get filtered protocols
             const filteredProtocols = getFilteredProtocols();
             
             debug(`Filter results: ${filteredProtocols.length} protocols match current criteria`);
@@ -4581,6 +4712,24 @@
                 document.querySelectorAll('.protocol-card').forEach((card, index) => {
                     setTimeout(() => {
                         card.classList.add('visible');
+                        
+                        // Restore expanded state if needed
+                        if (appState.expandedCards.has(card.id)) {
+                            card.classList.add('expanded');
+                            
+                            // Also rotate the icon properly
+                            const icon = card.querySelector('.expand-btn i');
+                            if (icon) {
+                                icon.style.transform = 'rotate(180deg)';
+                            }
+                            
+                            // Make list items visible 
+                            card.querySelectorAll('.list-item-animate').forEach((item, i) => {
+                                setTimeout(() => {
+                                    item.classList.add('list-item-visible');
+                                }, 50 + (i * 20));
+                            });
+                        }
                     }, index * 100);
                 });
             }, 50);
@@ -4615,8 +4764,8 @@
             });
             paginationContainer.appendChild(prevBtn);
             
-            // Page numbers
-            const maxVisiblePages = 5;
+            // Page numbers - adjust for mobile
+            const maxVisiblePages = appState.isMobile ? 3 : 5;
             const pageButtonsToShow = [];
             
             // Always show first page
@@ -4653,6 +4802,18 @@
             // Always show last page if there's more than one page
             if (totalPages > 1) {
                 pageButtonsToShow.push(totalPages);
+            }
+            
+            // For mobile, simplify further if needed
+            if (appState.isMobile && pageButtonsToShow.length > 5) {
+                // Show just first, current, and last
+                pageButtonsToShow = [
+                    1,
+                    appState.currentPage > 2 ? '...' : null,
+                    appState.currentPage !== 1 && appState.currentPage !== totalPages ? appState.currentPage : null,
+                    appState.currentPage < totalPages - 1 ? '...' : null,
+                    totalPages
+                ].filter(item => item !== null);
             }
             
             // Create page buttons
@@ -4733,10 +4894,10 @@
                 <div class="category-indicator" style="background: ${categoryColor}"></div>
                 <div class="card-header p-6 flex flex-col md:flex-row md:items-center justify-between" data-id="${protocol.id}">
                     <div>
-                        <div class="flex items-center mb-2">
+                        <div class="flex items-center mb-2 flex-wrap">
                             <h2 class="text-2xl font-bold">${protocol.name}</h2>
                             <span class="ml-3 text-sm px-3 py-1 rounded-full glass-inset">${portDisplay}</span>
-                            <span class="category-badge ml-3" style="background: ${categoryColor}">${protocol.category}</span>
+                            <span class="category-badge ml-3 mt-1 md:mt-0" style="background: ${categoryColor}">${protocol.category}</span>
                         </div>
                         <p class="text-gray-400">${protocol.description}</p>
                     </div>
@@ -4994,152 +5155,177 @@
             
             // Window resize handler for pagination adjustments
             window.addEventListener('resize', debounce(() => {
-                // Recalculate items per page based on screen size
-                if (window.innerWidth < 768) {
-                    appState.itemsPerPage = 3;
-                } else if (window.innerWidth < 1280) {
-                    appState.itemsPerPage = 4;
-                } else {
-                    appState.itemsPerPage = 5;
-                }
+                // Update mobile state
+                const wasMobile = appState.isMobile;
+                appState.isMobile = window.innerWidth < 768;
                 
-                // Re-render without changing page
-                renderProtocolCards();
+                // Only update if state changed
+                if (wasMobile !== appState.isMobile) {
+                    // Recalculate items per page based on screen size
+                    if (appState.isMobile) {
+                        appState.itemsPerPage = 3;
+                    } else if (window.innerWidth < 1280) {
+                        appState.itemsPerPage = 4;
+                    } else {
+                        appState.itemsPerPage = 5;
+                    }
+                    
+                    // Re-render without changing page
+                    renderProtocolCards();
+                }
             }, 250));
             
             debug('Event listeners setup complete');
         }
 
-// Add this utility function somewhere in your script
-function animateElement(element, keyframes, options) {
-    // Check if Web Animations API is supported
-    if ('animate' in element) {
-        return element.animate(keyframes, options);
-    } else {
-        // Fallback for browsers without Web Animations API
-        const animation = { finished: Promise.resolve() };
-        
-        // Apply the first keyframe immediately
-        const firstFrame = keyframes[0];
-        Object.keys(firstFrame).forEach(property => {
-            element.style[property] = firstFrame[property];
-        });
-        
-        // Use setTimeout to apply the last keyframe
-        setTimeout(() => {
-            const lastFrame = keyframes[keyframes.length - 1];
-            Object.keys(lastFrame).forEach(property => {
-                element.style[property] = lastFrame[property];
-            });
-        }, options.duration || 300);
-        
-        return animation;
-    }
-}
+        // Add this utility function somewhere in your script
+        function animateElement(element, keyframes, options) {
+            // Check if Web Animations API is supported
+            if ('animate' in element) {
+                // Use reduced motion setting if user prefers it
+                if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                    options.duration = options.duration / 2;
+                }
+                
+                return element.animate(keyframes, options);
+            } else {
+                // Fallback for browsers without Web Animations API
+                const animation = { finished: Promise.resolve() };
+                
+                // Apply the first keyframe immediately
+                const firstFrame = keyframes[0];
+                Object.keys(firstFrame).forEach(property => {
+                    element.style[property] = firstFrame[property];
+                });
+                
+                // Use setTimeout to apply the last keyframe
+                setTimeout(() => {
+                    const lastFrame = keyframes[keyframes.length - 1];
+                    Object.keys(lastFrame).forEach(property => {
+                        element.style[property] = lastFrame[property];
+                    });
+                }, options.duration || 300);
+                
+                return animation;
+            }
+        }
 
-// Enhanced toggleCardExpansion function with advanced animation
-function toggleCardExpansion(card) {
-    if (!card) return;
-    
-    const wasExpanded = card.classList.contains('expanded');
-    const icon = card.querySelector('.expand-btn i');
-    const id = card.id;
-    const cardContent = card.querySelector('.card-content');
-    
-    debug(`Toggling card expansion: ${id} (was expanded: ${wasExpanded})`);
-    
-    // Use the Web Animations API for smoother animation
-    if (wasExpanded) {
-        // 1. Animate content sections out
-        const sections = card.querySelectorAll('.content-section');
-        sections.forEach((section, index) => {
-            animateElement(section, [
-                { opacity: 1, transform: 'translateY(0)' },
-                { opacity: 0, transform: 'translateY(15px)' }
-            ], {
-                duration: 250,
-                easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
-                fill: 'forwards',
-                delay: index * 50
-            });
-        });
-        
-        // 2. Animate icon rotation
-        animateElement(icon, [
-            { transform: 'rotate(180deg)' },
-            { transform: 'rotate(0deg)' }
-        ], {
-            duration: 300,
-            easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
-            fill: 'forwards'
-        });
-        
-        // 3. Wait a bit then collapse the card
-        setTimeout(() => {
-            card.classList.remove('expanded');
-            animateElement(cardContent, [
-                { opacity: 1, maxHeight: `${cardContent.scrollHeight}px`, transform: 'translateY(0)' },
-                { opacity: 0, maxHeight: '0px', transform: 'translateY(10px)' }
-            ], {
-                duration: 350,
-                easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
-                fill: 'forwards'
-            });
-        }, 100);
-        
-    } else {
-        // 1. Expand the card
-        card.classList.add('expanded');
-        
-        // 2. Animate content expansion
-        animateElement(cardContent, [
-            { opacity: 0, maxHeight: '0px', transform: 'translateY(10px)' },
-            { opacity: 1, maxHeight: '2000px', transform: 'translateY(0)' }
-        ], {
-            duration: 500,
-            easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
-            fill: 'forwards'
-        });
-        
-        // 3. Animate icon rotation
-        animateElement(icon, [
-            { transform: 'rotate(0deg)' },
-            { transform: 'rotate(180deg)' }
-        ], {
-            duration: 400,
-            easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
-            fill: 'forwards'
-        });
-        
-        // 4. Animate content sections in with staggered delay
-        const sections = card.querySelectorAll('.content-section');
-        sections.forEach((section, index) => {
-            animateElement(section, [
-                { opacity: 0, transform: 'translateY(15px)' },
-                { opacity: 1, transform: 'translateY(0)' }
-            ], {
-                duration: 400,
-                easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
-                fill: 'forwards',
-                delay: 150 + (index * 100)
-            });
-        });
-        
-        // 5. Animate list items with staggered delay
-        const listItems = card.querySelectorAll('.list-item-animate');
-        listItems.forEach((item, index) => {
-            animateElement(item, [
-                { opacity: 0, transform: 'translateX(20px)' },
-                { opacity: 1, transform: 'translateX(0)' }
-            ], {
-                duration: 400,
-                easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
-                fill: 'forwards',
-                delay: 200 + (index * 30)
-            });
-        });
-    }
-}
+        // Enhanced toggleCardExpansion function with advanced animation
+        function toggleCardExpansion(card) {
+            if (!card) return;
+            
+            const wasExpanded = card.classList.contains('expanded');
+            const icon = card.querySelector('.expand-btn i');
+            const id = card.id;
+            const cardContent = card.querySelector('.card-content');
+            
+            debug(`Toggling card expansion: ${id} (was expanded: ${wasExpanded})`);
+            
+            // Handle expand/collapse state tracking
+            if (wasExpanded) {
+                appState.expandedCards.delete(id);
+            } else {
+                appState.expandedCards.add(id);
+            }
+            
+            // Use the Web Animations API for smoother animation
+            if (wasExpanded) {
+                // 1. Animate content sections out
+                const sections = card.querySelectorAll('.content-section');
+                sections.forEach((section, index) => {
+                    animateElement(section, [
+                        { opacity: 1, transform: 'translateY(0)' },
+                        { opacity: 0, transform: 'translateY(15px)' }
+                    ], {
+                        duration: 200,
+                        easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
+                        fill: 'forwards',
+                        delay: index * 30
+                    });
+                });
+                
+                // 2. Animate icon rotation
+                animateElement(icon, [
+                    { transform: 'rotate(180deg)' },
+                    { transform: 'rotate(0deg)' }
+                ], {
+                    duration: 300,
+                    easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+                    fill: 'forwards'
+                });
+                
+                // 3. Wait a bit then collapse the card content
+                setTimeout(() => {
+                    card.classList.remove('expanded');
+                    
+                    // Smooth animation with GPU acceleration
+                    animateElement(cardContent, [
+                        { opacity: 1, maxHeight: `${cardContent.scrollHeight}px`, transform: 'translateY(0)' },
+                        { opacity: 0, maxHeight: '0px', transform: 'translateY(10px)' }
+                    ], {
+                        duration: 300,
+                        easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
+                        fill: 'forwards'
+                    });
+                }, 80);
+                
+            } else {
+                // 1. Expand the card
+                card.classList.add('expanded');
+                
+                // 2. Animate content expansion
+                animateElement(cardContent, [
+                    { opacity: 0, maxHeight: '0px', transform: 'translateY(10px)' },
+                    { opacity: 1, maxHeight: '2000px', transform: 'translateY(0)' }
+                ], {
+                    duration: appState.isMobile ? 400 : 500,
+                    easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
+                    fill: 'forwards'
+                });
+                
+                // 3. Animate icon rotation
+                animateElement(icon, [
+                    { transform: 'rotate(0deg)' },
+                    { transform: 'rotate(180deg)' }
+                ], {
+                    duration: 400,
+                    easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+                    fill: 'forwards'
+                });
+                
+                // 4. Animate content sections in with staggered delay
+                const sections = card.querySelectorAll('.content-section');
+                const sectionDelay = appState.isMobile ? 80 : 150;
+                
+                sections.forEach((section, index) => {
+                    animateElement(section, [
+                        { opacity: 0, transform: 'translateY(15px)' },
+                        { opacity: 1, transform: 'translateY(0)' }
+                    ], {
+                        duration: 400,
+                        easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
+                        fill: 'forwards',
+                        delay: sectionDelay + (index * 80)
+                    });
+                });
+                
+                // 5. Animate list items with staggered delay
+                const listItems = card.querySelectorAll('.list-item-animate');
+                const itemDelay = appState.isMobile ? 10 : 30;
+                
+                listItems.forEach((item, index) => {
+                    animateElement(item, [
+                        { opacity: 0, transform: 'translateX(20px)' },
+                        { opacity: 1, transform: 'translateX(0)' }
+                    ], {
+                        duration: 400,
+                        easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+                        fill: 'forwards',
+                        delay: 200 + (index * itemDelay)
+                    });
+                });
+            }
+        }
 
         // Scroll to a specific protocol
         function scrollToProtocol(id) {
@@ -5191,21 +5377,17 @@ function toggleCardExpansion(card) {
                 
                 // Highlight and expand the card
                 setTimeout(() => {
-                    element.classList.add('expanded');
-                    element.querySelector('.expand-btn i').style.transform = 'rotate(180deg)';
+                    // Track this card as expanded
+                    appState.expandedCards.add(id);
+                    
+                    // Expand the card with animation
+                    toggleCardExpansion(element);
                     
                     // Add and remove highlight effect
                     element.style.boxShadow = `0 0 25px rgba(139, 92, 246, 0.5)`;
                     setTimeout(() => {
                         element.style.boxShadow = '';
                     }, 2000);
-                    
-                    // Animate list items
-                    element.querySelectorAll('.list-item-animate').forEach((item, index) => {
-                        setTimeout(() => {
-                            item.classList.add('list-item-visible');
-                        }, index * 30);
-                    });
                 }, 300);
             }, 100);
         }
@@ -5239,7 +5421,14 @@ function toggleCardExpansion(card) {
                 // Update protocol progress bar with smooth animation
                 const progressBars = document.querySelectorAll(`.progress-bar[data-protocol="${protocol.id}"]`);
                 progressBars.forEach(bar => {
-                    bar.style.width = `${percentage}%`;
+                    animateElement(bar, [
+                        { width: bar.style.width || '0%' },
+                        { width: `${percentage}%` }
+                    ], {
+                        duration: 500,
+                        easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+                        fill: 'forwards'
+                    });
                     
                     // Update percentage text if present
                     const percentageText = bar.closest('.progress-container').querySelector('.completion-percentage');
@@ -5256,11 +5445,13 @@ function toggleCardExpansion(card) {
             
             // Stagger the initial card animations
             document.querySelectorAll('.protocol-card').forEach((card, index) => {
+                // Use less delay on mobile for snappier response
+                const delay = appState.isMobile ? 50 : 100;
                 card.style.transitionDelay = `${index * 0.1}s`;
                 
                 setTimeout(() => {
                     card.classList.add('visible');
-                }, 100 + (index * 100));
+                }, delay + (index * delay));
             });
             
             // Trigger section animations that are initially visible
@@ -5292,50 +5483,50 @@ function toggleCardExpansion(card) {
         }
 
         // Get color for a category
-function getCategoryColor(category) {
-    // Static color mapping for common categories
-    const predefinedColors = {
-        'file': 'linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%)',
-        'remote': 'linear-gradient(135deg, #EC4899 0%, #BE185D 100%)',
-        'mail': 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
-        'network': 'linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%)',
-        'web': 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
-        'database': 'linear-gradient(135deg, #0EA5E9 0%, #0369A1 100%)'
-    };
-    
-    // If we have a predefined color, use it
-    if (predefinedColors[category]) {
-        return predefinedColors[category];
-    }
-    
-    // Otherwise, generate a color deterministically based on the category name
-    // This ensures the same category always gets the same color
-    return generateColorFromString(category);
-}
+        function getCategoryColor(category) {
+            // Static color mapping for common categories
+            const predefinedColors = {
+                'file': 'linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%)',
+                'remote': 'linear-gradient(135deg, #EC4899 0%, #BE185D 100%)',
+                'mail': 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+                'network': 'linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%)',
+                'web': 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
+                'database': 'linear-gradient(135deg, #0EA5E9 0%, #0369A1 100%)'
+            };
+            
+            // If we have a predefined color, use it
+            if (predefinedColors[category]) {
+                return predefinedColors[category];
+            }
+            
+            // Otherwise, generate a color deterministically based on the category name
+            // This ensures the same category always gets the same color
+            return generateColorFromString(category);
+        }
 
-// Generate a gradient color based on a string input
-function generateColorFromString(str) {
-    // Create a hash from the string
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-        hash = str.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    
-    // Generate primary color
-    const h1 = Math.abs(hash) % 360; // Hue (0-359)
-    const s1 = 70 + (Math.abs(hash >> 8) % 20); // Saturation (70-90%)
-    const l1 = 45 + (Math.abs(hash >> 16) % 10); // Lightness (45-55%)
-    
-    // Generate a complementary color for the gradient (shifted hue)
-    const h2 = (h1 + 20) % 360;
-    const s2 = s1 - 10;
-    const l2 = l1 - 10;
-    
-    // Return a gradient
-    return `linear-gradient(135deg, 
-        hsl(${h1}, ${s1}%, ${l1}%) 0%, 
-        hsl(${h2}, ${s2}%, ${l2}%) 100%)`;
-}
+        // Generate a gradient color based on a string input
+        function generateColorFromString(str) {
+            // Create a hash from the string
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                hash = str.charCodeAt(i) + ((hash << 5) - hash);
+            }
+            
+            // Generate primary color
+            const h1 = Math.abs(hash) % 360; // Hue (0-359)
+            const s1 = 70 + (Math.abs(hash >> 8) % 20); // Saturation (70-90%)
+            const l1 = 45 + (Math.abs(hash >> 16) % 10); // Lightness (45-55%)
+            
+            // Generate a complementary color for the gradient (shifted hue)
+            const h2 = (h1 + 20) % 360;
+            const s2 = s1 - 10;
+            const l2 = l1 - 10;
+            
+            // Return a gradient
+            return `linear-gradient(135deg, 
+                hsl(${h1}, ${s1}%, ${l1}%) 0%, 
+                hsl(${h2}, ${s2}%, ${l2}%) 100%)`;
+        }
         
         // Update progress on initial load
         window.addEventListener('load', () => {
