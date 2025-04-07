@@ -3777,7 +3777,7 @@
                  const navItem = document.createElement('div'); navItem.className = 'glass-inset py-3 pr-3 cursor-pointer transition-all duration-300 protocol-nav-item fade-in';
                  navItem.setAttribute('data-protocol-id', protocol.id); navItem.setAttribute('data-category', protocol.category || 'default'); navItem.style.animationDelay = `${index * 0.03}s`;
                  const categoryColor = getCategoryColor(protocol.category); navItem.style.setProperty('--nav-item-color', categoryColor);
-                 navItem.innerHTML = `<div class="flex items-center justify-between text-sm"><div class="flex items-center overflow-hidden whitespace-nowrap text-ellipsis"><i class="bx bx-chevron-right mr-1 text-primary flex-shrink-0"></i><span class="overflow-hidden whitespace-nowrap text-ellipsis">${protocol.name || 'Unnamed'}</span></div></div>`;
+                 navItem.innerHTML = `<div class="flex items-center justify-between text-sm"><div class="flex items-center overflow-hidden whitespace-nowrap text-ellipsis"><span class="overflow-hidden whitespace-nowrap text-ellipsis">${protocol.name || 'Unnamed'}</span></div></div>`;
                  fragment.appendChild(navItem);
             });
             protocolNav.innerHTML = ''; protocolNav.appendChild(fragment);
