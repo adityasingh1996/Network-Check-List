@@ -1398,14 +1398,26 @@ html
          }
 
 
-                // --- DYNAMIC COLOR GENERATION (REVISED: Sequential Hue + Brighter HSL) ---
+        // --- DYNAMIC COLOR GENERATION (REVISED: Golden Angle Hue Distribution) ---
         const categoryColorCache = {};
-        let nextHue = Math.random() * 360; // Start at a random hue position
-        const HUE_INCREMENT = 137.50776405; // Golden angle conjugate for good distribution
 
-        function generateHslValues(str, assignedHue) {
-            // Generate Saturation & Lightness variations based on the category name hash
-            // This adds subtle visual difference even if hues were somehow identical (unlikely now)
+        function generateHslColorFromString(str) {
+            if (!str || str.length === 0) str = 'uncategorized';
+
+            const GOLDEN_ANGLE_CONJUGATE = 137.50776405; // More precise golden angle conjugate
+
+            // Consistent HSL Parameters (can be adjusted)
+            const baseSaturation = 70;
+            const saturationVariation = 15; // Range: +/- 15%
+            const minSaturation = 55;
+            const maxSaturation = 85;
+
+            const baseLightness = 55;
+            const lightnessVariation = 10; // Range: +/- 10%
+            const minLightness = 45;
+            const maxLightness = 65;
+
+            // --- Hue Generation using Golden Angle ---
             let hash = 0;
             for (let i = 0; i < str.length; i++) {
                 hash = ((hash << 5) - hash) + str.charCodeAt(i);
@@ -1413,59 +1425,67 @@ html
             }
             const absHash = Math.abs(hash);
 
-            // --- NEW: Brighter HSL Parameters ---
-            const baseSaturation = 85; // Increased base saturation
-            const saturationVariation = 10; // Smaller variation range +/- 10%
-            const minSaturation = 75;   // Higher minimum saturation
-            const maxSaturation = 95;   // Higher maximum saturation (up to 100 is possible)
+            // Generate initial hue based on hash and golden angle
+            // Multiplying by the angle distributes hues more evenly than modulo segments
+            let hue = (absHash * GOLDEN_ANGLE_CONJUGATE) % 360;
 
-            const baseLightness = 65;   // Increased base lightness
-            const lightnessVariation = 5;  // Smaller variation range +/- 5%
-            const minLightness = 60;    // Higher minimum lightness
-            const maxLightness = 70;    // Higher maximum lightness (avoiding too pale)
-
-            // Calculate Saturation/Lightness with variation
+            // --- Saturation and Lightness Variation (using different parts of hash) ---
             const satOffset = ((absHash >> 8) % (saturationVariation * 2 + 1)) - saturationVariation;
             const saturation = Math.min(maxSaturation, Math.max(minSaturation, baseSaturation + satOffset));
 
             const lightOffset = ((absHash >> 16) % (lightnessVariation * 2 + 1)) - lightnessVariation;
             const lightness = Math.min(maxLightness, Math.max(minLightness, baseLightness + lightOffset));
 
-            // --- Generate Final Color Strings using the ASSIGNED unique hue ---
-            const finalHue = assignedHue % 360; // Ensure hue is within 0-360
-            const lightnessDarker = Math.max(minLightness - 10, Math.min(lightness - 15, maxLightness - 5)); // Adjust darker shade based on new lightness
+            // --- Avoid Clashing with Primary UI Hue (Purple ~258) ---
+            const primaryHue = 258;
+            const hueAvoidanceRange = 30; // Increased range slightly
+            const hueShiftAmount = 75 + (absHash % 30); // Shift by a variable amount (75-105 deg)
+
+            const hueDiff = Math.abs(hue - primaryHue);
+            if (Math.min(hueDiff, 360 - hueDiff) < hueAvoidanceRange) {
+                // Shift away from the primary hue
+                const shiftDirection = ((absHash >> 24) % 2 === 0) ? 1 : -1; // Use another part of hash for direction
+                hue = (hue + (hueShiftAmount * shiftDirection) + 360) % 360;
+                 debug(`Shifted hue for '${str}' away from primary ${primaryHue} to ${hue.toFixed(0)}`);
+            }
+
+            // --- Generate Final Color Strings ---
+            const lightnessDarker = Math.max(minLightness - 5, Math.min(lightness - 15, maxLightness - 10));
 
             // Background Gradient
-            const colorGradient = `linear-gradient(135deg, hsl(${finalHue.toFixed(0)}, ${saturation.toFixed(0)}%, ${lightness.toFixed(0)}%) 0%, hsl(${finalHue.toFixed(0)}, ${saturation.toFixed(0)}%, ${lightnessDarker.toFixed(0)}%) 100%)`;
+            const colorGradient = `linear-gradient(135deg, hsl(${hue.toFixed(0)}, ${saturation.toFixed(0)}%, ${lightness.toFixed(0)}%) 0%, hsl(${hue.toFixed(0)}, ${saturation.toFixed(0)}%, ${lightnessDarker.toFixed(0)}%) 100%)`;
 
-            
+            // Glow Color (slightly lighter/more saturated HSL with alpha)
+            const glowLightness = Math.min(maxLightness + 5, lightness + 8);
+            const glowSaturation = Math.min(maxSaturation + 5, saturation + 5);
+            const glowHsla = `hsla(${hue.toFixed(0)}, ${glowSaturation.toFixed(0)}%, ${glowLightness.toFixed(0)}%, 0.65)`; // Slightly increased opacity for glow
 
             return {
                 background: colorGradient,
-                
+                glow: glowHsla
             };
         }
 
+        // getCategoryColor function remains the same as it just calls generateHslColorFromString
         function getCategoryColor(category) {
-            const categoryKey = (category && typeof category === 'string' && category.trim() !== '') ? category.toLowerCase() : 'uncategorized';
+             const categoryKey = (category && typeof category === 'string' && category.trim() !== '') ? category.toLowerCase() : 'uncategorized';
+             if (categoryColorCache[categoryKey]) return categoryColorCache[categoryKey];
 
-            // Check cache first
-            if (categoryColorCache[categoryKey]) {
-                return categoryColorCache[categoryKey];
-            }
+             const generatedColors = generateHslColorFromString(categoryKey);
+             debug(`Generated color object (Golden Angle) for category '${categoryKey}': { background: ${generatedColors.background}, glow: ${generatedColors.glow} }`);
+             categoryColorCache[categoryKey] = generatedColors;
+             return generatedColors;
+         }
+        // --- END DYNAMIC COLOR GENERATION ---
 
-            // --- NEW: Assign unique hue sequentially ---
-            const assignedHue = nextHue;
-            nextHue += HUE_INCREMENT; // Increment for the *next* unique category
+        function getCategoryColor(category) {
+             const categoryKey = (category && typeof category === 'string' && category.trim() !== '') ? category.toLowerCase() : 'uncategorized';
+             if (categoryColorCache[categoryKey]) return categoryColorCache[categoryKey];
 
-            // Generate the full color object using the assigned hue and variations from name
-            const generatedColors = generateHslValues(categoryKey, assignedHue);
-
-            debug(`Assigned unique hue ${assignedHue.toFixed(0)} for category '${categoryKey}'. Color: { background: ${generatedColors.background}, glow: ${generatedColors.glow} }`);
-
-            // Store and return
-            categoryColorCache[categoryKey] = generatedColors;
-            return generatedColors;
+             const generatedColors = generateHslColorFromString(categoryKey);
+             debug(`Generated color object for category '${categoryKey}': { background: ${generatedColors.background}, glow: ${generatedColors.glow} }`);
+             categoryColorCache[categoryKey] = generatedColors;
+             return generatedColors;
          }
         // --- END DYNAMIC COLOR GENERATION ---
 
