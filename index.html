@@ -35,7 +35,7 @@ html
             --card-bg: rgba(15, 23, 42, 0.7);
             --sidebar-bg: rgba(2, 6, 23, 0.85); /* Default transparent bg for desktop */
             --sidebar-bg-solid: var(--darker); /* Solid fallback for mobile */
-            --glow: 0 0 15px rgba(139, 92, 246, 0.6);
+            /* --glow: 0 0 15px rgba(139, 92, 246, 0.6);  REMOVED - Glow is dynamic */
             --transition-smooth: 0.5s cubic-bezier(0.33, 1, 0.68, 1);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Manrope', system-ui, -apple-system, sans-serif; }
@@ -52,7 +52,7 @@ html
         .glass-inset { background: rgba(2, 6, 23, 0.5); border-radius: 16px; }
 
         /* Apply glass effects by default (desktop first) */
-        .glass-card { backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.05); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2); }
+        .glass-card { backdrop-filter: blur(px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.05); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2); }
         .glass-inset { backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.5), inset -2px -2px 5px rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.03); }
 
         /* Background Animation Rules REMOVED */
@@ -82,11 +82,11 @@ html
         .completion-percentage { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 0.75rem; font-weight: 600; color: white; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5); opacity: 0; transition: opacity 0.3s ease; pointer-events: none; } .progress-container:hover .completion-percentage { opacity: 1; }
 
         /* Category Badge & Filters */
-        .category-badge { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); box-shadow: 0 2px 10px rgba(139, 92, 246, 0.3); position: relative; overflow: hidden; color: white; } .category-badge::after { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0) 100%); transform: skewX(-25deg); transition: all 0.8s ease; } @keyframes shine { 0% { left: -100%; } 100% { left: 100%; } }
+        .category-badge { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; /* background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); */ /* REMOVED - Background is dynamic */ box-shadow: 0 2px 10px rgba(139, 92, 246, 0.3); position: relative; overflow: hidden; color: white; } .category-badge::after { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0) 100%); transform: skewX(-25deg); transition: all 0.8s ease; } @keyframes shine { 0% { left: -100%; } 100% { left: 100%; } }
         .category-filters { display: flex; gap: 0.75rem; flex-wrap: wrap; }
         .category-filter { padding: 0.4rem 1rem; border-radius: 9999px; cursor: pointer; transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1); background: rgba(15, 23, 42, 0.3); border: 1px solid rgba(255, 255, 255, 0.05); position: relative; overflow: hidden; font-weight: 500; font-size: 0.85rem; }
         .category-filter:hover { background: rgba(15, 23, 42, 0.5); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); }
-        .category-filter.active { background: var(--active-filter-bg, var(--primary)); box-shadow: 0 0 20px rgba(139, 92, 246, 0.3); transform: translateY(-2px); color: white; }
+        .category-filter.active { background: var(--active-filter-bg, var(--primary)); box-shadow: 0 0 20px rgba(139, 92, 246, 0.3); transform: translateY(-2px); color: white; } /* Now uses CSS variable for active bg */
         .category-filter.active::after { content: ''; position: absolute; top: 0; left: -100%; width: 200%; height: 100%; background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%); animation: shine 3s infinite; }
 
         /* Animations & Scrollbar */
@@ -101,13 +101,13 @@ html
         /* Sidebar Navigation */
         .nav-links { flex: 1; overflow-y: auto; padding-right: 5px; margin-bottom: 1rem; max-height: calc(100vh - 130px); /* Adjusted for potential search bar height */ }
         .protocol-nav-item { position: relative; overflow: hidden; padding-left: 1rem; margin-bottom: 0.6rem; border-radius: 12px; transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1); padding-top: 0.75rem; padding-bottom: 0.75rem; padding-right: 0.75rem; }
-        .protocol-nav-item::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--nav-item-color, var(--primary)); border-top-left-radius: inherit; border-bottom-left-radius: inherit; }
+        .protocol-nav-item::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--nav-item-color, var(--primary)); border-top-left-radius: inherit; border-bottom-left-radius: inherit; } /* Uses CSS variable for color */
         .protocol-nav-item:hover { transform: translateX(5px); background: rgba(15, 23, 42, 0.8) !important; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1), 0 0 5px rgba(139, 92, 246, 0.2); }
         .protocol-nav-item.hidden { display: none; }
 
         /* Misc UI Elements */
         #mainCategoryFiltersContainer { margin-bottom: 1.5rem; md:margin-bottom: 2rem; }
-        .category-indicator { position: absolute; left: 0; top: 0; bottom: 0; width: 4px; border-top-left-radius: 16px; border-bottom-left-radius: 16px; }
+        .category-indicator { position: absolute; left: 0; top: 0; bottom: 0; width: 4px; border-top-left-radius: 16px; border-bottom-left-radius: 16px; } /* Background is set dynamically */
         .expand-btn { position: relative; overflow: hidden; transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1); } .expand-btn:hover { box-shadow: 0 0 15px rgba(139, 92, 246, 0.3); transform: translateY(-2px); } .expand-btn::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle, rgba(139, 92, 246, 0.2) 0%, transparent 70%); opacity: 0; transition: opacity 0.3s ease; } .expand-btn:hover::after { opacity: 1; } .expand-btn i { transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
         .no-results { text-align: center; padding: 3rem; background: rgba(15, 23, 42, 0.5); border-radius: 1rem; margin: 2rem 0; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.03); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1); } .no-results:hover { box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2), 0 0 20px rgba(139, 92, 246, 0.1); transform: translateY(-5px); }
         .logo { position: relative; display: inline-block; } .logo::after { content: ''; position: absolute; left: 0; right: 0; bottom: -3px; height: 2px; background: linear-gradient(90deg, var(--primary-dark), var(--primary), var(--primary-dark)); transform: scaleX(0); transform-origin: left; transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1); } .logo:hover::after { transform: scaleX(1); }
@@ -289,10 +289,6 @@ html
                 console.error("Error fetching or parsing protocol data:", error);
 
                 // Log the specific error
-                // If it's a SyntaxError from response.json(), the message will indicate invalid JSON format.
-                // If it's the HTTP error, the status code will be shown.
-                // If it's the TypeError, it means the valid JSON wasn't an array.
-
                 if (loadingIndicator) {
                     loadingIndicator.style.display = 'flex';
                     loadingIndicator.classList.add('error');
@@ -432,8 +428,8 @@ html
                  navItem.setAttribute('data-protocol-id', protocol.id);
                  navItem.setAttribute('data-category', protocol.category || 'default');
                  navItem.style.animationDelay = `${index * 0.03}s`;
-                 const categoryColor = getCategoryColor(protocol.category);
-                 navItem.style.setProperty('--nav-item-color', categoryColor);
+                 const categoryColor = getCategoryColor(protocol.category); // Get color object
+                 navItem.style.setProperty('--nav-item-color', categoryColor.background); // Use background property
                  navItem.innerHTML = `<div class="flex items-center justify-between text-sm"><div class="flex items-center overflow-hidden whitespace-nowrap text-ellipsis"><i class="bx bx-chevron-right mr-1 text-primary flex-shrink-0"></i><span class="overflow-hidden whitespace-nowrap text-ellipsis">${protocol.name || 'Unnamed'}</span></div></div>`;
                  fragment.appendChild(navItem);
             });
@@ -460,12 +456,12 @@ html
                      allCategoryBtn.textContent = 'All';
                      categoryFilters.appendChild(allCategoryBtn); // Use appendChild if it's the only one
                  } else {
-                     // Remove any dynamically added category buttons from previous runs if data failed now
+                    // Remove any dynamically added category buttons from previous runs if data failed now
                     const existingFilters = categoryFilters.querySelectorAll('.category-filter:not([data-category="all"])');
                     existingFilters.forEach(btn => btn.remove());
                      allCategoryBtn.classList.add('active'); // Ensure 'All' is active
                  }
-                if(allCategoryBtn) allCategoryBtn.style.setProperty('--active-filter-bg', 'var(--primary)');
+                if(allCategoryBtn) allCategoryBtn.style.setProperty('--active-filter-bg', 'var(--primary)'); // Set 'All' button color
                  return;
             }
 
@@ -485,7 +481,7 @@ html
                  existingFilters.forEach(btn => btn.remove());
                  allCategoryBtn.classList.add('active'); // Ensure 'All' is active
              }
-             allCategoryBtn.style.setProperty('--active-filter-bg', 'var(--primary)');
+             allCategoryBtn.style.setProperty('--active-filter-bg', 'var(--primary)'); // Set 'All' button color
 
              categories.forEach(category => {
                  const categoryBtn = document.createElement('button');
@@ -575,10 +571,6 @@ html
             const currentFilterForRender = appState.currentFilter;
             const currentSearchForRender = appState.searchTerm;
             debug(`Render Cards: Filter="${currentFilterForRender}", Search="${currentSearchForRender}", Page=${currentPageForRender}`);
-
-            // Don't show loading indicator here again if fetch succeeded, it was already hidden.
-            // Only show if data is still loading (e.g., initial render call before fetch completes - though unlikely with async/await)
-            // if (loadingIndicator && protocolData.length === 0) loadingIndicator.style.display = 'flex';
 
             container.innerHTML = ''; // Clear previous cards
             pagination.style.display = 'none'; // Hide pagination until calculated
@@ -826,8 +818,6 @@ html
                         <span class="checkmark-animate text-sm flex-grow ${isChecked ? 'line-through text-gray-500' : ''}">${processedItem}</span>`;
                 } else {
                      // For non-checkbox lists, ensure the icon/bullet aligns better if needed, or just display text
-                     // Example: Adding a bullet point for vulnerabilities/tools for consistency
-                     // listItemHTML += `<span class="text-primary mr-2 text-xs align-middle">●</span>`; // Optional bullet
                      listItemHTML += `<span class="text-sm flex-grow list-item-no-checkbox">${processedItem}</span>`;
                  }
                  listItemHTML += `</li>`;
@@ -835,25 +825,26 @@ html
              }).join('');
          }
 
-        // --- MODIFIED: createProtocolCard (Layout remains the same, logic uses global protocolData) ---
+        // --- MODIFIED: createProtocolCard (Layout remains the same, logic uses global protocolData, uses categoryColor.background) ---
         function createProtocolCard(protocol, indexOnPage) {
              try {
                  if (!protocol || !protocol.id || !protocol.name) { console.warn("Skipping card: invalid data:", protocol); return null; }
                  const card = document.createElement('div'); card.className = 'protocol-card glass-card section-animate relative'; card.id = protocol.id;
-                 const categoryColor = getCategoryColor(protocol.category); const totalItems = protocol.testing?.length || 0; let checkedCount = 0;
+                 const categoryColor = getCategoryColor(protocol.category); // Get color object
+                 const totalItems = protocol.testing?.length || 0; let checkedCount = 0;
                  if (protocol.testing) { protocol.testing.forEach((_, i) => { if (appState.checkedItems[`${protocol.id}-testing-${i}`]) { checkedCount++; } }); }
                  const percentage = totalItems > 0 ? Math.round((checkedCount / totalItems) * 100) : 0; let portDisplayHtml = getPortDisplay(protocol.port); const isExpanded = appState.expandedCards.has(protocol.id);
                  const vulnerabilitiesList = generateListItems(protocol.vulnerabilities, 'vulnerability', protocol.id); const testingList = generateListItems(protocol.testing, 'testing', protocol.id); const toolsList = generateListItems(protocol.tools, 'tool', protocol.id);
 
                  // Card Header remains the same structure
                  card.innerHTML = `
-                    <div class="category-indicator" style="background: ${categoryColor}"></div>
+                    <div class="category-indicator" style="background: ${categoryColor.background}"></div> 
                     <div class="card-header p-4 md:p-6 flex flex-col md:flex-row md:items-center justify-between" data-id="${protocol.id}">
                         <div class="flex-grow mb-3 md:mb-0 md:mr-4">
                             <div class="flex items-center mb-1 flex-wrap">
                                 <h2 class="text-xl md:text-2xl font-bold mr-3">${protocol.name}</h2>
                                 ${portDisplayHtml}
-                                <span class="category-badge ml-3 mt-1 md:mt-0" style="background: ${categoryColor};">${protocol.category || 'other'}</span>
+                                <span class="category-badge ml-3 mt-1 md:mt-0" style="background: ${categoryColor.background};">${protocol.category || 'other'}</span> 
                             </div>
                             <p class="text-gray-400 text-sm">${protocol.description || ''}</p>
                         </div>
@@ -935,7 +926,10 @@ html
                 const isActive = (btnCategory === category);
                 btn.classList.toggle('active', isActive);
                 if (isActive) {
-                    const activeColor = (category === 'all') ? 'var(--primary)' : getCategoryColor(category);
+                    // Get the appropriate color for the active filter button
+                    const activeColor = (category === 'all')
+                        ? 'var(--primary)' // Use primary for 'All'
+                        : getCategoryColor(category).background; // Use category background gradient
                     btn.style.setProperty('--active-filter-bg', activeColor);
                     debug(`Set active color for filter '${category}': ${activeColor}`);
                 } else {
@@ -986,10 +980,13 @@ html
              protocolCardsContainer?.addEventListener('click', (e) => {
                  // Card Expansion Logic - Triggered by header or expand button
                  const trigger = e.target.closest('.card-header, .expand-btn');
-                 if (trigger && !e.target.closest('a, button:not(.expand-btn)')) { // Avoid toggling if click is on interactive element within header
+                 // Ensure the click wasn't on an *interactive* element inside the header EXCEPT the expand button itself
+                 const isInteractiveClick = e.target.closest('a, button:not(.expand-btn), input, label');
+
+                 if (trigger && !isInteractiveClick) {
                     const card = trigger.closest('.protocol-card');
                     if (card) {
-                        toggleCardExpansion(card);
+                        toggleCardExpansion(card); // Handles expansion AND post-expansion scroll
                         return; // Expansion handled, stop processing
                     }
                 }
@@ -1053,7 +1050,7 @@ html
                  if (item) {
                      const id = item.getAttribute('data-protocol-id');
                      if (id) {
-                        scrollToProtocol(id);
+                        scrollToProtocol(id); // Handles finding page, scrolling, highlighting, and expanding
                          // Close sidebar on mobile after clicking a nav item
                          if (appState.isMobile) {
                             sidebar?.classList.remove('open');
@@ -1150,7 +1147,7 @@ html
 
               if (totalItems === 0) {
                  if (bar) bar.style.width = '0%';
-                 if (text) text.textContent = '0%';
+                 if (text) text.textContent = 'N/A'; // Indicate no testing items
                  return;
              }
 
@@ -1230,31 +1227,32 @@ html
          }
 
 
+        // --- MODIFIED: toggleCardExpansion (Now includes post-expansion scroll alignment) ---
         function toggleCardExpansion(card) {
-               if (!card) return;
-               const content = card.querySelector('.card-content');
-               const icon = card.querySelector('.expand-btn i');
-               const button = card.querySelector('.expand-btn');
-               const id = card.id;
+            if (!card) return;
+            const content = card.querySelector('.card-content');
+            const icon = card.querySelector('.expand-btn i');
+            const button = card.querySelector('.expand-btn');
+            const id = card.id;
 
-               if (!content || !icon || !button || !id) {
+            if (!content || !icon || !button || !id) {
                  console.warn("Could not toggle expansion, missing elements for card:", id, card);
                  return;
-             }
+            }
 
-               const wasExpanded = card.classList.contains('expanded');
-               debug(`Toggling card: ${id} (was expanded: ${wasExpanded})`);
+            const wasExpanded = card.classList.contains('expanded');
+            debug(`Toggling card: ${id} (was expanded: ${wasExpanded})`);
 
-               // Update state before animation
-               if (wasExpanded) {
-                 appState.expandedCards.delete(id);
-             } else {
-                 appState.expandedCards.add(id);
-             }
-             button.setAttribute('aria-expanded', !wasExpanded);
+            // Update state before animation
+            if (wasExpanded) {
+                appState.expandedCards.delete(id);
+            } else {
+                appState.expandedCards.add(id);
+            }
+            button.setAttribute('aria-expanded', !wasExpanded);
 
-               // --- Collapse Animation ---
-               if (wasExpanded) {
+            // --- Collapse Animation ---
+            if (wasExpanded) {
                  card.classList.remove('expanded'); // Let CSS handle max-height via class removal
 
                  // Animate icon rotation
@@ -1263,29 +1261,26 @@ html
                     { duration: 300, easing: 'ease-out', fill: 'forwards' }
                  );
 
-                 // Fade out inner content sections slightly before collapse (optional, can be removed)
+                 // Fade out inner content sections slightly before collapse
                  card.querySelectorAll('.content-section').forEach((s) => animateElement(s,
-                     [{ opacity: 1, transform: 'translateY(0)' }, { opacity: 0, transform: 'translateY(5px)' }], // Shorter transform distance
+                     [{ opacity: 1, transform: 'translateY(0)' }, { opacity: 0, transform: 'translateY(5px)' }],
                      { duration: 150, easing: 'ease-out', fill: 'forwards' })
                  );
-                 // Hide list items quickly
                  card.querySelectorAll('.list-item-animate').forEach(item => item.style.opacity = 0);
 
                  // Animate the main content container's height/padding/opacity
-                 // Get current height before setting to 0 for animation
                  const currentHeight = content.scrollHeight + 'px';
                  const anim = animateElement(content,
                      [
                          { height: currentHeight, opacity: 1, transform: 'translateY(0)', paddingBottom: '20px', paddingTop: '1rem' },
-                         { height: '0px', opacity: 0, transform: 'translateY(5px)', paddingBottom: '0px', paddingTop: '0px'} // Match transform Y
+                         { height: '0px', opacity: 0, transform: 'translateY(5px)', paddingBottom: '0px', paddingTop: '0px'}
                      ],
                      { duration: 350, easing: 'cubic-bezier(0.4, 0, 0.2, 1)', fill: 'forwards' }
                  );
-
                  anim.finished.catch(e => console.warn("Collapse animation interrupted/cancelled", e));
 
-               // --- Expand Animation ---
-               } else {
+            // --- Expand Animation ---
+            } else {
                  card.classList.add('expanded'); // Add class to trigger CSS max-height
 
                  // Animate icon rotation
@@ -1294,12 +1289,12 @@ html
                      { duration: 350, easing: 'ease-in-out', fill: 'forwards' }
                  );
 
-                 // Set initial styles for animation (height starts at 0)
+                 // Set initial styles for animation
                  content.style.height = '0px';
                  content.style.opacity = '0';
                  content.style.paddingTop = '0px';
                  content.style.paddingBottom = '0px';
-                 content.style.transform = 'translateY(5px)'; // Start slightly down
+                 content.style.transform = 'translateY(5px)';
 
                  // Animate the main content container open
                  const targetHeight = content.scrollHeight + 'px';
@@ -1311,23 +1306,40 @@ html
                      { duration: 400, easing: 'cubic-bezier(0.2, 0, 0.1, 1)', fill: 'forwards' }
                  );
 
-                 // After the main container finishes expanding, fade/slide in the inner content
+                 // After the main container finishes expanding...
                  anim.finished.then(() => {
-                     // Check if the card is still meant to be expanded (user might have clicked again quickly)
+                     // Check if the card is still meant to be expanded
                      if (!appState.expandedCards.has(id)) return;
 
-                     // Ensure height is auto after animation for dynamic content
+                     // Ensure height is auto after animation
                      content.style.height = '';
 
                      // Animate inner sections and list items
                      card.querySelectorAll('.content-section').forEach((s, i) => animateElement(s,
-                         [{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'translateY(0)' }], // Slide up slightly
-                         { duration: 300, easing: 'ease-out', fill: 'forwards', delay: i * 50 } // Stagger sections slightly
+                         [{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'translateY(0)' }],
+                         { duration: 300, easing: 'ease-out', fill: 'forwards', delay: i * 50 }
                      ));
                      card.querySelectorAll('.list-item-animate').forEach((item, i) => animateElement(item,
-                         [{ opacity: 0, transform: 'translateX(10px)' }, { opacity: 1, transform: 'translateX(0)' }], // Slide in from right
-                         { duration: 250, easing: 'ease-out', fill: 'forwards', delay: 100 + i * 20 } // Stagger list items
+                         [{ opacity: 0, transform: 'translateX(10px)' }, { opacity: 1, transform: 'translateX(0)' }],
+                         { duration: 250, easing: 'ease-out', fill: 'forwards', delay: 100 + i * 20 }
                      ));
+
+                     // --- <<< NEW: Final Scroll Alignment >>> ---
+                     // After animations start, check scroll position
+                     setTimeout(() => {
+                         if (card.classList.contains('expanded')) { // Double-check it's still expanded
+                             const cardRect = card.getBoundingClientRect();
+                             const viewportHeight = window.innerHeight;
+                             // Check if bottom is below viewport or top is above viewport
+                             if (cardRect.bottom > viewportHeight || cardRect.top < 0) {
+                                 debug(`Post-expansion scroll needed for ${id}`);
+                                 card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                             } else {
+                                 debug(`Post-expansion scroll NOT needed for ${id}`);
+                             }
+                         }
+                     }, 150); // Delay slightly after inner animations are triggered
+
                  }).catch(e => {
                      console.warn("Expand animation interrupted/cancelled", e);
                      // If cancelled, ensure final styles are applied correctly based on current state
@@ -1343,7 +1355,8 @@ html
                      }
                  });
              }
-           }
+         }
+         // --- END MODIFIED ---
 
 
         function initializeAnimations() {
@@ -1379,38 +1392,83 @@ html
                  return;
              }
              elements.forEach(element => {
-                 // Optional: Double check if element is actually in viewport before observing,
-                 // though the observer threshold should handle this.
-                 // const rect = element.getBoundingClientRect();
-                 // if (rect.top < window.innerHeight && rect.bottom > 0) {
                  appState.observer.observe(element);
-                 // }
              });
              // debug(`Observing ${elements.length} elements for animation.`);
          }
 
 
-        // --- DYNAMIC COLOR GENERATION (HUE BINNING - No change needed here) ---
+                // --- DYNAMIC COLOR GENERATION (REVISED: Sequential Hue + Brighter HSL) ---
         const categoryColorCache = {};
-        function generateHslColorFromString(str) {
-             if (!str || str.length === 0) str = 'uncategorized';
-             const numSegments = 18; const segmentSize = 360 / numSegments; const hueVariation = Math.floor(segmentSize / 3);
-             const baseSaturation = 70; const saturationVariation = 15; const minSaturation = 55; const maxSaturation = 85;
-             const baseLightness = 55; const lightnessVariation = 10; const minLightness = 45; const maxLightness = 65;
-             const primaryHue = 258; const hueAvoidanceRange = 25; const hueShiftAmount = segmentSize * 3;
-             let hash = 0; for (let i = 0; i < str.length; i++) { hash = ((hash << 5) - hash) + str.charCodeAt(i); hash |= 0; } const absHash = Math.abs(hash);
-             const segmentIndex = absHash % numSegments; const segmentStartHue = segmentIndex * segmentSize; const hueOffset = ((absHash >> 8) % (hueVariation * 2 + 1)) - hueVariation; let hue = (segmentStartHue + hueOffset + 360) % 360;
-             const hueDiff = Math.abs(hue - primaryHue); if (Math.min(hueDiff, 360 - hueDiff) < hueAvoidanceRange) { const shiftDirection = ((absHash >> 16) % 2 === 0) ? 1 : -1; hue = (hue + (hueShiftAmount * shiftDirection) + 360) % 360; debug(`Shifted hue for '${str}' from original near ${primaryHue} to ${hue}`); }
-             const satOffset = ((absHash >> 12) % (saturationVariation * 2 + 1)) - saturationVariation; const saturation = Math.min(maxSaturation, Math.max(minSaturation, baseSaturation + satOffset));
-             const lightOffset = ((absHash >> 16) % (lightnessVariation * 2 + 1)) - lightnessVariation; const lightness = Math.min(maxLightness, Math.max(minLightness, baseLightness + lightOffset)); const lightnessDarker = Math.max(minLightness - 5, Math.min(lightness - 15, maxLightness - 10));
-             const colorGradient = `linear-gradient(135deg, hsl(${hue.toFixed(0)}, ${saturation.toFixed(0)}%, ${lightness.toFixed(0)}%) 0%, hsl(${hue.toFixed(0)}, ${saturation.toFixed(0)}%, ${lightnessDarker.toFixed(0)}%) 100%)`; return colorGradient;
-         }
+        let nextHue = Math.random() * 360; // Start at a random hue position
+        const HUE_INCREMENT = 137.50776405; // Golden angle conjugate for good distribution
+
+        function generateHslValues(str, assignedHue) {
+            // Generate Saturation & Lightness variations based on the category name hash
+            // This adds subtle visual difference even if hues were somehow identical (unlikely now)
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                hash = ((hash << 5) - hash) + str.charCodeAt(i);
+                hash |= 0; // Convert to 32bit integer
+            }
+            const absHash = Math.abs(hash);
+
+            // --- NEW: Brighter HSL Parameters ---
+            const baseSaturation = 85; // Increased base saturation
+            const saturationVariation = 10; // Smaller variation range +/- 10%
+            const minSaturation = 75;   // Higher minimum saturation
+            const maxSaturation = 95;   // Higher maximum saturation (up to 100 is possible)
+
+            const baseLightness = 65;   // Increased base lightness
+            const lightnessVariation = 5;  // Smaller variation range +/- 5%
+            const minLightness = 60;    // Higher minimum lightness
+            const maxLightness = 70;    // Higher maximum lightness (avoiding too pale)
+
+            // Calculate Saturation/Lightness with variation
+            const satOffset = ((absHash >> 8) % (saturationVariation * 2 + 1)) - saturationVariation;
+            const saturation = Math.min(maxSaturation, Math.max(minSaturation, baseSaturation + satOffset));
+
+            const lightOffset = ((absHash >> 16) % (lightnessVariation * 2 + 1)) - lightnessVariation;
+            const lightness = Math.min(maxLightness, Math.max(minLightness, baseLightness + lightOffset));
+
+            // --- Generate Final Color Strings using the ASSIGNED unique hue ---
+            const finalHue = assignedHue % 360; // Ensure hue is within 0-360
+            const lightnessDarker = Math.max(minLightness - 10, Math.min(lightness - 15, maxLightness - 5)); // Adjust darker shade based on new lightness
+
+            // Background Gradient
+            const colorGradient = `linear-gradient(135deg, hsl(${finalHue.toFixed(0)}, ${saturation.toFixed(0)}%, ${lightness.toFixed(0)}%) 0%, hsl(${finalHue.toFixed(0)}, ${saturation.toFixed(0)}%, ${lightnessDarker.toFixed(0)}%) 100%)`;
+
+            
+
+            return {
+                background: colorGradient,
+                
+            };
+        }
+
         function getCategoryColor(category) {
-             const categoryKey = (category && typeof category === 'string' && category.trim() !== '') ? category.toLowerCase() : 'uncategorized';
-             if (categoryColorCache[categoryKey]) return categoryColorCache[categoryKey];
-             const generatedColor = generateHslColorFromString(categoryKey); debug(`Generated color (Binning) for category '${categoryKey}': ${generatedColor}`); categoryColorCache[categoryKey] = generatedColor; return generatedColor;
+            const categoryKey = (category && typeof category === 'string' && category.trim() !== '') ? category.toLowerCase() : 'uncategorized';
+
+            // Check cache first
+            if (categoryColorCache[categoryKey]) {
+                return categoryColorCache[categoryKey];
+            }
+
+            // --- NEW: Assign unique hue sequentially ---
+            const assignedHue = nextHue;
+            nextHue += HUE_INCREMENT; // Increment for the *next* unique category
+
+            // Generate the full color object using the assigned hue and variations from name
+            const generatedColors = generateHslValues(categoryKey, assignedHue);
+
+            debug(`Assigned unique hue ${assignedHue.toFixed(0)} for category '${categoryKey}'. Color: { background: ${generatedColors.background}, glow: ${generatedColors.glow} }`);
+
+            // Store and return
+            categoryColorCache[categoryKey] = generatedColors;
+            return generatedColors;
          }
         // --- END DYNAMIC COLOR GENERATION ---
+
 
         // --- SCROLL/HIGHLIGHT/EXPAND LOGIC (Refined - Relies on global protocolData) ---
         function scrollToProtocol(id) {
@@ -1456,14 +1514,14 @@ html
                  // Use goToPage which handles state update and rendering
                  goToPage(targetPage);
                  // Wait for the render triggered by goToPage to complete
-                 setTimeout(() => scrollAndHighlight(id), 400); // Increased delay
+                 setTimeout(() => scrollAndHighlight(id), 400); // Delay might need adjustment based on render speed
              } else {
                  // Already on the correct page, just scroll and highlight
                  scrollAndHighlight(id);
              }
          }
 
-
+        // --- MODIFIED: scrollAndHighlight (Now triggers expansion which handles its own final scroll) ---
         function scrollAndHighlight(id) {
              // Use rAF to ensure layout is stable after potential render/page change
              requestAnimationFrame(() => {
@@ -1484,27 +1542,27 @@ html
              });
         }
 
+        // --- MODIFIED: performScrollAndHighlight (Applies category glow, triggers expansion) ---
          function performScrollAndHighlight(element) {
              const id = element.id;
              debug(`Performing Scroll & Highlight for: ${id}`);
 
              const needsExpansion = !element.classList.contains('expanded');
-             const expansionAnimationDuration = 450; // Match toggleCardExpansion duration + buffer
-             const highlightDelay = 50;
-             const finalScrollDelay = needsExpansion ? expansionAnimationDuration : 50; // Wait for expansion if needed
+             const highlightDelay = 50; // Delay before applying highlight after initial scroll
 
-             // --- Step 1: Scroll into view (nearest edge) - Use smooth here for better feel if already on page
+             // --- Step 1: Initial Scroll into view (nearest edge) ---
+             // This happens first to get the card roughly in view.
              element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-             debug(`Performed 'smooth' scroll to nearest for ${id}`);
+             debug(`Performed initial 'smooth' scroll to nearest for ${id}`);
 
-             // Use a timeout based on whether expansion is needed
+             // --- Step 2: Expand if needed (after a short delay allowing scroll to start) ---
+             // The toggleCardExpansion function itself now handles the final scroll alignment *after* it finishes expanding.
              setTimeout(() => {
                  if (!document.getElementById(id)) { debug(`Element ${id} disappeared after initial scroll.`); return; }
 
-                 // --- Step 2: Expand if needed ---
                  if (needsExpansion) {
-                     debug(`Triggering expansion for ${id}`);
-                     toggleCardExpansion(element); // This starts its own animation
+                     debug(`Triggering expansion for ${id} (final scroll handled by toggleCardExpansion)`);
+                     toggleCardExpansion(element); // This starts its own animation AND post-animation scroll check
                  }
 
                  // --- Step 3: Highlight (slight delay after scroll/start of expansion) ---
@@ -1512,11 +1570,18 @@ html
                      if (!document.getElementById(id)) { debug(`Element ${id} disappeared before highlight.`); return; }
 
                      debug(`Applying highlight for ${id}`);
+
+                     // --- <<< NEW: Get Category Glow Color >>> ---
+                     const protocol = protocolData.find(p => p && p.id === id);
+                     const categoryColor = getCategoryColor(protocol?.category);
+                     const glowColorValue = categoryColor?.glow || 'rgba(139, 92, 246, 0.5)'; // Fallback glow
+                     // --- <<< END NEW >>> ---
+
                      const originalShadow = getComputedStyle(element).boxShadow;
                      element.classList.add('highlighting'); // Add class to manage transition override
 
-                     // Apply highlight glow. Combine with original shadow if possible.
-                     element.style.boxShadow = `0 0 25px 5px rgba(139, 92, 246, 0.5), ${originalShadow || '0 8px 32px rgba(0, 0, 0, 0.2)'}`; // Add glow
+                     // Apply highlight glow using the category color. Combine with original shadow.
+                     element.style.boxShadow = `0 0 25px 5px ${glowColorValue}, ${originalShadow || '0 8px 32px rgba(0, 0, 0, 0.2)'}`; // Add glow
 
                      // Remove highlight after duration
                      setTimeout(() => {
@@ -1526,23 +1591,13 @@ html
                              setTimeout(() => {
                                  if (document.getElementById(id)) {
                                      element.classList.remove('highlighting');
+                                     debug(`Removed highlight for ${id}`);
                                  }
                              }, 300); // Duration of the highlight transition defined in CSS
                          }
                      }, 1500); // Duration the highlight stays visible
 
-                 }, highlightDelay);
-
-                 // Step 4: Optional - A second scroll check *after* expansion if needed?
-                 // Usually scrollIntoView 'nearest' is sufficient, but if expansion significantly changes position:
-                 // if (needsExpansion) {
-                 //     setTimeout(() => {
-                 //         if (document.getElementById(id)) {
-                 //              debug(`Performing final scroll check post-expansion for ${id}`);
-                 //              element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                 //         }
-                 //     }, expansionAnimationDuration + 50); // After expansion animation finishes
-                 // }
+                 }, highlightDelay); // Delay relative to starting expansion/scroll
 
              }, 100); // Delay after initial scroll before starting expansion/highlight logic
          }
