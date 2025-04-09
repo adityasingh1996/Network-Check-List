@@ -2365,65 +2365,63 @@
 
         // Optimized dynamic color generation with caching
         const categoryColorCache = {};
-
-        function generateHslColorFromString(str) {
-            if (!str || str.length === 0) str = 'uncategorized';
-
-            // Golden angle for optimal distribution
-            const GOLDEN_ANGLE_CONJUGATE = 137.5;
-
-            // Base HSL parameters
-            const baseSaturation = 70;
-            const saturationVariation = 10;
-            const baseLightness = 55;
-            const lightnessVariation = 8;
-            
-            // Generate hash
-            let hash = 0;
-            for (let i = 0; i < str.length; i++) {
-                hash = ((hash << 5) - hash) + str.charCodeAt(i);
-                hash |= 0;
-            }
-            const absHash = Math.abs(hash);
-            
-            // Generate hue using golden angle
-            let hue = (absHash * GOLDEN_ANGLE_CONJUGATE) % 360;
-            
-            // Generate saturation and lightness
-            const saturation = baseSaturation + ((absHash >> 8) % (saturationVariation * 2 + 1) - saturationVariation);
-            const lightness = baseLightness + ((absHash >> 16) % (lightnessVariation * 2 + 1) - lightnessVariation);
-            
-            // Avoid clashing with primary UI hue
-            const primaryHue = 258;
-            const hueAvoidanceRange = 25;
-            if (Math.abs(hue - primaryHue) < hueAvoidanceRange || 
-                Math.abs(hue - primaryHue - 360) < hueAvoidanceRange) {
-                hue = (hue + 180) % 360; // Complementary color
-            }
-            
-            // Generate gradient and glow
-            const lightnessSecondary = Math.max(20, lightness - 12);
-            const colorGradient = `linear-gradient(135deg, hsl(${hue}, ${saturation}%, ${lightness}%) 0%, hsl(${hue}, ${saturation}%, ${lightnessSecondary}%) 100%)`;
-            const glowHsla = `hsla(${hue}, ${Math.min(100, saturation + 5)}%, ${Math.min(70, lightness + 5)}%, 0.5)`;
-            
-            return {
-                background: colorGradient,
-                glow: glowHsla
-            };
+		const PREDEFINED_PALETTE = [
+        'hsl(195, 80%, 55%)', // Blue
+        'hsl( 95, 60%, 50%)', // Green
+        'hsl( 35, 90%, 60%)', // Orange
+        'hsl(330, 75%, 60%)', // Pink
+        'hsl( 50, 85%, 55%)', // Yellow/Gold
+        'hsl(160, 70%, 45%)', // Teal
+        'hsl(280, 60%, 65%)', // Purple (different from primary)
+        'hsl(  0, 70%, 60%)', // Red
+        'hsl(220, 70%, 65%)', // Indigo
+        'hsl( 75, 65%, 55%)', // Lime Green
+    ];
+		function getIndexFromString(str, maxIndex) {
+         if (!str || str.length === 0) str = 'uncategorized';
+         let hash = 0;
+         for (let i = 0; i < str.length; i++) {
+             hash = ((hash << 5) - hash) + str.charCodeAt(i);
+             hash |= 0; // Convert to 32bit integer
+         }
+         return Math.abs(hash) % maxIndex;
+    }
+		function parseHsl(hslString) {
+        const match = hslString.match(/hsl\((\d+),\s*(\d+)%?,\s*(\d+)%?\)/);
+        if (match) {
+            return { h: parseInt(match[1]), s: parseInt(match[2]), l: parseInt(match[3]) };
         }
+        return null; // Fallback or error
+    }
+	
+	
 
         function getCategoryColor(category) {
-            const categoryKey = (category && typeof category === 'string' && category.trim() !== '') ? 
-                                category.toLowerCase() : 'uncategorized';
-            
-            if (categoryColorCache[categoryKey]) {
-                return categoryColorCache[categoryKey];
-            }
+        const categoryKey = (category && typeof category === 'string' && category.trim() !== '') ?
+                              category.toLowerCase() : 'uncategorized';
 
-            const generatedColors = generateHslColorFromString(categoryKey);
-            categoryColorCache[categoryKey] = generatedColors;
-            return generatedColors;
+        if (categoryColorCache[categoryKey]) {
+            return categoryColorCache[categoryKey];
         }
+
+        const paletteIndex = getIndexFromString(categoryKey, PREDEFINED_PALETTE.length);
+        const backgroundColor = PREDEFINED_PALETTE[paletteIndex];
+
+        // Generate a matching glow (optional, can be simplified)
+        let glowColor = 'hsla(258, 70%, 65%, 0.5)'; // Default glow similar to primary
+        const hsl = parseHsl(backgroundColor);
+        if (hsl) {
+            glowColor = `hsla(${hsl.h}, ${Math.min(100, hsl.s + 10)}%, ${Math.min(75, hsl.l + 10)}%, 0.6)`;
+        }
+
+        const result = {
+            background: backgroundColor, // Assign the solid color from palette
+            glow: glowColor
+        };
+
+        categoryColorCache[categoryKey] = result;
+        return result;
+    }
 
         // Protocol scrolling and highlighting
         function scrollToProtocol(id) {
