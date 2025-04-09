@@ -1728,60 +1728,108 @@
         }
 
         // Optimized list item generation
-        function generateListItems(items, type, protocolId) {
+         function generateListItems(items, type, protocolId) {
             if (!items || items.length === 0) {
                 return '<li class="text-gray-500 text-sm list-item-no-checkbox">None listed.</li>';
             }
 
             const includeCheckbox = (type === 'testing');
-            
-            // Pre-compute copy button HTML
+
+            // Pre-compute copy button HTML (can be reused)
             const copyButtonHtml = `
                 <button class="copy-command-btn ml-2 p-1 text-neutral-400 hover:text-primary focus:outline-none focus:ring-1 focus:ring-primary-light rounded transition-colors duration-200 inline-flex items-center align-middle"
                         title="Copy command"
                         aria-label="Copy command to clipboard">
                     <i class='bx bx-copy text-sm'></i>
                 </button>`;
-                
+
             // Prepare HTML in batches
             let html = '';
-            
+
             for (let i = 0; i < items.length; i++) {
                 const item = items[i];
                 if (typeof item !== 'string' || item.trim() === '') continue;
-                
+
                 const key = `${protocolId}-${type}-${i}`;
                 const isChecked = includeCheckbox && appState.checkedItems[key];
-                
-                // Process code blocks
-                let processedItem = item;
-                if (item.includes('`')) {
-                    processedItem = item.replace(/`([^`]+)`/g, (match, codeContent) => {
-                        const escapedCode = codeContent
+                let processedItemHtml = ''; // Store the final HTML for the item content
+
+                // --- NEW LOGIC for "Alternative Metasploit Module:" ---
+                const metasploitPrefix = "Alternative Metasploit Module:";
+                if (includeCheckbox && item.startsWith(metasploitPrefix)) {
+                    const separator = ' - ';
+                    const separatorIndex = item.indexOf(separator);
+
+                    if (separatorIndex !== -1) {
+                        const modulePartRaw = item.substring(metasploitPrefix.length, separatorIndex).trim();
+                        const descriptionPart = item.substring(separatorIndex + separator.length).trim();
+
+                        // Escape potential HTML in description
+                        const escapedDescription = descriptionPart
                             .replace(/</g, "&lt;")
                             .replace(/>/g, "&gt;");
+
+                        // Escape potential HTML in module name (for the code tag)
+                         const escapedModule = modulePartRaw
+                             .replace(/</g, "&lt;")
+                             .replace(/>/g, "&gt;");
+
+                        // Build the new structure
+                        processedItemHtml = `
+                            <span class="block">${escapedDescription}</span>
+                            <span class="block text-xs text-neutral-400 mt-1">
+                                ${metasploitPrefix} <code class="command-inline">${escapedModule}</code>${copyButtonHtml}
+                            </span>
+                        `;
+                    } else {
+                        // Fallback if separator ' - ' is missing, treat as normal line but apply command styling maybe?
+                         const escapedItem = item
+                             .replace(/</g, "&lt;")
+                             .replace(/>/g, "&gt;");
+                        processedItemHtml = escapedItem.replace(/`([^`]+)`/g, (match, codeContent) => {
+                             const escapedCode = codeContent
+                                 .replace(/</g, "&lt;")
+                                 .replace(/>/g, "&gt;");
+                            const codeTag = `<code class="command-inline">${escapedCode}</code>`;
+                            // Add copy button only if it's a testing item (already checked by includeCheckbox)
+                            return codeTag + copyButtonHtml;
+                        });
+                    }
+                } else {
+                    // --- Existing logic for backticks and regular lines ---
+                     const escapedItem = item
+                         .replace(/</g, "&lt;")
+                         .replace(/>/g, "&gt;");
+                    processedItemHtml = escapedItem.replace(/`([^`]+)`/g, (match, codeContent) => {
+                        const escapedCode = codeContent
+                             .replace(/</g, "&lt;")
+                             .replace(/>/g, "&gt;");
                         const codeTag = `<code class="command-inline">${escapedCode}</code>`;
-                        return (type === 'testing') ? codeTag + copyButtonHtml : codeTag;
+                        // Add copy button only if it's a testing item and the line isn't already handled above
+                        return (includeCheckbox ? codeTag + copyButtonHtml : codeTag);
                     });
                 }
-                
-                // Create list item HTML
-                html += `<li class="flex items-start list-item-animate ${!includeCheckbox ? 'list-item-no-checkbox-container' : ''} mb-1">`;
-                
+                // --- END OF NEW/EXISTING LOGIC ---
+
+
+                // Create list item HTML using the processedItemHtml
+                html += `<li class="flex items-start list-item-animate ${!includeCheckbox ? 'list-item-no-checkbox-container' : ''} mb-2">`; // Increased mb slightly
+
                 if (includeCheckbox) {
                     html += `
                         <label class="toggle-container inline-flex mr-3 mt-0.5 flex-shrink-0">
                             <input type="checkbox" class="toggle-input ${type}-check" data-protocol="${protocolId}" data-type="${type}" data-index="${i}" ${isChecked ? 'checked' : ''}>
                             <span class="toggle-slider"></span>
                         </label>
-                        <span class="checkmark-animate text-sm flex-grow ${isChecked ? 'line-through text-gray-500' : ''}">${processedItem}</span>`;
+                        <span class="checkmark-animate text-sm flex-grow ${isChecked ? 'line-through text-gray-500' : ''}">${processedItemHtml}</span>`;
                 } else {
-                    html += `<span class="text-sm flex-grow list-item-no-checkbox">${processedItem}</span>`;
+                    // For non-testing items (vulnerabilities, tools), don't apply checkmark/line-through styling
+                    html += `<span class="text-sm flex-grow list-item-no-checkbox">${processedItemHtml}</span>`;
                 }
-                
+
                 html += `</li>`;
             }
-            
+
             return html;
         }
 
