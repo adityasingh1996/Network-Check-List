@@ -2408,18 +2408,18 @@
 
         // Optimized dynamic color generation with caching
         const categoryColorCache = {};
-		const PREDEFINED_PALETTE = [
-        'hsl(195, 80%, 55%)', // Blue
-        'hsl( 95, 60%, 50%)', // Green
-        'hsl( 35, 90%, 60%)', // Orange
-        'hsl(330, 75%, 60%)', // Pink
-        'hsl( 50, 85%, 55%)', // Yellow/Gold
-        'hsl(160, 70%, 45%)', // Teal
-        'hsl(280, 60%, 65%)', // Purple (different from primary)
-        'hsl(  0, 70%, 60%)', // Red
-        'hsl(220, 70%, 65%)', // Indigo
-        'hsl( 75, 65%, 55%)', // Lime Green
-    ];
+	const PREDEFINED_PALETTE = [
+    'hsl(210, 85%, 30%)', // Deep Navy Blue
+    'hsl(150, 75%, 25%)', // Deep Forest Green
+    'hsl( 15, 80%, 35%)', // Deep Rust/Auburn
+    'hsl(320, 70%, 30%)', // Deep Magenta
+    'hsl( 40, 90%, 30%)', // Deep Amber
+    'hsl(180, 65%, 25%)', // Deep Teal
+    'hsl(270, 65%, 30%)', // Deep Purple
+    'hsl(  0, 75%, 35%)', // Deep Crimson
+    'hsl(235, 75%, 30%)', // Deep Royal Blue
+    'hsl( 90, 60%, 25%)', // Deep Moss Green
+];
 		function getIndexFromString(str, maxIndex) {
          if (!str || str.length === 0) str = 'uncategorized';
          let hash = 0;
