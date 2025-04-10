@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SecureCheck</title>
     <link href="https://fonts.googleapis.com/css?family=Oswald|Open+Sans" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -108,6 +108,7 @@
             justify-content: center;
             gap: 30px;
             width: 100%;
+            flex-wrap: wrap;
         }
         
         /* Initial state for circle lights */
@@ -202,8 +203,37 @@
             height: 15px;
         }
         
-        .slider .navigations .dots li.active:hover {
-            filter: blur(0px);
+        @media (max-width: 768px) {
+            .buttons-container {
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
+            }
+            
+            .slider .items-group .item .block {
+                width: 85vw;
+                max-width: 300px;
+                height: 400px;
+            }
+            
+            .slider .items-group .item .block h2 {
+                font-size: 80px;
+            }
+            
+            .slider .items-group .item {
+                padding: 20px 10px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .slider .items-group .item .block {
+                width: 90vw;
+                height: 350px;
+            }
+            
+            .slider .items-group .item .block h2 {
+                font-size: 70px;
+            }
         }
     </style>
 </head>
@@ -261,7 +291,9 @@
         },
         imags = [
             'https://r4.wallpaperflare.com/wallpaper/809/736/875/light-space-darkness-darkness-wallpaper-299f28d6a40c27d96c0c5c1c821a9747.jpg'
-        ];
+        ],
+        isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        
         // Original button click handler
         $('#button1').on('click', function() {
             window.location.href = 'https://adityasingh1996.github.io/SecureCheck/SecureCheck';
@@ -271,43 +303,74 @@
         $('#button2').on('click', function() {
             window.location.href = '';
         });
-        // Independent mouse tracking for button1
-        $('#button1').on('mousemove', function(e) {
-            mouse1.X = (e.pageX - $(this).offset().left) - $(this).width() / 2;
-            mouse1.Y = (e.pageY - $(this).offset().top) - $(this).height() / 2;
-        });
-        $('#button1').on('mouseleave', function(e) {
-            mouse1.X = mouse1.CX;
-            mouse1.Y = mouse1.CY;
-        });
         
-        // Independent mouse tracking for button2
-        $('#button2').on('mousemove', function(e) {
-            mouse2.X = (e.pageX - $(this).offset().left) - $(this).width() / 2;
-            mouse2.Y = (e.pageY - $(this).offset().top) - $(this).height() / 2;
-        });
-        $('#button2').on('mouseleave', function(e) {
-            mouse2.X = mouse2.CX;
-            mouse2.Y = mouse2.CY;
-        });
-        // Separate animation calculations
-        setInterval(function() {
-            // Animate button1 with blue color
-            block1.CY += (mouse1.Y - block1.CY) / 12;
-            block1.CX += (mouse1.X - block1.CX) / 12;
-            $('#button1 .circleLight').css('background', 'radial-gradient(circle at ' + mouse1.X + 'px ' + mouse1.Y + 'px, #0a3b8c, transparent)');
-            $('#button1').css({
-                transform: 'scale(1.03) translate(' + (block1.CX * 0.05) + 'px, ' + (block1.CY * 0.05) + 'px) rotateX(' + (block1.CY * 0.05) + 'deg) rotateY(' + (block1.CX * 0.05) + 'deg)'
+        // Use touch events for mobile and mouse events for desktop
+        if (!isMobile) {
+            // Independent mouse tracking for button1
+            $('#button1').on('mousemove', function(e) {
+                mouse1.X = (e.pageX - $(this).offset().left) - $(this).width() / 2;
+                mouse1.Y = (e.pageY - $(this).offset().top) - $(this).height() / 2;
+            });
+            $('#button1').on('mouseleave', function(e) {
+                mouse1.X = mouse1.CX;
+                mouse1.Y = mouse1.CY;
             });
             
-            // Animate button2 with red color
-            block2.CY += (mouse2.Y - block2.CY) / 12;
-            block2.CX += (mouse2.X - block2.CX) / 12;
-            $('#button2 .circleLight').css('background', 'radial-gradient(circle at ' + mouse2.X + 'px ' + mouse2.Y + 'px, #8c0a3b, transparent)');
-            $('#button2').css({
-                transform: 'scale(1.03) translate(' + (block2.CX * 0.05) + 'px, ' + (block2.CY * 0.05) + 'px) rotateX(' + (block2.CY * 0.05) + 'deg) rotateY(' + (block2.CX * 0.05) + 'deg)'
+            // Independent mouse tracking for button2
+            $('#button2').on('mousemove', function(e) {
+                mouse2.X = (e.pageX - $(this).offset().left) - $(this).width() / 2;
+                mouse2.Y = (e.pageY - $(this).offset().top) - $(this).height() / 2;
             });
-        }, 20);
+            $('#button2').on('mouseleave', function(e) {
+                mouse2.X = mouse2.CX;
+                mouse2.Y = mouse2.CY;
+            });
+            
+            // Separate animation calculations
+            setInterval(function() {
+                // Animate button1 with blue color
+                block1.CY += (mouse1.Y - block1.CY) / 12;
+                block1.CX += (mouse1.X - block1.CX) / 12;
+                $('#button1 .circleLight').css('background', 'radial-gradient(circle at ' + mouse1.X + 'px ' + mouse1.Y + 'px, #0a3b8c, transparent)');
+                $('#button1').css({
+                    transform: 'scale(1.03) translate(' + (block1.CX * 0.05) + 'px, ' + (block1.CY * 0.05) + 'px) rotateX(' + (block1.CY * 0.05) + 'deg) rotateY(' + (block1.CX * 0.05) + 'deg)'
+                });
+                
+                // Animate button2 with red color
+                block2.CY += (mouse2.Y - block2.CY) / 12;
+                block2.CX += (mouse2.X - block2.CX) / 12;
+                $('#button2 .circleLight').css('background', 'radial-gradient(circle at ' + mouse2.X + 'px ' + mouse2.Y + 'px, #8c0a3b, transparent)');
+                $('#button2').css({
+                    transform: 'scale(1.03) translate(' + (block2.CX * 0.05) + 'px, ' + (block2.CY * 0.05) + 'px) rotateX(' + (block2.CY * 0.05) + 'deg) rotateY(' + (block2.CX * 0.05) + 'deg)'
+                });
+            }, 20);
+        } else {
+            // For mobile, add a subtle pulse animation to both buttons instead of mouse tracking
+            $('#button1 .circleLight, #button2 .circleLight').css('opacity', '0.3');
+            
+            // Simple pulse animation for mobile
+            setInterval(function() {
+                var time = new Date().getTime() / 1000;
+                var scale = 1.03 + 0.01 * Math.sin(time * 2);
+                
+                $('#button1').css({
+                    transform: 'scale(' + scale + ')'
+                });
+                
+                $('#button2').css({
+                    transform: 'scale(' + scale + ')'
+                });
+                
+                // Animate glow positions in a circular pattern
+                var x1 = 150 + 50 * Math.cos(time);
+                var y1 = 225 + 50 * Math.sin(time);
+                $('#button1 .circleLight').css('background', 'radial-gradient(circle at ' + x1 + 'px ' + y1 + 'px, #0a3b8c, transparent)');
+                
+                var x2 = 150 + 50 * Math.cos(time + Math.PI);
+                var y2 = 225 + 50 * Math.sin(time + Math.PI);
+                $('#button2 .circleLight').css('background', 'radial-gradient(circle at ' + x2 + 'px ' + y2 + 'px, #8c0a3b, transparent)');
+            }, 30);
+        }
         
         // Set active class for first slide
         $('.slider .item').first().addClass('active');
