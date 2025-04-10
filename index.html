@@ -1729,103 +1729,104 @@
 
         // Optimized list item generation
          function generateListItems(items, type, protocolId) {
-     if (!items || items.length === 0) {
-         return '<li class="text-gray-500 text-sm list-item-no-checkbox">None listed.</li>';
-     }
+           // --- (Keep existing initial checks and variable definitions) ---
+           if (!items || items.length === 0) { return '<li class="text-gray-500 text-sm list-item-no-checkbox">None listed.</li>'; }
+           const includeCheckbox = (type === 'testing');
+           const copyButtonHtml = `<button class="copy-command-btn ml-2 p-1 text-neutral-400 hover:text-primary focus:outline-none focus:ring-1 focus:ring-primary-light rounded transition-colors duration-200 inline-flex items-center align-middle" title="Copy command" aria-label="Copy command to clipboard"><i class='bx bx-copy text-sm'></i></button>`;
+           let html = '';
+           const recognizedPrefixes = ["Alternative Metasploit Module:", "msf>"];
+           const separator = ' - ';
 
-     const includeCheckbox = (type === 'testing');
+           // Helper function for HTML escaping
+           const escapeHtml = (unsafe) => {
+               if (typeof unsafe !== 'string') return unsafe;
+               // Basic escaping
+               return unsafe
+                        // .replace(/&/g, "&amp;") // Usually only needed if source strings contain '&'
+                        .replace(/</g, "&lt;")
+                        .replace(/>/g, "&gt;");
+           };
 
-     // Pre-compute copy button HTML (can be reused)
-     const copyButtonHtml = `
-         <button class="copy-command-btn ml-2 p-1 text-neutral-400 hover:text-primary focus:outline-none focus:ring-1 focus:ring-primary-light rounded transition-colors duration-200 inline-flex items-center align-middle"
-                 title="Copy command"
-                 aria-label="Copy command to clipboard">
-             <i class='bx bx-copy text-sm'></i>
-         </button>`;
+           // Helper to highlight backticked commands AND add copy button
+           const applyCommandHighlighting = (escapedText) => {
+                return escapedText.replace(/`([^`]+)`/g, (match, codeContent) => {
+                   // Escape the content inside backticks before wrapping
+                   const safelyEscapedCodeContent = escapeHtml(codeContent);
+                   const codeTag = `<code class="command-inline">${safelyEscapedCodeContent}</code>`;
+                   return includeCheckbox ? codeTag + copyButtonHtml : codeTag;
+                });
+           };
 
-     let html = '';
 
-     for (let i = 0; i < items.length; i++) {
-         const item = items[i];
-         if (typeof item !== 'string' || item.trim() === '') continue;
+           for (let i = 0; i < items.length; i++) {
+               const item = items[i]; // Use the raw item for checks
+               if (typeof item !== 'string' || item.trim() === '') continue;
 
-         const key = `${protocolId}-${type}-${i}`;
-         const isChecked = includeCheckbox && appState.checkedItems[key];
-         let processedItemHtml = '';
+               const key = `${protocolId}-${type}-${i}`;
+               const isChecked = includeCheckbox && appState.checkedItems[key];
+               let processedItemHtml = '';
+               let specialPrefixHandled = false;
 
-         const metasploitPrefix = "msf>";
-         const separator = ' - ';
+               // --- Generalized Prefix Handling (using raw 'item') ---
+               if (includeCheckbox) {
+                   let prefixUsed = null;
+                   for (const prefix of recognizedPrefixes) {
+                       if (item.startsWith(prefix)) { // Check on original 'item'
+                           prefixUsed = prefix;
+                           break;
+                       }
+                   }
 
-         // Escape the raw item text *once* before processing
-         const escapedItem = item
-             .replace(/</g, "&lt;") // Use HTML entities for safety
-             .replace(/>/g, "&gt;");
+                   if (prefixUsed) {
+                       const separatorIndex = item.indexOf(separator); // Check on original 'item'
 
-         let baseContent = escapedItem; // Start with the full escaped item
+                       if (separatorIndex !== -1) {
+                           // Extract raw parts
+                           const rawCommandOrModulePart = item.substring(prefixUsed.length, separatorIndex).trim();
+                           const rawDescriptionPart = item.substring(separatorIndex + separator.length).trim();
 
-         // --- Helper function to apply command highlighting ---
-         // This function finds backticks and wraps content with <code class="command-inline">
-         // It also adds the copy button if includeCheckbox is true (i.e., for 'testing' items)
-         const applyCommandHighlighting = (text) => {
-             return text.replace(/`([^`]+)`/g, (match, codeContent) => {
-                 // codeContent comes from escapedItem, so it's already safe
-                 const codeTag = `<code class="command-inline">${codeContent}</code>`;
-                 // Add copy button ONLY for testing items
-                 return includeCheckbox ? codeTag + copyButtonHtml : codeTag;
-             });
-         };
-         // --- End Helper ---
+                           // Escape parts
+                           const escapedCommandOrModulePart = escapeHtml(rawCommandOrModulePart);
+                           let escapedDescriptionPart = escapeHtml(rawDescriptionPart);
 
-         // Handle the specific Metasploit structure FIRST
-         if (includeCheckbox && escapedItem.startsWith(metasploitPrefix)) {
-             const separatorIndex = escapedItem.indexOf(separator);
-             if (separatorIndex !== -1) {
-                 const modulePartRaw = escapedItem.substring(metasploitPrefix.length, separatorIndex).trim();
-                 let descriptionPart = escapedItem.substring(separatorIndex + separator.length).trim();
+                           // Apply backtick highlighting to the *escaped* description
+                           escapedDescriptionPart = applyCommandHighlighting(escapedDescriptionPart);
 
-                 // *** Apply highlighting to the description part BEFORE building the structure ***
-                 descriptionPart = applyCommandHighlighting(descriptionPart);
+                           // Create highlighted command/module part (using escaped content) + copy button
+                           const highlightedCommandOrModule = `<code class="command-inline">${escapedCommandOrModulePart}</code>${copyButtonHtml}`;
 
-                 // Highlight the module part separately (including its own copy button)
-                 const highlightedModule = `<code class="command-inline">${modulePartRaw}</code>${copyButtonHtml}`;
+                           // --- MODIFIED LINE ---
+                           // Construct the HTML, adding flex alignment and the icon bullet
+                           processedItemHtml = `
+                               <span class="block">${escapedDescriptionPart}</span>
+                               <span class="block text-xs text-neutral-400 mt-1 flex items-center"> <i class='bx bx-chevron-right text-xs mr-1 text-primary align-middle'></i> ${escapeHtml(prefixUsed)} ${highlightedCommandOrModule}
+                               </span>
+                           `;
+                           // --- END MODIFIED LINE ---
 
-                 // Construct the final HTML for the Metasploit item
-                 processedItemHtml = `
-                     <span class="block">${descriptionPart}</span>
-                     <span class="block text-xs text-neutral-400 mt-1">
-                         ${metasploitPrefix} ${highlightedModule}
-                     </span>
-                 `;
-                 baseContent = null; // Mark that we've handled this via the specific structure
-             }
-             // If it starts with the prefix but doesn't have the separator, it will fall through
-             // to the general processing below, treating the whole line.
-         }
+                           specialPrefixHandled = true; // Mark as handled
+                       }
+                   }
+               } // End if(includeCheckbox)
 
-         // General processing: Apply highlighting if not handled by the Metasploit structure above
-         if (baseContent !== null) {
-              processedItemHtml = applyCommandHighlighting(baseContent);
-         }
+               // --- General Handling ---
+               if (!specialPrefixHandled) {
+                    const escapedItem = escapeHtml(item);
+                    processedItemHtml = applyCommandHighlighting(escapedItem);
+               }
 
-         // --- Build the final list item HTML ---
-         html += `<li class="flex items-start list-item-animate ${!includeCheckbox ? 'list-item-no-checkbox-container' : ''} mb-2">`;
+               // --- Build List Item (No changes needed here) ---
+               html += `<li class="flex items-start list-item-animate ${!includeCheckbox ? 'list-item-no-checkbox-container' : ''} mb-2">`;
+               if (includeCheckbox) {
+                   html += `<label class="toggle-container inline-flex mr-3 mt-0.5 flex-shrink-0"><input type="checkbox" class="toggle-input ${type}-check" data-protocol="${protocolId}" data-type="${type}" data-index="${i}" ${isChecked ? 'checked' : ''}><span class="toggle-slider"></span></label><span class="checkmark-animate text-sm flex-grow ${isChecked ? 'line-through text-gray-500' : ''}">${processedItemHtml}</span>`;
+               } else {
+                   html += `<span class="text-sm flex-grow list-item-no-checkbox">${processedItemHtml}</span>`;
+               }
+               html += `</li>`;
 
-         if (includeCheckbox) { // Testing items get a checkbox
-             html += `
-                 <label class="toggle-container inline-flex mr-3 mt-0.5 flex-shrink-0">
-                     <input type="checkbox" class="toggle-input ${type}-check" data-protocol="${protocolId}" data-type="${type}" data-index="${i}" ${isChecked ? 'checked' : ''}>
-                     <span class="toggle-slider"></span>
-                 </label>
-                 <span class="checkmark-animate text-sm flex-grow ${isChecked ? 'line-through text-gray-500' : ''}">${processedItemHtml}</span>`;
-         } else { // Vulnerability or Tool items (no checkbox)
-             html += `<span class="text-sm flex-grow list-item-no-checkbox">${processedItemHtml}</span>`;
-         }
-
-         html += `</li>`;
-     } // End for loop
-
-     return html;
- }
+           } // End for loop
+           return html;
+       }
 
         // Card creation optimized for performance
         function createProtocolCard(protocol, indexOnPage) {
