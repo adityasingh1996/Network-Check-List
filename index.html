@@ -50,10 +50,6 @@
             opacity: 0.2;
         }
         
-        .slider .items-group .item:hover .block {
-            box-shadow: 0px 0px 50px #0a3b8c;
-        }
-        
         .slider .items-group .item.active {
             opacity: 1;
             visibility: visible;
@@ -108,6 +104,13 @@
             position: relative;
         }
         
+        /* New styles for buttons container */
+        .buttons-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        
         .slider .items-group .item .block .circleLight {
             top: 0px;
             left: 0px;
@@ -120,6 +123,11 @@
             position: absolute;
             border-radius: 10px;
             background: radial-gradient(circle at 80px 40px, #0a3b8c, transparent);
+        }
+        
+        /* Different color for second button */
+        #button2 .circleLight {
+            background: radial-gradient(circle at 80px 40px, #8c0a3b, transparent) !important;
         }
         
         .slider .items-group .item .block .text {
@@ -144,8 +152,13 @@
             font-size: 15px;
         }
         
-        .slider .items-group .item .block:hover {
-            box-shadow: 0px 0px 70px #0a3b8c;
+        /* Different hover glow colors for each button */
+        #button1:hover {
+            box-shadow: 0px 0px 70px #0a3b8c !important;
+        }
+        
+        #button2:hover {
+            box-shadow: 0px 0px 70px #8c0a3b !important;
         }
         
         .slider .items-group .item .block:hover .circleLight {
@@ -198,113 +211,120 @@
     <div class="slider">
         <div class="items-group">
             <div class="item">
-                <div class="block">
-                    <span class="circleLight"></span>
-                    <div class="text">
-                        <h2>NPT</h2>
-                        <p>Protocol Cheat Sheet</p>
+                <div class="buttons-container">
+                    <!-- Original Button -->
+                    <div class="block" id="button1">
+                        <span class="circleLight"></span>
+                        <div class="text">
+                            <h2>NPT</h2>
+                            <p>Protocol Cheat Sheet</p>
+                        </div>
                     </div>
-                </div>
-            </div>
-            <div class="item">
-                <div class="block">
-                    <span class="circleLight"></span>
-                    <div class="text">
-                        <h2>Hi</h2>
-                        <p>I`m cool card</p>
-                    </div>
-                </div>
-            </div>
-            <div class="item">
-                <div class="block">
-                    <span class="circleLight"></span>
-                    <div class="text">
-                        <h2>Hi</h2>
-                        <p>I`m cool card</p>
-                    </div>
-                </div>
-            </div>
-            <div class="item">
-                <div class="block">
-                    <span class="circleLight"></span>
-                    <div class="text">
-                        <h2>Hi</h2>
-                        <p>I`m cool card</p>
+                    
+                    <!-- New Button -->
+                    <div class="block" id="button2">
+                        <span class="circleLight"></span>
+                        <div class="text">
+                            <h2>EXS</h2>
+                            <p>Exploit Suggester(Dev.)</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
     <script>
-        var mouse = {
+        // Create separate mouse tracking objects for each button
+        var mouse1 = {
             X: 0,
             Y: 0,
             CX: 0,
             CY: 0
         },
-        block = {
-            X: mouse.X,
-            Y: mouse.Y,
-            CX: mouse.CX,
-            CY: mouse.CY
+        mouse2 = {
+            X: 0,
+            Y: 0,
+            CX: 0,
+            CY: 0
+        },
+        block1 = {
+            X: mouse1.X,
+            Y: mouse1.Y,
+            CX: mouse1.CX,
+            CY: mouse1.CY
+        },
+        block2 = {
+            X: mouse2.X,
+            Y: mouse2.Y,
+            CX: mouse2.CX,
+            CY: mouse2.CY
         },
         imags = [
             'https://r4.wallpaperflare.com/wallpaper/809/736/875/light-space-darkness-darkness-wallpaper-299f28d6a40c27d96c0c5c1c821a9747.jpg'
         ];
-
-        $('.block').on('click', function() {
+        // Original button click handler
+        $('#button1').on('click', function() {
             window.location.href = 'https://adityasingh1996.github.io/SecureCheck/SecureCheck';
         });
-
-        $('.block').on('mousemove', function(e) {
-            mouse.X = (e.pageX - $(this).offset().left) - $('.block').width() / 2;
-            mouse.Y = (e.pageY - $(this).offset().top) - $('.block').height() / 2;
+        
+        // New button click handler
+        $('#button2').on('click', function() {
+            window.location.href = 'https://adityasingh1996.github.io/SecureCheck/Guidelines';
         });
-
-        $('.block').on('mouseleave', function(e) {
-            mouse.X = mouse.CX;
-            mouse.Y = mouse.CY;
+        // Independent mouse tracking for button1
+        $('#button1').on('mousemove', function(e) {
+            mouse1.X = (e.pageX - $(this).offset().left) - $(this).width() / 2;
+            mouse1.Y = (e.pageY - $(this).offset().top) - $(this).height() / 2;
         });
-
+        $('#button1').on('mouseleave', function(e) {
+            mouse1.X = mouse1.CX;
+            mouse1.Y = mouse1.CY;
+        });
+        
+        // Independent mouse tracking for button2
+        $('#button2').on('mousemove', function(e) {
+            mouse2.X = (e.pageX - $(this).offset().left) - $(this).width() / 2;
+            mouse2.Y = (e.pageY - $(this).offset().top) - $(this).height() / 2;
+        });
+        $('#button2').on('mouseleave', function(e) {
+            mouse2.X = mouse2.CX;
+            mouse2.Y = mouse2.CY;
+        });
+        // Separate animation calculations
         setInterval(function() {
-            block.CY += (mouse.Y - block.CY) / 12;
-            block.CX += (mouse.X - block.CX) / 12;
-            $('.block .circleLight').css('background', 'radial-gradient(circle at ' + mouse.X + 'px ' + mouse.Y + 'px, #0a3b8c, transparent)');
-            $('.block').css({
-                transform: 'scale(1.03) translate(' + (block.CX * 0.05) + 'px, ' + (block.CY * 0.05) + 'px) rotateX(' + (block.CY * 0.05) + 'deg) rotateY(' + (block.CX * 0.05) + 'deg)'
+            // Animate button1 with blue color
+            block1.CY += (mouse1.Y - block1.CY) / 12;
+            block1.CX += (mouse1.X - block1.CX) / 12;
+            $('#button1 .circleLight').css('background', 'radial-gradient(circle at ' + mouse1.X + 'px ' + mouse1.Y + 'px, #0a3b8c, transparent)');
+            $('#button1').css({
+                transform: 'scale(1.03) translate(' + (block1.CX * 0.05) + 'px, ' + (block1.CY * 0.05) + 'px) rotateX(' + (block1.CY * 0.05) + 'deg) rotateY(' + (block1.CX * 0.05) + 'deg)'
+            });
+            
+            // Animate button2 with red color
+            block2.CY += (mouse2.Y - block2.CY) / 12;
+            block2.CX += (mouse2.X - block2.CX) / 12;
+            $('#button2 .circleLight').css('background', 'radial-gradient(circle at ' + mouse2.X + 'px ' + mouse2.Y + 'px, #8c0a3b, transparent)');
+            $('#button2').css({
+                transform: 'scale(1.03) translate(' + (block2.CX * 0.05) + 'px, ' + (block2.CY * 0.05) + 'px) rotateX(' + (block2.CY * 0.05) + 'deg) rotateY(' + (block2.CX * 0.05) + 'deg)'
             });
         }, 20);
-
+        
+        // Set active class for first slide
+        $('.slider .item').first().addClass('active');
+        
+        // Add background images
         $('.slider .item').each(function(i) {
-            if (i == 0) {
-                $(this).addClass('active');
-                $(this).next().addClass('next');
-                $(this).prev().addClass('prev');
-            }
-            
             $(this).attr('id', 'slide-' + i);
             
             $(this).prepend(
-                $('<div>', {class: 'blur', style: 'background-image: url(' + imags[i] + ');'}),
-                $('<div>', {class: 'bg', style: 'background-image: url(' + imags[i] + ');'})
+                $('<div>', {class: 'blur', style: 'background-image: url(' + imags[0] + ');'}),
+                $('<div>', {class: 'bg', style: 'background-image: url(' + imags[0] + ');'})
             );
             
-            $(this).find('.block').css('background-image', 'url(' + imags[i] + ')');
-            
-            $('.navigations .dots').append(
-                $('<li>', {class: i == 0 ? 'active' : '', id: i}).on('click', function() {
-                    var cSlide = $('.slider #slide-' + $(this).attr('id'));
-                    
-                    $('.navigations .dots li').removeClass('active');
-                    $(this).addClass('active');
-                    
-                    $('.slider .item').removeClass('active prev next');
-                    cSlide.addClass('active');
-                    cSlide.next().addClass('next');
-                    cSlide.prev().addClass('prev');
-                })
-            );
+            // Set background images for both buttons
+            $(this).find('.block').each(function() {
+                $(this).css('background-image', 'url(' + imags[0] + ')');
+            });
         });
     </script>
 </body>
