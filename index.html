@@ -86,14 +86,12 @@
         }
         
         .slider .items-group .item .block {
-            width: 100%;
-            height: 100%;
+            width: 300px;
+            height: 450px;
             padding: 20px;
             color: #ffffff;
             transition: box-shadow 0.5s;
-            max-width: 300px;
             overflow: hidden;
-            max-height: 450px;
             border-radius: 10px;
             transform: scale(1.03);
             box-sizing: border-box;
@@ -108,9 +106,11 @@
         .buttons-container {
             display: flex;
             justify-content: center;
-            gap: 20px;
+            gap: 30px;
+            width: 100%;
         }
         
+        /* Initial state for circle lights */
         .slider .items-group .item .block .circleLight {
             top: 0px;
             left: 0px;
@@ -125,9 +125,9 @@
             background: radial-gradient(circle at 80px 40px, #0a3b8c, transparent);
         }
         
-        /* Different color for second button */
+        /* Initial state for button2's circle light - without !important */
         #button2 .circleLight {
-            background: radial-gradient(circle at 80px 40px, #8c0a3b, transparent) !important;
+            background: radial-gradient(circle at 80px 40px, #8c0a3b, transparent);
         }
         
         .slider .items-group .item .block .text {
@@ -143,7 +143,7 @@
         
         .slider .items-group .item .block h2 {
             font-family: 'Oswald', sans-serif;
-            font-size: 130px;
+            font-size: 100px;
             margin-bottom: 0px;
         }
         
@@ -269,7 +269,7 @@
         
         // New button click handler
         $('#button2').on('click', function() {
-            window.location.href = 'https://adityasingh1996.github.io/SecureCheck/Guidelines';
+            window.location.href = '';
         });
         // Independent mouse tracking for button1
         $('#button1').on('mousemove', function(e) {
