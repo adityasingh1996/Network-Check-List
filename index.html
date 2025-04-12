@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -50,7 +49,7 @@
 
         html {
             scroll-behavior: smooth;
-            scroll-padding-top: 80px; /* Adjust if navbar height changes */
+            scroll-padding-top: 80px; 
         }
 
         body {
@@ -70,12 +69,11 @@
             margin: 0 auto;
             padding: 0 1rem;
         }
-        @media (min-width: 640px) { /* sm breakpoint */
+        @media (min-width: 640px) { 
             .container {
                 padding: 0 1.5rem;
             }
         }
-
 
         .glass-card {
             background: rgba(15, 23, 42, 0.9);
@@ -142,7 +140,6 @@
             transform: translateY(-2px);
         }
 
-        /* Gradient texts */
         .gradient-text {
             background: linear-gradient(to right, var(--primary-light), var(--secondary-light));
             -webkit-background-clip: text;
@@ -151,7 +148,6 @@
             display: inline-block;
         }
 
-        /* Navbar styles */
         .navbar {
             position: fixed;
             top: 0;
@@ -171,7 +167,6 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         }
 
-        /* Feature card */
         .feature-card {
             height: 100%;
             display: flex;
@@ -191,7 +186,6 @@
             flex-shrink: 0;
         }
 
-        /* Testimonial card (if added later) */
         .testimonial-card {
             padding: 2rem;
             text-align: left;
@@ -210,7 +204,6 @@
             color: var(--primary-light);
         }
 
-        /* Hero section */
         .hero {
             min-height: 90vh;
             display: flex;
@@ -234,15 +227,13 @@
              background: radial-gradient(circle at 30% 60%, rgba(16, 185, 129, 0.10), transparent 50%);
         }
 
-
-        /* App mockups */
         .app-mockup {
     position: relative;
     z-index: 10;
     transition: all var(--transition-smooth);
     will-change: transform;
     border-radius: 12px;
-    /* box-shadow: var(--shadow-xl); */ /* Delete or comment out */
+
     border: none;
     overflow: hidden;
      background-color: transparent;
@@ -255,7 +246,6 @@
             border-radius: 8px;
         }
 
-        /* Animation classes */
         .fade-in {
             opacity: 0;
             transform: translateY(20px);
@@ -267,7 +257,6 @@
             transform: translateY(0);
         }
 
-        /* Features list */
         .features-list li {
             margin-bottom: 1rem;
             display: flex;
@@ -281,7 +270,6 @@
             margin-top: 0.125rem;
         }
 
-        /* Pricing table (if added later) */
         .pricing-card {
             height: 100%;
             display: flex;
@@ -318,19 +306,17 @@
             color: var(--neutral);
         }
 
-        /* Footer */
         footer {
             background: rgba(2, 6, 23, 0.9);
             border-top: 1px solid rgba(255, 255, 255, 0.05);
             padding: 3rem 0 1.5rem;
         }
-        @media (min-width: 768px) { /* md breakpoint */
+        @media (min-width: 768px) { 
              footer {
                 padding: 4rem 0 2rem;
             }
         }
 
-        /* Mobile menu */
         .mobile-menu {
             position: fixed;
             top: 0;
@@ -369,8 +355,6 @@
             pointer-events: all;
         }
 
-
-        /* Feature category badges */
         .category-badge {
             display: inline-flex;
             align-items: center;
@@ -384,7 +368,6 @@
             color: var(--primary-light);
         }
 
-        /* Glow effects */
         .glow-btn {
             position: relative;
             z-index: 1;
@@ -411,16 +394,13 @@
             transform: translate(-50%, -50%) scale(1);
         }
 
-        /* Dashboard mockup - Added a class to potentially hide on mobile */
         .dashboard-mockup {
     position: relative;
     border-radius: 12px;
     overflow: hidden;
-    /* box-shadow: var(--shadow-xl); */ /* Delete or comment out */
+
     background-color: transparent;
 }
-
-        
 
     </style>
 </head>
@@ -774,7 +754,7 @@
                         <a href="#" class="text-gray-500 hover:text-gray-300 transition-colors">Cookie Policy</a>
                     </div>
                 </div>
-                
+
                 <p class="text-center text-gray-500 text-xs sm:text-sm mt-4">
                     Made with ❤️ by Aditya Singh
                 </p>
@@ -783,7 +763,7 @@
     </footer>
 
     <script>
-        // Navbar scroll effect
+
         const navbar = document.getElementById('navbar');
         let lastScrollY = window.scrollY;
         window.addEventListener('scroll', () => {
@@ -795,7 +775,6 @@
             lastScrollY = window.scrollY;
         });
 
-        // Mobile menu toggles
         const menuToggle = document.getElementById('menuToggle');
         const menuClose = document.getElementById('menuClose');
         const mobileMenu = document.getElementById('mobileMenu');
@@ -805,51 +784,47 @@
         const openMenu = () => {
             mobileMenu.classList.add('open');
             menuOverlay.classList.add('open');
-            body.style.overflow = 'hidden'; // Prevent background scroll
+            body.style.overflow = 'hidden'; 
         };
 
         const closeMenu = () => {
             mobileMenu.classList.remove('open');
             menuOverlay.classList.remove('open');
-             body.style.overflow = ''; // Restore background scroll
+             body.style.overflow = ''; 
         };
 
         menuToggle.addEventListener('click', openMenu);
         menuClose.addEventListener('click', closeMenu);
         menuOverlay.addEventListener('click', closeMenu);
 
-        // Mobile menu nav links - close menu on click
         const mobileNavLinks = mobileMenu.querySelectorAll('a');
         mobileNavLinks.forEach(link => {
             link.addEventListener('click', (e) => {
-                // Only close if it's an anchor link within the page
+
                 if (link.getAttribute('href')?.startsWith('#')) {
                      closeMenu();
                 }
-                // Allow normal navigation for external links or buttons like Login/Get Started
+
             });
         });
 
-        // Intersection Observer for animation
         const observeElements = document.querySelectorAll('.fade-in');
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
-                    observer.unobserve(entry.target); // Optional: stop observing once visible
+                    observer.unobserve(entry.target); 
                 }
             });
         }, {
-            threshold: 0.1 // Trigger when 10% of the element is visible
+            threshold: 0.1 
         });
 
         observeElements.forEach(element => {
             observer.observe(element);
         });
 
-        // Quick animation startup for initial hero elements
-        // Use requestAnimationFrame for smoother startup
         requestAnimationFrame(() => {
              const heroContent = document.getElementById('heroContent');
              const heroImage = document.getElementById('heroImage');
@@ -860,4 +835,3 @@
     </script>
 </body>
 </html>
-
