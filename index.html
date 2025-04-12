@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,19 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SecureCheck - Modern Protocol Testing Checklist</title>
     <meta name="description" content="Track testing procedures and discover vulnerabilities & tools for network protocols with SecureCheck.">
-    
-    <!-- Preload critical resources -->
+
     <link rel="preload" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" as="style">
     <link rel="preload" href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" as="style">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" as="style">
-    
-    <!-- Load CSS -->
+
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
+
     <style>
         :root {
             --primary: #002F6C;
@@ -41,37 +40,43 @@
             --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.2);
             --shadow-xl: 0 12px 24px rgba(0, 0, 0, 0.25);
         }
-        
+
         * {
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
             font-family: 'Manrope', system-ui, -apple-system, sans-serif;
         }
-        
+
         html {
             scroll-behavior: smooth;
-            scroll-padding-top: 80px;
+            scroll-padding-top: 80px; /* Adjust if navbar height changes */
         }
-        
+
         body {
             background: var(--darker);
             color: var(--light);
             min-height: 100vh;
             overflow-x: hidden;
-            background-image: 
+            background-image:
                 radial-gradient(circle at 10% 20%, rgba(26, 86, 219, 0.05) 0%, transparent 20%),
                 radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 20%),
                 radial-gradient(circle at 50% 50%, rgba(15, 23, 42, 0.8) 0%, var(--darker) 100%);
         }
-        
+
         .container {
             width: 100%;
             max-width: 1280px;
             margin: 0 auto;
-            padding: 0 1.5rem;
+            padding: 0 1rem;
         }
-        
+        @media (min-width: 640px) { /* sm breakpoint */
+            .container {
+                padding: 0 1.5rem;
+            }
+        }
+
+
         .glass-card {
             background: rgba(15, 23, 42, 0.9);
             border-radius: 16px;
@@ -80,12 +85,12 @@
             transition: transform var(--transition-medium), box-shadow var(--transition-medium);
             will-change: transform, box-shadow;
         }
-        
+
         .glass-card:hover {
             transform: translateY(-5px);
             box-shadow: var(--shadow-lg), 0 0 15px rgba(26, 86, 219, 0.15);
         }
-        
+
         .btn {
             display: inline-flex;
             align-items: center;
@@ -98,44 +103,45 @@
             border: none;
             outline: none;
             text-decoration: none;
+            white-space: nowrap;
         }
-        
+
         .btn-primary {
             background: var(--primary);
             color: white;
             box-shadow: 0 4px 6px rgba(0, 47, 108, 0.25);
         }
-        
+
         .btn-primary:hover {
             background: var(--primary-light);
             transform: translateY(-2px);
             box-shadow: 0 6px 8px rgba(0, 47, 108, 0.3);
         }
-        
+
         .btn-secondary {
             background: var(--secondary);
             color: white;
             box-shadow: 0 4px 6px rgba(16, 185, 129, 0.25);
         }
-        
+
         .btn-secondary:hover {
             background: var(--secondary-light);
             transform: translateY(-2px);
             box-shadow: 0 6px 8px rgba(16, 185, 129, 0.3);
         }
-        
+
         .btn-outline {
             background: transparent;
             color: white;
             border: 2px solid rgba(255, 255, 255, 0.2);
         }
-        
+
         .btn-outline:hover {
             border-color: var(--primary-light);
             background: rgba(26, 86, 219, 0.1);
             transform: translateY(-2px);
         }
-        
+
         /* Gradient texts */
         .gradient-text {
             background: linear-gradient(to right, var(--primary-light), var(--secondary-light));
@@ -144,7 +150,7 @@
             color: transparent;
             display: inline-block;
         }
-        
+
         /* Navbar styles */
         .navbar {
             position: fixed;
@@ -158,40 +164,40 @@
             z-index: 1000;
             transition: all 0.3s ease;
         }
-        
+
         .navbar.scrolled {
             padding: 0.75rem 0;
             background: rgba(2, 6, 23, 0.95);
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         }
-        
+
         /* Feature card */
         .feature-card {
-            padding: 2rem;
             height: 100%;
             display: flex;
             flex-direction: column;
         }
-        
+
         .feature-icon {
-            width: 64px;
-            height: 64px;
+            width: 56px;
+            height: 56px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 16px;
+            border-radius: 12px;
             margin-bottom: 1.5rem;
             background: rgba(26, 86, 219, 0.1);
             box-shadow: 0 4px 8px rgba(0, 47, 108, 0.2);
+            flex-shrink: 0;
         }
-        
-        /* Testimonial card */
+
+        /* Testimonial card (if added later) */
         .testimonial-card {
             padding: 2rem;
             text-align: left;
             position: relative;
         }
-        
+
         .testimonial-card::before {
             content: '"';
             position: absolute;
@@ -203,79 +209,79 @@
             opacity: 0.1;
             color: var(--primary-light);
         }
-        
+
         /* Hero section */
         .hero {
-            min-height: 100vh;
+            min-height: 90vh;
             display: flex;
             align-items: center;
             position: relative;
             overflow: hidden;
         }
-        
+
+        .hero::before, .hero::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
         .hero::before {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 70% 50%, rgba(26, 86, 219, 0.15), transparent 50%);
-            z-index: -1;
+            background: radial-gradient(circle at 70% 50%, rgba(26, 86, 219, 0.10), transparent 50%);
         }
-        
         .hero::after {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 30% 60%, rgba(16, 185, 129, 0.15), transparent 50%);
-            z-index: -1;
+             background: radial-gradient(circle at 30% 60%, rgba(16, 185, 129, 0.10), transparent 50%);
         }
-        
+
+
         /* App mockups */
         .app-mockup {
-            position: relative;
-            z-index: 10;
-            transition: all var(--transition-smooth);
-            will-change: transform;
-            border-radius: 12px;
-            box-shadow: var(--shadow-xl);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            overflow: hidden;
-        }
-        
+    position: relative;
+    z-index: 10;
+    transition: all var(--transition-smooth);
+    will-change: transform;
+    border-radius: 12px;
+    /* box-shadow: var(--shadow-xl); */ /* Delete or comment out */
+    border: none;
+    overflow: hidden;
+     background-color: transparent;
+}
+
         .app-mockup img {
             width: 100%;
             height: auto;
             display: block;
             border-radius: 8px;
         }
-        
+
         /* Animation classes */
         .fade-in {
             opacity: 0;
             transform: translateY(20px);
             transition: opacity 0.5s ease, transform 0.5s ease;
         }
-        
+
         .fade-in.visible {
             opacity: 1;
             transform: translateY(0);
         }
-        
+
         /* Features list */
         .features-list li {
             margin-bottom: 1rem;
             display: flex;
             align-items: flex-start;
         }
-        
+
         .features-list i {
             color: var(--secondary);
             margin-right: 0.75rem;
             flex-shrink: 0;
+            margin-top: 0.125rem;
         }
-        
-        /* Pricing table */
+
+        /* Pricing table (if added later) */
         .pricing-card {
             height: 100%;
             display: flex;
@@ -284,7 +290,7 @@
             position: relative;
             overflow: hidden;
         }
-        
+
         .pricing-card.popular::before {
             content: 'MOST POPULAR';
             position: absolute;
@@ -298,59 +304,32 @@
             letter-spacing: 1px;
             transform: rotate(45deg);
         }
-        
+
         .pricing-card .price {
             font-size: 3rem;
             font-weight: 800;
             margin: 1.5rem 0;
             color: white;
         }
-        
+
         .pricing-card .price span {
             font-size: 1rem;
             font-weight: 500;
             color: var(--neutral);
         }
-      
-        @media screen and (max-width: 768px) {
-    /* Hide the dashboard-mockup div */
-    .dashboard-mockup {
-        display: none;
-    }
-}
-        
+
         /* Footer */
         footer {
             background: rgba(2, 6, 23, 0.9);
             border-top: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 4rem 0 2rem;
+            padding: 3rem 0 1.5rem;
         }
-        
-        /* Responsive adjustments */
-        @media (max-width: 1024px) {
-            .hero {
-                padding: 8rem 0 4rem;
+        @media (min-width: 768px) { /* md breakpoint */
+             footer {
+                padding: 4rem 0 2rem;
             }
         }
-        
-        @media (max-width: 768px) {
-            .feature-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .pricing-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .hero {
-                padding: 6rem 0 3rem;
-            }
-            
-            .app-mockup {
-                margin-top: 3rem;
-            }
-        }
-        
+
         /* Mobile menu */
         .mobile-menu {
             position: fixed;
@@ -359,17 +338,19 @@
             bottom: 0;
             background: var(--darker);
             width: 300px;
+            max-width: 80vw;
             z-index: 1001;
-            padding: 2rem;
+            padding: 1.5rem;
             transform: translateX(100%);
             transition: transform 0.3s cubic-bezier(0.65, 0, 0.35, 1);
             box-shadow: 0 0 25px rgba(0, 0, 0, 0.15);
+            overflow-y: auto;
         }
-        
+
         .mobile-menu.open {
             transform: translateX(0);
         }
-        
+
         .menu-overlay {
             position: fixed;
             top: 0;
@@ -382,112 +363,13 @@
             pointer-events: none;
             transition: opacity 0.3s ease;
         }
-        
+
         .menu-overlay.open {
             opacity: 1;
             pointer-events: all;
         }
-        
-        /* Toggle animation */
-        .toggle-container {
-            position: relative;
-            width: 50px;
-            height: 26px;
-            flex-shrink: 0;
-        }
-        
-        .toggle-input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        
-        .toggle-slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(15, 23, 42, 0.7);
-            transition: all var(--transition-medium);
-            border-radius: 34px;
-            box-shadow: inset 2px 2px 4px var(--glass-dark), inset -2px -2px 4px var(--glass-light);
-            overflow: hidden;
-        }
-        
-        .toggle-slider:before {
-            position: absolute;
-            content: "";
-            height: 18px;
-            width: 18px;
-            left: 4px;
-            bottom: 4px;
-            background: var(--light);
-            transition: all var(--transition-spring);
-            border-radius: 50%;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-            z-index: 2;
-        }
-        
-        .toggle-slider::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
-            transition: all var(--transition-medium);
-            opacity: 0;
-        }
-        
-        .toggle-input:checked + .toggle-slider::after {
-            left: 0;
-            opacity: 1;
-        }
-        
-        .toggle-input:checked + .toggle-slider:before {
-            transform: translateX(24px);
-            background: white;
-        }
-        
-        /* Progress bar demo */
-        .progress-container {
-            width: 100%;
-            height: 12px;
-            background: rgba(15, 23, 42, 0.5);
-            border-radius: 10px;
-            box-shadow: inset 2px 2px 4px var(--glass-dark), inset -2px -2px 4px var(--glass-light);
-            margin: 1rem 0;
-            overflow: hidden;
-            position: relative;
-        }
-        
-        .progress-bar {
-            height: 100%;
-            width: 75%;
-            background: linear-gradient(90deg, var(--primary), var(--primary-light));
-            border-radius: 10px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .progress-bar::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
-            animation: progressShine 2.5s infinite;
-        }
-        
-        @keyframes progressShine {
-            to { left: 100%; }
-        }
-        
+
+
         /* Feature category badges */
         .category-badge {
             display: inline-flex;
@@ -499,379 +381,293 @@
             font-weight: 600;
             margin-bottom: 0.5rem;
             border: 1px solid rgba(26, 86, 219, 0.2);
+            color: var(--primary-light);
         }
-        
-        .category-badge.security {
-            background: rgba(220, 38, 38, 0.1);
-            border-color: rgba(220, 38, 38, 0.2);
-            color: #ef4444;
-        }
-        
-        .category-badge.tools {
-            background: rgba(16, 185, 129, 0.1);
-            border-color: rgba(16, 185, 129, 0.2);
-            color: #10b981;
-        }
-        
-        .category-badge.testing {
-            background: rgba(245, 158, 11, 0.1);
-            border-color: rgba(245, 158, 11, 0.2);
-            color: #f59e0b;
-        }
-        
+
         /* Glow effects */
         .glow-btn {
             position: relative;
+            z-index: 1;
         }
-        
+
         .glow-btn::after {
             content: '';
             position: absolute;
-            top: -20%;
-            left: -20%;
-            width: 140%;
-            height: 140%;
-            background: radial-gradient(circle, rgba(26, 86, 219, 0.4) 0%, transparent 10%);
+            top: 50%;
+            left: 50%;
+            width: 150%;
+            padding-bottom: 150%;
+            background: radial-gradient(circle, rgba(26, 86, 219, 0.3) 0%, transparent 70%);
+            border-radius: 50%;
             opacity: 0;
-            transition: opacity 0.5s ease;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            transform: translate(-50%, -50%) scale(0.8);
             pointer-events: none;
             z-index: -1;
         }
-        
+
         .glow-btn:hover::after {
-            opacity: 0.8;
+            opacity: 0.7;
+            transform: translate(-50%, -50%) scale(1);
         }
-        
-        /* Dashboard mockup */
+
+        /* Dashboard mockup - Added a class to potentially hide on mobile */
         .dashboard-mockup {
-            position: relative;
-            border-radius: 12px;
-            overflow: hidden;
-        }
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    /* box-shadow: var(--shadow-xl); */ /* Delete or comment out */
+    background-color: transparent;
+}
+
         
-        .dashboard-mockup::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 32px;
-            
-            z-index: 10;
-            display: flex;
-            align-items: center;
-            padding: 0 10px;
-        }
-        
-        .dashboard-mockup::after {
-            content: '';
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            width: 12px;
-            height: 12px;
-            
-            border-radius: 50%;
-            
-            z-index: 11;
-        }
+
     </style>
 </head>
 
 <body>
-    <!-- Navbar -->
     <nav class="navbar" id="navbar">
         <div class="container">
-            <div class="flex items-center justify-between">
-                <a href="#" class="text-2xl font-bold tracking-tight">
+            <div class="flex items-center justify-between h-16">
+                <a href="#" class="text-2xl font-bold tracking-tight flex-shrink-0">
                     <span class="text-primary-light">Secure</span>Check
                 </a>
-                
-                <div class="hidden md:flex items-center space-x-8">
+
+                <div class="hidden md:flex items-center space-x-6 lg:space-x-8">
                     <a href="#features" class="text-gray-300 hover:text-white transition-colors">Features</a>
                     <a href="#benefits" class="text-gray-300 hover:text-white transition-colors">Benefits</a>
                     <a href="#pricing" class="text-gray-300 hover:text-white transition-colors">Pricing</a>
                     <a href="#faq" class="text-gray-300 hover:text-white transition-colors">FAQ</a>
                 </div>
-                
+
                 <div class="hidden md:flex items-center space-x-4">
-                    <a href="#" class="btn btn-outline">Login</a>
-                    <a href="https://adityasingh1996.github.io/SecureCheck/SecureCheck" class="btn btn-primary">Get Started</a>
+                    <a href="#" class="btn btn-outline text-sm px-4 py-2">Login</a>
+                    <a href="YOUR_SIGNUP_LINK_HERE" class="btn btn-primary text-sm px-4 py-2">Get Started</a>
                 </div>
-                
-                <button id="menuToggle" class="block md:hidden p-2 rounded-lg bg-gray-800 text-white focus:outline-none">
+
+                <button id="menuToggle" class="block md:hidden p-2 rounded-lg text-white focus:outline-none hover:bg-gray-800 transition-colors">
                     <i class="bx bx-menu text-2xl"></i>
                 </button>
             </div>
         </div>
     </nav>
-    
-    <!-- Mobile Menu -->
+
     <div class="menu-overlay" id="menuOverlay"></div>
     <div class="mobile-menu" id="mobileMenu">
-        <div class="flex justify-end">
-            <button id="menuClose" class="p-2 rounded-lg bg-gray-800 text-white focus:outline-none">
+        <div class="flex justify-between items-center mb-8">
+             <a href="#" class="text-2xl font-bold tracking-tight">
+                 <span class="text-primary-light">Secure</span>Check
+             </a>
+            <button id="menuClose" class="p-2 rounded-lg text-white focus:outline-none hover:bg-gray-800 transition-colors">
                 <i class="bx bx-x text-2xl"></i>
             </button>
         </div>
-        
-        <div class="flex flex-col space-y-6 mt-8">
-            <a href="#features" class="text-lg font-medium text-gray-300 hover:text-white transition-colors">Features</a>
-            <a href="#benefits" class="text-lg font-medium text-gray-300 hover:text-white transition-colors">Benefits</a>
-            <a href="#pricing" class="text-lg font-medium text-gray-300 hover:text-white transition-colors">Pricing</a>
-            <a href="#faq" class="text-lg font-medium text-gray-300 hover:text-white transition-colors">FAQ</a>
-            
-            <div class="pt-6 border-t border-gray-800">
-                <a href="#" class="btn btn-outline w-full mb-4">Login</a>
-                <a href="https://adityasingh1996.github.io/SecureCheck/SecureCheck" class="btn btn-primary w-full">Get Started</a>
+
+        <div class="flex flex-col space-y-5">
+            <a href="#features" class="text-lg font-medium text-gray-300 hover:text-white transition-colors py-2">Features</a>
+            <a href="#benefits" class="text-lg font-medium text-gray-300 hover:text-white transition-colors py-2">Benefits</a>
+            <a href="#pricing" class="text-lg font-medium text-gray-300 hover:text-white transition-colors py-2">Pricing</a>
+            <a href="#faq" class="text-lg font-medium text-gray-300 hover:text-white transition-colors py-2">FAQ</a>
+
+            <div class="pt-6 border-t border-gray-800 space-y-4">
+                <a href="#" class="btn btn-outline w-full">Login</a>
+                 <a href="YOUR_SIGNUP_LINK_HERE" class="btn btn-primary w-full">Get Started</a>
             </div>
         </div>
     </div>
-    
-    <!-- Hero Section -->
-    <section class="hero pt-24">
+
+    <section class="hero pt-24 md:pt-28 lg:pt-32">
         <div class="container">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-                <div class="lg:col-span-6 fade-in" id="heroContent">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 md:gap-16 items-center">
+                <div class="lg:col-span-6 text-center lg:text-left fade-in" id="heroContent">
                     <span class="category-badge mb-4">Protocol Security Testing</span>
-                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-6 leading-tight">
                         Secure Your Systems with <span class="gradient-text">Structured Checklists</span>
                     </h1>
-                    <p class="text-xl text-gray-300 mb-8">
+                    <p class="text-lg sm:text-xl text-gray-300 mb-8 max-w-xl mx-auto lg:mx-0">
                         Track testing procedures, discover vulnerabilities, and leverage tools for comprehensive network protocol security testing.
                     </p>
-                    
-                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 mb-12">
-                        <a href="#" class="btn btn-primary glow-btn py-3 px-8 text-lg">
+
+                    <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start space-y-4 sm:space-y-0 sm:space-x-4 mb-12">
+                         <a href="YOUR_SIGNUP_LINK_HERE" class="btn btn-primary glow-btn py-3 px-6 sm:px-8 text-base sm:text-lg w-full sm:w-auto">
                             <i class="bx bx-rocket mr-2"></i> Get Started Free
                         </a>
-                        <a href="#demo" class="btn btn-outline py-3 px-8 text-lg">
+                        <a href="#demo" class="btn btn-outline py-3 px-6 sm:px-8 text-base sm:text-lg w-full sm:w-auto">
                             <i class="bx bx-play-circle mr-2"></i> Watch Demo
                         </a>
                     </div>
-                    
-                    <div class="flex items-center space-x-8">
+
+                    <div class="flex flex-wrap justify-center lg:justify-start items-center gap-x-6 gap-y-4 sm:gap-x-8">
                         <div class="text-center">
-                            <div class="text-3xl font-bold text-white">100+</div>
-                            <div class="text-gray-400 text-sm">Protocols</div>
+                            <div class="text-2xl sm:text-3xl font-bold text-white">100+</div>
+                            <div class="text-xs sm:text-sm text-gray-400 uppercase tracking-wider">Protocols</div>
                         </div>
-                        <div class="h-12 w-px bg-gray-800"></div>
+                        <div class="hidden sm:block h-10 w-px bg-gray-800"></div>
                         <div class="text-center">
-                            <div class="text-3xl font-bold text-white">500+</div>
-                            <div class="text-gray-400 text-sm">Test Procedures</div>
+                            <div class="text-2xl sm:text-3xl font-bold text-white">500+</div>
+                            <div class="text-xs sm:text-sm text-gray-400 uppercase tracking-wider">Test Procedures</div>
                         </div>
-                        <div class="h-12 w-px bg-gray-800"></div>
+                        <div class="hidden sm:block h-10 w-px bg-gray-800"></div>
                         <div class="text-center">
-                            <div class="text-3xl font-bold text-white">250+</div>
-                            <div class="text-gray-400 text-sm">Security Tools</div>
+                            <div class="text-2xl sm:text-3xl font-bold text-white">250+</div>
+                            <div class="text-xs sm:text-sm text-gray-400 uppercase tracking-wider">Security Tools</div>
                         </div>
                     </div>
                 </div>
-                
-                <div class="lg:col-span-6 relative fade-in" id="heroImage">
-                    <div class="dashboard-mockup">
-                        <img src="https://cdn.pixabay.com/photo/2023/10/03/10/06/ai-generated-8291089_640.png" alt="SecureCheck Dashboard" class="rounded-lg shadow-2xl">
+
+                <div class="lg:col-span-6 relative fade-in mt-10 lg:mt-0" id="heroImage">
+                    <div class="app-mockup dashboard-mockup">
+                        <img src="https://cdn.pixabay.com/photo/2023/10/03/10/06/ai-generated-8291089_640.png" alt="SecureCheck Dashboard" class="rounded-lg">
                     </div>
                 </div>
             </div>
         </div>
     </section>
-    
-    <!-- Clients Section (Logos) -->
-    
-    
-    <!-- Features Section -->
-    <section id="features" class="py-24">
+
+    <section id="features" class="py-16 md:py-20 lg:py-24">
         <div class="container">
-            <div class="text-center max-w-3xl mx-auto mb-16 fade-in">
+            <div class="text-center max-w-3xl mx-auto mb-12 md:mb-16 fade-in">
                 <span class="category-badge">Powerful Features</span>
-                <h2 class="text-3xl md:text-4xl font-bold mb-6">Everything you need for protocol security testing</h2>
-                <p class="text-gray-300 text-lg">SecureCheck provides a comprehensive suite of tools for security professionals to efficiently test and validate network protocols.</p>
+                <h2 class="text-3xl md:text-4xl font-bold my-4">Everything you need for protocol security testing</h2>
+                <p class="text-gray-300 text-base md:text-lg">SecureCheck provides a comprehensive suite of tools for security professionals to efficiently test and validate network protocols.</p>
             </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 feature-grid">
-                <div class="glass-card feature-card fade-in">
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 feature-grid">
+                <div class="glass-card feature-card fade-in p-6 lg:p-8">
                     <div class="feature-icon" style="background-color: rgba(220, 38, 38, 0.1);">
                         <i class="bx bx-shield-quarter text-3xl text-red-500"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-4">Vulnerability Library</h3>
-                    <p class="text-gray-300 mb-6">Access a comprehensive database of known vulnerabilities for each protocol.</p>
-                    <ul class="features-list mt-auto">
-                        <li>
-                            <i class="bx bx-check text-xl"></i>
-                            <span>Categorized by severity and impact</span>
-                        </li>
-                        <li>
-                            <i class="bx bx-check text-xl"></i>
-                            <span>Regularly updated with new findings</span>
-                        </li>
-                        <li>
-                            <i class="bx bx-check text-xl"></i>
-                            <span>Includes detailed CVE references</span>
-                        </li>
+                    <h3 class="text-xl font-semibold mb-3">Vulnerability Library</h3>
+                    <p class="text-gray-300 text-sm md:text-base mb-5">Access a comprehensive database of known vulnerabilities for each protocol.</p>
+                    <ul class="features-list mt-auto text-sm md:text-base">
+                        <li><i class="bx bx-check text-lg"></i><span>Categorized by severity and impact</span></li>
+                        <li><i class="bx bx-check text-lg"></i><span>Regularly updated with new findings</span></li>
+                        <li><i class="bx bx-check text-lg"></i><span>Includes detailed CVE references</span></li>
                     </ul>
                 </div>
-                
-                <div class="glass-card feature-card fade-in">
+
+                 <div class="glass-card feature-card fade-in p-6 lg:p-8">
                     <div class="feature-icon" style="background-color: rgba(245, 158, 11, 0.1);">
                         <i class="bx bx-test-tube text-3xl text-yellow-500"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-4">Testing Checklists</h3>
-                    <p class="text-gray-300 mb-6">Step-by-step testing procedures for thorough protocol examination.</p>
-                    <ul class="features-list mt-auto">
-                        <li>
-                            <i class="bx bx-check text-xl"></i>
-                            <span>Interactive checkboxes for tracking progress</span>
-                        </li>
-                        <li>
-                            <i class="bx bx-check text-xl"></i>
-                            <span>Detailed testing instructions</span>
-                        </li>
-                        <li>
-                            <i class="bx bx-check text-xl"></i>
-                            <span>Command-line examples for each test</span>
-                        </li>
+                    <h3 class="text-xl font-semibold mb-3">Testing Checklists</h3>
+                    <p class="text-gray-300 text-sm md:text-base mb-5">Step-by-step testing procedures for thorough protocol examination.</p>
+                    <ul class="features-list mt-auto text-sm md:text-base">
+                        <li><i class="bx bx-check text-lg"></i><span>Interactive checkboxes for tracking</span></li>
+                        <li><i class="bx bx-check text-lg"></i><span>Detailed testing instructions</span></li>
+                        <li><i class="bx bx-check text-lg"></i><span>Command-line examples provided</span></li>
                     </ul>
                 </div>
-                
-                <div class="glass-card feature-card fade-in">
+
+                 <div class="glass-card feature-card fade-in p-6 lg:p-8">
                     <div class="feature-icon" style="background-color: rgba(16, 185, 129, 0.1);">
                         <i class="bx bx-wrench text-3xl text-green-500"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-4">Tool Recommendations</h3>
-                    <p class="text-gray-300 mb-6">Discover and access the right security tools for each protocol.</p>
-                    <ul class="features-list mt-auto">
-                        <li>
-                            <i class="bx bx-check text-xl"></i>
-                            <span>Categorized by functionality</span>
-                        </li>
-                        <li>
-                            <i class="bx bx-check text-xl"></i>
-                            <span>One-click copy for commands</span>
-                        </li>
-                        <li>
-                            <i class="bx bx-check text-xl"></i>
-                            <span>Links to detailed tool documentation</span>
-                        </li>
+                    <h3 class="text-xl font-semibold mb-3">Tool Recommendations</h3>
+                    <p class="text-gray-300 text-sm md:text-base mb-5">Discover and access the right security tools for each protocol.</p>
+                    <ul class="features-list mt-auto text-sm md:text-base">
+                        <li><i class="bx bx-check text-lg"></i><span>Categorized by functionality</span></li>
+                        <li><i class="bx bx-check text-lg"></i><span>One-click copy for commands</span></li>
+                        <li><i class="bx bx-check text-lg"></i><span>Links to tool documentation</span></li>
                     </ul>
                 </div>
-                
-                <div class="glass-card feature-card fade-in">
+
+                <div class="glass-card feature-card fade-in p-6 lg:p-8">
                     <div class="feature-icon" style="background-color: rgba(79, 70, 229, 0.1);">
                         <i class="bx bx-search-alt text-3xl text-indigo-500"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-4">Powerful Search</h3>
-                    <p class="text-gray-300 mb-6">Quickly find protocols by name, port number, or vulnerability keywords.</p>
-                    <ul class="features-list mt-auto">
-                        <li>
-                            <i class="bx bx-check text-xl"></i>
-                            <span>Real-time filtering as you type</span>
-                        </li>
-                        <li>
-                            <i class="bx bx-check text-xl"></i>
-                            <span>Search across all protocol properties</span>
-                        </li>
-                        <li>
-                            <i class="bx bx-check text-xl"></i>
-                            <span>Port range and multi-port search</span>
-                        </li>
+                    <h3 class="text-xl font-semibold mb-3">Powerful Search</h3>
+                    <p class="text-gray-300 text-sm md:text-base mb-5">Quickly find protocols by name, port number, or vulnerability keywords.</p>
+                    <ul class="features-list mt-auto text-sm md:text-base">
+                        <li><i class="bx bx-check text-lg"></i><span>Real-time filtering as you type</span></li>
+                        <li><i class="bx bx-check text-lg"></i><span>Search across protocol properties</span></li>
+                        <li><i class="bx bx-check text-lg"></i><span>Port range & multi-port search</span></li>
                     </ul>
                 </div>
-                
-                <div class="glass-card feature-card fade-in">
+
+                <div class="glass-card feature-card fade-in p-6 lg:p-8">
                     <div class="feature-icon" style="background-color: rgba(236, 72, 153, 0.1);">
                         <i class="bx bx-category-alt text-3xl text-pink-500"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-4">Category Filtering</h3>
-                    <p class="text-gray-300 mb-6">Organize protocols by categories for efficient testing workflows.</p>
-                    <ul class="features-list mt-auto">
-                        <li>
-                            <i class="bx bx-check text-xl"></i>
-                            <span>Color-coded categories for visual organization</span>
-                        </li>
-                        <li>
-                            <i class="bx bx-check text-xl"></i>
-                            <span>Filter by multiple categories</span>
-                        </li>
-                        <li>
-                            <i class="bx bx-check text-xl"></i>
-                            <span>Customizable category system</span>
-                        </li>
+                    <h3 class="text-xl font-semibold mb-3">Category Filtering</h3>
+                    <p class="text-gray-300 text-sm md:text-base mb-5">Organize protocols by categories for efficient testing workflows.</p>
+                    <ul class="features-list mt-auto text-sm md:text-base">
+                        <li><i class="bx bx-check text-lg"></i><span>Color-coded visual organization</span></li>
+                        <li><i class="bx bx-check text-lg"></i><span>Filter by multiple categories</span></li>
+                        <li><i class="bx bx-check text-lg"></i><span>Customizable category system</span></li>
                     </ul>
                 </div>
-                
-                <div class="glass-card feature-card fade-in">
+
+                <div class="glass-card feature-card fade-in p-6 lg:p-8">
                     <div class="feature-icon" style="background-color: rgba(37, 99, 235, 0.1);">
                         <i class="bx bx-chart text-3xl text-blue-600"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-4">Progress Tracking</h3>
-                    <p class="text-gray-300 mb-6">Monitor your testing progress with visual indicators and statistics.</p>
-                    <ul class="features-list mt-auto">
-                        <li>
-                            <i class="bx bx-check text-xl"></i>
-                            <span>Percentage-based completion tracking</span>
-                        </li>
-                        <li>
-                            <i class="bx bx-check text-xl"></i>
-                            <span>Animated progress bars</span>
-                        </li>
-                        <li>
-                            <i class="bx bx-check text-xl"></i>
-                            <span>Testing history and audit logs</span>
-                        </li>
+                    <h3 class="text-xl font-semibold mb-3">Progress Tracking</h3>
+                    <p class="text-gray-300 text-sm md:text-base mb-5">Monitor your testing progress with visual indicators and statistics.</p>
+                    <ul class="features-list mt-auto text-sm md:text-base">
+                        <li><i class="bx bx-check text-lg"></i><span>Percentage-based completion</span></li>
+                        <li><i class="bx bx-check text-lg"></i><span>Animated progress bars</span></li>
+                        <li><i class="bx bx-check text-lg"></i><span>Testing history & audit logs</span></li>
                     </ul>
                 </div>
             </div>
         </div>
     </section>
-    
-    <!-- How It Works / Demo Section -->
-    <section id="demo" class="py-24 bg-gray-900 bg-opacity-30">
+
+    <section id="demo" class="py-16 md:py-20 lg:py-24 bg-gray-900 bg-opacity-30">
         <div class="container">
-            <div class="max-w-3xl mx-auto text-center mb-16 fade-in">
+            <div class="max-w-3xl mx-auto text-center mb-12 md:mb-16 fade-in">
                 <span class="category-badge">See It In Action</span>
-                <h2 class="text-3xl md:text-4xl font-bold mb-6">How SecureCheck Works</h2>
-                <p class="text-gray-300 text-lg">Our streamlined interface makes protocol security testing more efficient and thorough than ever before.</p>
+                <h2 class="text-3xl md:text-4xl font-bold my-4">How SecureCheck Works</h2>
+                <p class="text-gray-300 text-base md:text-lg">Our streamlined interface makes protocol security testing more efficient and thorough than ever before.</p>
             </div>
-            
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-                <div class="lg:col-span-5 fade-in">
-                    <div class="mb-12">
-                        <div class="flex items-center mb-6">
-                            <div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white font-bold text-xl mr-4">1</div>
-                            <h3 class="text-2xl font-bold">Select a Protocol</h3>
-                        </div>
-                        <p class="text-gray-300 ml-16">Browse or search through our comprehensive database of network protocols, organized by category and port number.</p>
-                    </div>
-                    
-                    <div class="mb-12">
-                        <div class="flex items-center mb-6">
-                            <div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white font-bold text-xl mr-4">2</div>
-                            <h3 class="text-2xl font-bold">Review Vulnerabilities</h3>
-                        </div>
-                        <p class="text-gray-300 ml-16">Examine common vulnerabilities and security concerns specific to your selected protocol, with detailed explanations.</p>
-                    </div>
-                    
-                    <div class="mb-12">
-                        <div class="flex items-center mb-6">
-                            <div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white font-bold text-xl mr-4">3</div>
-                            <h3 class="text-2xl font-bold">Follow Test Procedures</h3>
-                        </div>
-                        <p class="text-gray-300 ml-16">Execute step-by-step testing procedures with interactive checklists to ensure comprehensive coverage.</p>
-                    </div>
-                    
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 md:gap-16 items-center">
+                <div class="lg:col-span-5 fade-in space-y-8 md:space-y-10">
                     <div>
-                        <div class="flex items-center mb-6">
-                            <div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white font-bold text-xl mr-4">4</div>
-                            <h3 class="text-2xl font-bold">Track Progress</h3>
+                        <div class="flex items-center mb-4">
+                            <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-primary flex-shrink-0 flex items-center justify-center text-white font-bold text-lg md:text-xl mr-4">1</div>
+                            <h3 class="text-xl md:text-2xl font-semibold">Select a Protocol</h3>
                         </div>
-                        <p class="text-gray-300 ml-16">Monitor your testing progress with visual indicators and save your results for comprehensive reporting.</p>
+                        <p class="text-gray-300 ml-14 md:ml-16 text-sm md:text-base">
+                            Browse or search our comprehensive database, organized by category and port number.
+                        </p>
+                    </div>
+
+                     <div>
+                        <div class="flex items-center mb-4">
+                            <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-primary flex-shrink-0 flex items-center justify-center text-white font-bold text-lg md:text-xl mr-4">2</div>
+                            <h3 class="text-xl md:text-2xl font-semibold">Review Vulnerabilities</h3>
+                        </div>
+                        <p class="text-gray-300 ml-14 md:ml-16 text-sm md:text-base">
+                            Examine common vulnerabilities specific to the protocol, with detailed explanations.
+                        </p>
+                    </div>
+
+                     <div>
+                        <div class="flex items-center mb-4">
+                             <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-primary flex-shrink-0 flex items-center justify-center text-white font-bold text-lg md:text-xl mr-4">3</div>
+                            <h3 class="text-xl md:text-2xl font-semibold">Follow Test Procedures</h3>
+                        </div>
+                        <p class="text-gray-300 ml-14 md:ml-16 text-sm md:text-base">
+                            Execute step-by-step tests with interactive checklists for comprehensive coverage.
+                        </p>
+                    </div>
+
+                    <div>
+                        <div class="flex items-center mb-4">
+                             <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-primary flex-shrink-0 flex items-center justify-center text-white font-bold text-lg md:text-xl mr-4">4</div>
+                            <h3 class="text-xl md:text-2xl font-semibold">Track Progress</h3>
+                        </div>
+                        <p class="text-gray-300 ml-14 md:ml-16 text-sm md:text-base">
+                            Monitor progress with visual indicators and save results for reporting.
+                        </p>
                     </div>
                 </div>
-                
+
                 <div class="lg:col-span-7 fade-in">
-                    <div class="relative rounded-xl overflow-hidden shadow-2xl">
-                        <video controls playsinline webkit-playsinline class="w-full rounded-xl">
+                    <div class="relative rounded-xl overflow-hidden shadow-2xl border border-gray-700">
+                        <video controls playsinline webkit-playsinline muted class="w-full rounded-xl block aspect-video">
                             <source src="https://cdn.jsdelivr.net/gh/adityasingh1996/SecureCheck@main/video/securecheck-demo.mp4" type="video/mp4">
                             Your browser does not support the video tag.
                         </video>
@@ -880,62 +676,53 @@
             </div>
         </div>
     </section>
-    
-   
-    
-    
-    
-   
-    
-    <!-- CTA Section -->
-    <section class="py-24">
+
+    <section class="py-16 md:py-20 lg:py-24">
         <div class="container">
-            <div class="glass-card p-12 relative overflow-hidden fade-in">
-                <div class="absolute top-0 left-0 w-full h-full bg-opacity-30">
-                    <div class="absolute top-0 -right-10 w-60 h-60 bg-primary opacity-20 rounded-full filter blur-3xl"></div>
-                    <div class="absolute bottom-0 -left-10 w-60 h-60 bg-secondary opacity-20 rounded-full filter blur-3xl"></div>
+            <div class="glass-card p-8 md:p-12 relative overflow-hidden fade-in">
+                <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+                    <div class="absolute top-0 -right-10 w-40 h-40 md:w-60 md:h-60 bg-primary opacity-15 rounded-full filter blur-3xl"></div>
+                    <div class="absolute bottom-0 -left-10 w-40 h-40 md:w-60 md:h-60 bg-secondary opacity-15 rounded-full filter blur-3xl"></div>
                 </div>
-                
+
                 <div class="relative z-10 max-w-3xl mx-auto text-center">
-                    <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">Ready to secure your protocols?</h2>
-                    <p class="text-xl text-gray-300 mb-8">Join thousands of security professionals who trust SecureCheck for comprehensive protocol testing.</p>
-                    
-                    <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6">
-                        <a href="#" class="btn btn-primary glow-btn py-4 px-8 text-lg">
+                    <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-5">Ready to secure your protocols?</h2>
+                    <p class="text-lg sm:text-xl text-gray-300 mb-8">Join thousands of security professionals who trust SecureCheck for comprehensive protocol testing.</p>
+
+                    <div class="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6">
+                         <a href="YOUR_SIGNUP_LINK_HERE" class="btn btn-primary glow-btn py-3 px-6 md:py-4 md:px-8 text-base md:text-lg w-full sm:w-auto">
                             <i class="bx bx-rocket mr-2"></i> Get Started
                         </a>
-                        
                     </div>
-                    
-                    <p class="mt-6 text-gray-400">No credit card required. Its Free!</p>
+
+                    <p class="mt-6 text-sm text-gray-400">No credit card required. It's Free!</p>
                 </div>
             </div>
         </div>
     </section>
-    
-    <!-- Footer -->
+
     <footer>
         <div class="container">
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-8 mb-12">
-                <div class="md:col-span-4">
-                    <h2 class="text-2xl font-bold mb-6"><span class="text-primary-light">Secure</span>Check</h2>
-                    <p class="text-gray-400 mb-6">A comprehensive protocol security testing application for cybersecurity professionals.</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-12 gap-8 mb-10 md:mb-12">
+                <div class="sm:col-span-2 md:col-span-4">
+                    <h2 class="text-2xl font-bold mb-4"><span class="text-primary-light">Secure</span>Check</h2>
+                    <p class="text-gray-400 text-sm mb-6">A comprehensive protocol security testing application for cybersecurity professionals.</p>
                     <div class="flex space-x-4">
-                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-300 hover:bg-primary hover:text-white transition-all">
-                            <i class="bx bxl-twitter"></i>
+                        <a href="#" aria-label="Twitter" class="w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center text-gray-300 hover:bg-primary hover:text-white transition-all">
+                            <i class="bx bxl-twitter text-lg"></i>
                         </a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-300 hover:bg-primary hover:text-white transition-all">
-                            <i class="bx bxl-linkedin"></i>
+                        <a href="#" aria-label="LinkedIn" class="w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center text-gray-300 hover:bg-primary hover:text-white transition-all">
+                            <i class="bx bxl-linkedin text-lg"></i>
                         </a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-300 hover:bg-primary hover:text-white transition-all">
-                            <i class="bx bxl-github"></i>
+                        <a href="#" aria-label="GitHub" class="w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center text-gray-300 hover:bg-primary hover:text-white transition-all">
+                            <i class="bx bxl-github text-lg"></i>
                         </a>
                     </div>
                 </div>
-                
+
                 <div class="md:col-span-2">
-                    <h3 class="text-lg font-semibold mb-6">Product</h3>
-                    <ul class="space-y-3">
+                    <h3 class="text-base font-semibold mb-4 text-gray-200">Product</h3>
+                    <ul class="space-y-2 text-sm">
                         <li><a href="#features" class="text-gray-400 hover:text-white transition-colors">Features</a></li>
                         <li><a href="#pricing" class="text-gray-400 hover:text-white transition-colors">Pricing</a></li>
                         <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Integrations</a></li>
@@ -943,10 +730,10 @@
                         <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Roadmap</a></li>
                     </ul>
                 </div>
-                
+
                 <div class="md:col-span-2">
-                    <h3 class="text-lg font-semibold mb-6">Resources</h3>
-                    <ul class="space-y-3">
+                     <h3 class="text-base font-semibold mb-4 text-gray-200">Resources</h3>
+                    <ul class="space-y-2 text-sm">
                         <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Documentation</a></li>
                         <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Blog</a></li>
                         <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Guides</a></li>
@@ -954,10 +741,10 @@
                         <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Community</a></li>
                     </ul>
                 </div>
-                
+
                 <div class="md:col-span-2">
-                    <h3 class="text-lg font-semibold mb-6">Company</h3>
-                    <ul class="space-y-3">
+                    <h3 class="text-base font-semibold mb-4 text-gray-200">Company</h3>
+                    <ul class="space-y-2 text-sm">
                         <li><a href="#" class="text-gray-400 hover:text-white transition-colors">About</a></li>
                         <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Careers</a></li>
                         <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Contact</a></li>
@@ -965,10 +752,10 @@
                         <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Legal</a></li>
                     </ul>
                 </div>
-                
+
                 <div class="md:col-span-2">
-                    <h3 class="text-lg font-semibold mb-6">Support</h3>
-                    <ul class="space-y-3">
+                    <h3 class="text-base font-semibold mb-4 text-gray-200">Support</h3>
+                     <ul class="space-y-2 text-sm">
                         <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Help Center</a></li>
                         <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Status</a></li>
                         <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Report a Bug</a></li>
@@ -977,81 +764,96 @@
                     </ul>
                 </div>
             </div>
-            
-            <div class="pt-8 border-t border-gray-800">
+
+            <div class="pt-6 md:pt-8 border-t border-gray-800">
                 <div class="flex flex-col md:flex-row justify-between items-center">
-                    <p class="text-gray-500 text-sm">&copy; 2025 SecureCheck. All rights reserved.</p>
-                    <div class="flex space-x-6 mt-4 md:mt-0">
-                        <a href="#" class="text-gray-500 hover:text-gray-300 text-sm">Privacy Policy</a>
-                        <a href="#" class="text-gray-500 hover:text-gray-300 text-sm">Terms of Service</a>
-                        <a href="#" class="text-gray-500 hover:text-gray-300 text-sm">Cookie Policy</a>
+                    <p class="text-gray-500 text-xs sm:text-sm order-2 md:order-1 mt-4 md:mt-0">&copy; 2025 SecureCheck. All rights reserved.</p>
+                    <div class="flex space-x-4 sm:space-x-6 order-1 md:order-2 text-xs sm:text-sm">
+                        <a href="#" class="text-gray-500 hover:text-gray-300 transition-colors">Privacy Policy</a>
+                        <a href="#" class="text-gray-500 hover:text-gray-300 transition-colors">Terms of Service</a>
+                        <a href="#" class="text-gray-500 hover:text-gray-300 transition-colors">Cookie Policy</a>
                     </div>
                 </div>
             </div>
         </div>
     </footer>
-    
+
     <script>
         // Navbar scroll effect
         const navbar = document.getElementById('navbar');
+        let lastScrollY = window.scrollY;
         window.addEventListener('scroll', () => {
             if (window.scrollY > 50) {
                 navbar.classList.add('scrolled');
             } else {
                 navbar.classList.remove('scrolled');
             }
+            lastScrollY = window.scrollY;
         });
-        
+
         // Mobile menu toggles
         const menuToggle = document.getElementById('menuToggle');
         const menuClose = document.getElementById('menuClose');
         const mobileMenu = document.getElementById('mobileMenu');
         const menuOverlay = document.getElementById('menuOverlay');
-        
-        menuToggle.addEventListener('click', () => {
+        const body = document.body;
+
+        const openMenu = () => {
             mobileMenu.classList.add('open');
             menuOverlay.classList.add('open');
-        });
-        
+            body.style.overflow = 'hidden'; // Prevent background scroll
+        };
+
         const closeMenu = () => {
             mobileMenu.classList.remove('open');
             menuOverlay.classList.remove('open');
+             body.style.overflow = ''; // Restore background scroll
         };
-        
+
+        menuToggle.addEventListener('click', openMenu);
         menuClose.addEventListener('click', closeMenu);
         menuOverlay.addEventListener('click', closeMenu);
-        
-        // Mobile menu nav links
-        const mobileNavLinks = mobileMenu.querySelectorAll('a[href^="#"]');
+
+        // Mobile menu nav links - close menu on click
+        const mobileNavLinks = mobileMenu.querySelectorAll('a');
         mobileNavLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                closeMenu();
+            link.addEventListener('click', (e) => {
+                // Only close if it's an anchor link within the page
+                if (link.getAttribute('href')?.startsWith('#')) {
+                     closeMenu();
+                }
+                // Allow normal navigation for external links or buttons like Login/Get Started
             });
         });
-        
+
         // Intersection Observer for animation
         const observeElements = document.querySelectorAll('.fade-in');
-        
+
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
-                    observer.unobserve(entry.target);
+                    observer.unobserve(entry.target); // Optional: stop observing once visible
                 }
             });
         }, {
-            threshold: 0.1
+            threshold: 0.1 // Trigger when 10% of the element is visible
         });
-        
+
         observeElements.forEach(element => {
             observer.observe(element);
         });
-        
-        // Quick animation startup for initial elements
-        setTimeout(() => {
-            document.getElementById('heroContent').classList.add('visible');
-            document.getElementById('heroImage').classList.add('visible');
-        }, 200);
+
+        // Quick animation startup for initial hero elements
+        // Use requestAnimationFrame for smoother startup
+        requestAnimationFrame(() => {
+             const heroContent = document.getElementById('heroContent');
+             const heroImage = document.getElementById('heroImage');
+             if (heroContent) heroContent.classList.add('visible');
+             if (heroImage) heroImage.classList.add('visible');
+        });
+
     </script>
 </body>
 </html>
+```
