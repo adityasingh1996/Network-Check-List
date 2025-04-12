@@ -5,20 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SecureCheck - Protocol Checklist</title>
 
-    <!-- Preload critical resources -->
     <link rel="preload" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" as="style">
     <link rel="preload" href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" as="style">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&display=swap" as="style">
 
-    <!-- Load CSS with display swap for better loading experience -->
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" media="print" onload="this.media='all'">
 
     <style>
-        /* Base Variables */
+
         :root {
             --primary: #002F6C;
             --primary-dark: #002F6C;
@@ -45,7 +43,6 @@
             --shadow-xl: 0 12px 24px rgba(0, 0, 0, 0.25);
         }
 
-        /* Reset & Base Styles */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Manrope', system-ui, -apple-system, sans-serif; }
         html { scroll-behavior: smooth; }
         body { 
@@ -59,8 +56,6 @@
             will-change: transform;
         }
 
-        /* Optimized Glass Effects - Reduce Blur Intensity & Hardware Acceleration */
-        /* Only apply blur on larger devices, fallback to regular backgrounds on smaller devices */
         .glass-card {
             background: var(--card-bg);
             border-radius: 16px;
@@ -70,7 +65,7 @@
             will-change: transform, box-shadow;
             transform: translate3d(0, 0, 0);
         }
-        
+
         .glass-inset {
             background: rgba(2, 6, 23, 0.5);
             border-radius: 16px;
@@ -78,20 +73,18 @@
             box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.3), inset -1px -1px 2px rgba(255, 255, 255, 0.03);
         }
 
-        /* Apply high-quality blur effects only on desktop */
         @media (min-width: 1025px) {
             .glass-effect {
                 backdrop-filter: blur(8px);
                 -webkit-backdrop-filter: blur(8px);
             }
-            
+
             .glass-card:hover {
                 transform: translateY(-3px);
                 box-shadow: var(--shadow-lg), 0 0 15px rgba(139, 92, 246, 0.15);
             }
         }
 
-        /* Sidebar Styling */
         .sidebar {
             background: var(--sidebar-bg);
             height: 100vh;
@@ -119,7 +112,6 @@
             }
         }
 
-        /* Content Area */
         .content-area {
             margin-left: 300px;
             padding: 2rem;
@@ -159,7 +151,6 @@
             }
         }
 
-        /* Protocol Card Optimizations */
         .protocol-card {
             transition: opacity var(--transition-medium), transform var(--transition-medium);
             transform: translateZ(0);
@@ -195,7 +186,6 @@
             transform: translateY(0);
         }
 
-        /* Optimized Toggle Switch */
         .toggle-container {
             position: relative;
             width: 50px;
@@ -268,7 +258,6 @@
             transform: scale(1.05);
         }
 
-        /* Progress Bar */
         .progress-container {
             width: 100%;
             height: 12px;
@@ -290,7 +279,6 @@
             will-change: width;
         }
 
-        /* Optimized Sheen Effect */
         .progress-bar::after {
             content: '';
             position: absolute;
@@ -327,7 +315,6 @@
             opacity: 1;
         }
 
-        /* Category Badge & Filters */
         .category-badge {
             display: inline-block;
             padding: 0.25rem 0.75rem;
@@ -374,37 +361,35 @@
             color: white;
         }
 
-        /* Simplified Animation Logic */
         .fade-in {
             animation: fadeIn 0.5s var(--transition-smooth) forwards;
             opacity: 0;
         }
-        
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        
+
         .section-animate {
             transform: translateY(15px);
             transition: opacity var(--transition-medium), transform var(--transition-medium);
             opacity: 0;
         }
-        
+
         .section-animate.visible {
             opacity: 1;
             transform: translateY(0);
         }
-        
+
         .protocol-card.section-animate {
             opacity: 0;
         }
-        
+
         .protocol-card.section-animate.visible {
             opacity: 1;
         }
 
-        /* Optimized Scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -420,7 +405,6 @@
             background: var(--primary);
         }
 
-        /* Search */
         .search-container {
             position: relative;
             margin-bottom: 1.25rem;
@@ -452,7 +436,6 @@
             color: var(--primary);
         }
 
-        /* Sidebar Navigation */
         .nav-links {
             flex: 1;
             overflow-y: auto;
@@ -495,7 +478,6 @@
             display: none;
         }
 
-        /* Misc UI Elements */
         #mainCategoryFiltersContainer {
             margin-bottom: 1.5rem;
         }
@@ -564,7 +546,6 @@
             box-shadow: 0 0 10px rgba(139, 92, 246, 0.2);
         }
 
-        /* List Items */
         li.list-item-animate {
             transition: background 0.3s ease, transform 0.3s ease;
             border-radius: 8px;
@@ -572,7 +553,7 @@
             align-items: flex-start;
             opacity: 0;
         }
-        
+
         .protocol-card.expanded li.list-item-animate {
             opacity: 1;
         }
@@ -582,7 +563,6 @@
             transform: translateX(5px);
         }
 
-        /* Pagination */
         .pagination-container {
             display: flex;
             justify-content: center;
@@ -629,7 +609,6 @@
             color: var(--neutral);
         }
 
-        /* Badges & Code */
         .port-badge {
             font-family: 'Courier New', monospace;
             background: rgba(15, 23, 42, 0.5);
@@ -676,7 +655,6 @@
             color: var(--secondary) !important;
         }
 
-        /* Loading */
         .loading-indicator {
             display: flex;
             justify-content: center;
@@ -698,7 +676,6 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Error state for loading indicator */
         .loading-indicator.error {
             color: #f87171;
         }
@@ -706,12 +683,10 @@
             display: none;
         }
 
-        /* Scroll Highlighting Fix */
         .protocol-card.highlighting {
             transition: box-shadow 0.3s ease-in-out !important;
         }
 
-        /* Mobile Responsiveness */
         @media (max-width: 640px) {
             .category-filter {
                 padding: 0.3rem 0.8rem;
@@ -781,35 +756,32 @@
             }
         }
 
-        /* Wide Screen Optimizations */
         @media (min-width: 1920px) {
             .content-area {
                 max-width: 1600px;
                 margin-left: 300px;
                 margin-right: auto;
                 margin-left: auto;
-                padding-left: 340px; /* 300px sidebar + 40px padding */
+                padding-left: 340px; 
             }
-            
+
             #protocolCards {
                 display: grid;
                 grid-template-columns: repeat(auto-fill, minmax(700px, 1fr));
                 gap: 1.5rem;
             }
         }
-        
-        /* Extra-Wide Screen Optimizations */
+
         @media (min-width: 2560px) {
             .content-area {
                 max-width: 2200px;
             }
-            
+
             #protocolCards {
                 grid-template-columns: repeat(auto-fill, minmax(800px, 1fr));
             }
         }
 
-        /* Touch Device Hover Reset */
         @media (hover: none) and (pointer: coarse) {
             .glass-card:hover,
             .category-filter:hover,
@@ -823,8 +795,7 @@
                 background: inherit;
             }
         }
-        
-        /* Reduced Motion Support */
+
         @media (prefers-reduced-motion: reduce) {
             *,
             ::before,
@@ -834,7 +805,7 @@
                 transition-duration: 0.01ms !important;
                 scroll-behavior: auto !important;
             }
-            
+
             .progress-bar::after {
                 animation: none !important;
             }
@@ -843,14 +814,13 @@
 </head>
 
 <body>
-    <!-- Mobile menu toggle -->
+
     <button id="menuToggle" class="fixed top-4 left-4 z-50 lg:hidden menu-toggle p-2 w-10 h-10 flex items-center justify-center glass-dark rounded-full text-white focus:outline-none">
         <i class="bx bx-menu text-2xl"></i>
     </button>
 
-    <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
-        <!-- Header -->
+
         <div class="flex flex-col mb-8 flex-shrink-0">
             <div class="flex items-center justify-between">
                 <h1 class="text-2xl font-bold tracking-tight logo">
@@ -864,73 +834,66 @@
                 <p class="text-xs text-gray-400 tracking-wide relative group">
                     <span class="text-primary">◈</span> Created by <span class="underline cursor-pointer text-gray-300 hover:text-primary transition-colors duration-300">Aditya Singh</span>
                     <span class="absolute bottom-full left-0 mb-2 w-48 p-2 bg-gray-800 rounded-md shadow-lg text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10">
-                        https://www.youtube.com/watch?v=dQw4w9WgXcQ<br>© 2025 All Rights Reserved
+                        https:
                     </span>
                 </p>
             </div>
         </div>
-        <!-- Search -->
+
         <div class="search-container flex-shrink-0">
             <input type="text" id="search" class="search-input" placeholder="Search protocols or ports...">
             <i class="bx bx-search search-icon"></i>
         </div>
-        <!-- Protocols List -->
+
         <div class="protocol-section flex-grow flex flex-col min-h-0">
             <h2 class="text-lg font-semibold mb-2 text-neutral-300 flex-shrink-0">Protocols</h2>
             <div class="nav-links space-y-2" id="protocolNav">
-                <!-- Protocol nav items rendered here -->
+
             </div>
         </div>
     </aside>
 
-    <!-- Main content -->
     <main class="content-area" id="mainContent">
         <header class="mb-6 md:mb-10 fade-in" style="animation-delay: 0.1s;">
             <h1 class="text-3xl md:text-4xl font-bold mb-2">Protocol Security Checklist</h1>
             <p class="text-gray-400">Track testing procedures and discover vulnerabilities & tools for network protocols.</p>
         </header>
 
-        <!-- Category Filters in Main Content -->
         <div id="mainCategoryFiltersContainer" class="mb-6 md:mb-8">
             <h2 class="text-lg font-semibold mb-3 text-neutral-300">Filter by Category:</h2>
             <div class="category-filters" id="categoryFilters">
                 <button class="category-filter active" data-category="all">All</button>
-                <!-- Category filters will be rendered here by JS -->
+
             </div>
         </div>
 
-        <!-- Loading Indicator -->
         <div class="loading-indicator col-span-full" id="loadingIndicator" style="display: none;">
             <div class="loading-spinner"></div>
             <span class="loading-text">Loading protocols...</span>
         </div>
 
-        <!-- Protocol Cards Grid -->
         <div class="grid grid-cols-1 gap-6" id="protocolCards">
-            <!-- Protocol Cards will be rendered here -->
+
         </div>
 
-        <!-- Pagination -->
         <div class="pagination-container" id="paginationContainer">
-            <!-- Pagination will be rendered here -->
+
         </div>
     </main>
 
     <script>
-        // --- DATA SOURCE ---
+
         const DATA_URL = 'https://raw.githubusercontent.com/adityasingh1996/SecureCheck/refs/heads/main/Data';
 
-        // --- GLOBAL DATA STORE ---
-        let protocolData = []; // Initialize as empty, will be filled by fetch
+        let protocolData = []; 
 
-        // --- STATE ---
         const appState = {
             currentFilter: 'all',
             searchTerm: '',
             checkedItems: {},
             currentPage: 1,
             itemsPerPage: 5,
-            debug: false, // Set to false in production
+            debug: false, 
             expandedCards: new Set(),
             isMobile: false,
             observer: null,
@@ -940,25 +903,22 @@
             hasWideScreen: false
         };
 
-        // --- UTILITIES ---
         function debug(message) { if (appState.debug) console.log(`[DEBUG] ${message}`); }
-        
-        // Optimized debounce with AbortController for better cleanup
+
         const debounce = (func, delay) => {
             let controller = new AbortController();
             return (...args) => {
-                controller.abort(); // Cancel previous timeout
+                controller.abort(); 
                 controller = new AbortController();
                 const signal = controller.signal;
-                
+
                 return new Promise((resolve) => {
                     const timeoutId = setTimeout(() => {
                         if (!signal.aborted) {
                             resolve(func(...args));
                         }
                     }, delay);
-                    
-                    // Clean up if aborted
+
                     signal.addEventListener('abort', () => {
                         clearTimeout(timeoutId);
                     });
@@ -966,40 +926,34 @@
             };
         };
 
-        // --- FEATURE DETECTION ---
         function detectFeatures() {
-            // Check if backdrop-filter is supported
+
             const supportsBlur = CSS.supports('backdrop-filter', 'blur(1px)') ||
                                 CSS.supports('-webkit-backdrop-filter', 'blur(1px)');
-            
-            // Check screen size for wide screen optimization
+
             const hasWideScreen = window.innerWidth >= 1920;
-            
-            // Store feature detection results
+
             appState.supportsBlur = supportsBlur;
             appState.hasWideScreen = hasWideScreen;
-            
-            // Apply class based on blur support
+
             document.documentElement.classList.toggle('supports-blur', supportsBlur);
             document.documentElement.classList.toggle('wide-screen', hasWideScreen);
-            
+
             debug(`Feature detection: supportsBlur=${supportsBlur}, hasWideScreen=${hasWideScreen}`);
-            
-            // Update itemsPerPage based on screen width for better performance
+
             if (window.innerWidth >= 2560) {
-                appState.itemsPerPage = 8; // Ultra-wide screens
+                appState.itemsPerPage = 8; 
             } else if (window.innerWidth >= 1920) {
-                appState.itemsPerPage = 6; // Wide screens
+                appState.itemsPerPage = 6; 
             } else if (window.innerWidth >= 1280) {
-                appState.itemsPerPage = 5; // Standard desktop
+                appState.itemsPerPage = 5; 
             } else if (window.innerWidth >= 768) {
-                appState.itemsPerPage = 4; // Small desktop/tablet
+                appState.itemsPerPage = 4; 
             } else {
-                appState.itemsPerPage = 3; // Mobile
+                appState.itemsPerPage = 3; 
             }
         }
 
-        // --- DATA FETCHING & PARSING ---
         async function fetchProtocolData() {
             debug(`Fetching data from ${DATA_URL}...`);
             const loadingIndicator = document.getElementById('loadingIndicator');
@@ -1016,8 +970,7 @@
                 const cacheTime = 'secureCheckDataTime';
                 const cachedTime = localStorage.getItem(cacheTime);
                 const now = Date.now();
-                
-                // Use cached data if available and less than 1 hour old
+
                 if (cachedTime && (now - parseInt(cachedTime)) < 3600000) {
                     const cachedData = localStorage.getItem(cacheKey);
                     if (cachedData) {
@@ -1029,16 +982,15 @@
                         }
                     }
                 }
-                
-                // Fetch fresh data
+
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 8000); // 8-second timeout
-                
+                const timeoutId = setTimeout(() => controller.abort(), 8000); 
+
                 const response = await fetch(DATA_URL, { 
                     signal: controller.signal,
                     cache: 'no-cache' 
                 });
-                
+
                 clearTimeout(timeoutId);
 
                 if (!response.ok) {
@@ -1051,8 +1003,7 @@
                 if (!Array.isArray(parsedData)) {
                     throw new TypeError("Fetched data is not an array.");
                 }
-                
-                // Cache the fetched data
+
                 try {
                     localStorage.setItem(cacheKey, JSON.stringify(parsedData));
                     localStorage.setItem(cacheTime, now.toString());
@@ -1083,39 +1034,35 @@
                         loadingText.innerHTML = `<i class='bx bx-error-circle mr-2'></i> ${errorMsg}`;
                     }
                 }
-                
-                // Try to use cached data even if it's older as a fallback
+
                 try {
                     const cachedData = localStorage.getItem('secureCheckData');
                     if (cachedData) {
                         debug('Using expired cached data as fallback');
                         const parsedData = JSON.parse(cachedData);
                         if (Array.isArray(parsedData) && parsedData.length > 0) {
-                            // Still show the error but return the cached data
+
                             return parsedData;
                         }
                     }
                 } catch (e) {
                     debug('No usable cached data available');
                 }
-                
-                return null; // Indicate failure
+
+                return null; 
             }
         }
 
-        // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', async () => {
             debug('App initializing...');
-            
-            // Feature detection
+
             detectFeatures();
-            
-            // Check required elements
+
             const requiredElements = [
                 'loadingIndicator', 'protocolCards', 'paginationContainer',
                 'protocolNav', 'sidebar', 'categoryFilters'
             ];
-            
+
             let missingElement = false;
             for (const id of requiredElements) {
                 if (!document.getElementById(id)) {
@@ -1123,14 +1070,13 @@
                     missingElement = true;
                 }
             }
-            
+
             if (missingElement) {
                 const body = document.body || document.createElement('body');
                 body.innerHTML = `<div style="color: red; padding: 20px; font-family: sans-serif; text-align: center;">Error: Core UI elements missing. Cannot initialize application.</div>`;
                 return;
             }
 
-            // --- Fetch data FIRST ---
             const fetchedData = await fetchProtocolData();
 
             if (fetchedData === null || !Array.isArray(fetchedData)) {
@@ -1138,27 +1084,24 @@
                 return;
             }
 
-            // --- Assign fetched data ---
-            protocolData = fetchedData; // Assign to the global variable
+            protocolData = fetchedData; 
             debug(`Assigned fetched data (${protocolData.length} items) to global scope.`);
 
-            // --- Proceed with initialization using the fetched data ---
             try {
                 updateDeviceState();
                 loadCheckedItems();
-                
-                // Use batch processing for performance
+
                 setTimeout(() => {
                     renderSidebarProtocols();
                     initializeMainCategoryFilters();
                     setupEventListeners();
                     initializeAnimations();
                     renderProtocolCards();
-                    
+
                     setTimeout(updateProgress, 300);
                     debug('App initialized successfully.');
                 }, 10);
-                
+
             } catch (error) {
                 console.error("Error during initialization steps after data fetch:", error);
                 const loadingIndicator = document.getElementById('loadingIndicator');
@@ -1171,30 +1114,27 @@
             }
         });
 
-        // --- CORE LOGIC ---
         function updateDeviceState() {
             const wasMobile = appState.isMobile;
             appState.isMobile = window.innerWidth < 768;
-            
+
             if (window.innerWidth >= 2560) {
-                appState.itemsPerPage = 8; // Ultra-wide screens
+                appState.itemsPerPage = 8; 
             } else if (window.innerWidth >= 1920) {
-                appState.itemsPerPage = 6; // Wide screens 
+                appState.itemsPerPage = 6; 
             } else if (window.innerWidth >= 1280) {
-                appState.itemsPerPage = 5; // Standard desktop
+                appState.itemsPerPage = 5; 
             } else if (window.innerWidth >= 768) {
-                appState.itemsPerPage = 4; // Small desktop/tablet
+                appState.itemsPerPage = 4; 
             } else {
-                appState.itemsPerPage = 3; // Mobile
+                appState.itemsPerPage = 3; 
             }
-            
-            // Update wide screen status
+
             appState.hasWideScreen = window.innerWidth >= 1920;
             document.documentElement.classList.toggle('wide-screen', appState.hasWideScreen);
-            
+
             debug(`Device state: isMobile=${appState.isMobile}, itemsPerPage=${appState.itemsPerPage}, hasWideScreen=${appState.hasWideScreen}`);
-            
-            // Only re-render if initialization is complete and state changed
+
             if (document.readyState === 'complete' && protocolData.length > 0 && 
                 (wasMobile !== appState.isMobile || appState.hasWideScreen !== (window.innerWidth >= 1920))) {
                 renderProtocolCards();
@@ -1225,7 +1165,6 @@
             return '';
         }
 
-        // Optimized sidebar rendering with batch DOM updates
         function renderSidebarProtocols() {
             debug('Rendering sidebar protocol list...');
             const protocolNav = document.getElementById('protocolNav');
@@ -1234,7 +1173,6 @@
                 return; 
             }
 
-            // Ensure protocolData is available
             if (!protocolData || protocolData.length === 0) {
                 protocolNav.innerHTML = '<p class="text-sm text-neutral-500 px-3">No protocols loaded.</p>';
                 debug('Sidebar render skipped: No protocol data available.');
@@ -1248,31 +1186,28 @@
                 return;
             }
 
-            // Create document fragment for batch DOM update
             const fragment = document.createDocumentFragment();
             const sortedProtocols = [...filteredProtocols]
                 .sort((a, b) => (a.name || '').localeCompare(b.name || ''));
-            
-            // Use virtualized rendering for large lists
-            const maxVisibleItems = 100; // Limit for performance
+
+            const maxVisibleItems = 100; 
             const actualItems = sortedProtocols.length > maxVisibleItems ? 
                                 sortedProtocols.slice(0, maxVisibleItems) : 
                                 sortedProtocols;
-            
+
             actualItems.forEach((protocol, index) => {
                 if (!protocol || !protocol.id) return;
-                
+
                 const navItem = document.createElement('div');
                 navItem.className = 'glass-inset py-3 pr-3 cursor-pointer transition-all duration-300 protocol-nav-item';
                 navItem.setAttribute('data-protocol-id', protocol.id);
                 navItem.setAttribute('data-category', protocol.category || 'default');
-                
-                // Apply staggered fade-in only to first 20 items for performance
+
                 if (index < 20) {
                     navItem.classList.add('fade-in');
                     navItem.style.animationDelay = `${index * 0.02}s`;
                 }
-                
+
                 const categoryColor = getCategoryColor(protocol.category);
                 navItem.style.setProperty('--nav-item-color', categoryColor.background);
                 navItem.innerHTML = `<div class="flex items-center justify-between text-sm">
@@ -1280,22 +1215,20 @@
                         <span class="overflow-hidden whitespace-nowrap text-ellipsis">${protocol.name || 'Unnamed'}</span>
                     </div>
                 </div>`;
-                
+
                 fragment.appendChild(navItem);
             });
 
-            // Single batch DOM update
             protocolNav.innerHTML = '';
             protocolNav.appendChild(fragment);
-            
-            // Show message if list was truncated
+
             if (sortedProtocols.length > maxVisibleItems) {
                 const message = document.createElement('p');
                 message.className = 'text-xs text-gray-400 px-3 py-2 text-center';
                 message.textContent = `Showing ${maxVisibleItems} of ${sortedProtocols.length} protocols. Use search to narrow results.`;
                 protocolNav.appendChild(message);
             }
-            
+
             debug(`Sidebar rendered ${actualItems.length} items.`);
         }
 
@@ -1307,10 +1240,9 @@
                 return; 
             }
 
-            // Ensure protocolData is available
             if (!protocolData || protocolData.length === 0) {
                 debug('Category filter init skipped: No protocol data available.');
-                // Keep the 'All' button, but don't add others
+
                 let allCategoryBtn = categoryFilters.querySelector('[data-category="all"]');
                 if (!allCategoryBtn) {
                     allCategoryBtn = document.createElement('button');
@@ -1319,7 +1251,7 @@
                     allCategoryBtn.textContent = 'All';
                     categoryFilters.appendChild(allCategoryBtn);
                 } else {
-                    // Remove any dynamically added category buttons from previous runs if data failed now
+
                     const existingFilters = categoryFilters.querySelectorAll('.category-filter:not([data-category="all"])');
                     existingFilters.forEach(btn => btn.remove());
                     allCategoryBtn.classList.add('active');
@@ -1328,10 +1260,8 @@
                 return;
             }
 
-            // Get unique categories and sort
             const categories = [...new Set(protocolData.map(p => p.category || 'default'))].sort();
 
-            // Prepare the 'All' button
             let allCategoryBtn = categoryFilters.querySelector('[data-category="all"]');
             if (!allCategoryBtn) {
                 allCategoryBtn = document.createElement('button');
@@ -1346,10 +1276,8 @@
             }
             allCategoryBtn.style.setProperty('--active-filter-bg', 'var(--primary)');
 
-            // Create document fragment for batch DOM update
             const fragment = document.createDocumentFragment();
-            
-            // Add category buttons
+
             categories.forEach(category => {
                 const categoryBtn = document.createElement('button');
                 categoryBtn.className = 'category-filter';
@@ -1357,10 +1285,9 @@
                 categoryBtn.textContent = category.charAt(0).toUpperCase() + category.slice(1);
                 fragment.appendChild(categoryBtn);
             });
-            
-            // Single batch DOM update
+
             categoryFilters.appendChild(fragment);
-            
+
             debug(`Main category filters initialized with ${categories.length} categories.`);
         }
 
@@ -1368,49 +1295,42 @@
             if (!protocolData || protocolData.length === 0) {
                 return [];
             }
-            
+
             try {
                 const lowerSearchTerm = appState.searchTerm.toLowerCase();
                 const currentCategory = appState.currentFilter === 'all' ? null : appState.currentFilter;
-                
-                // Use faster filtering approach
+
                 return protocolData.filter(protocol => {
                     if (!protocol || !protocol.name) { return false; }
-                    
-                    // First check category since it's fastest
+
                     const protocolCategory = protocol.category || 'default';
                     if (currentCategory && protocolCategory !== currentCategory) {
                         return false;
                     }
-                    
-                    // If no search term, we're done
+
                     if (!lowerSearchTerm) {
                         return true;
                     }
-                    
-                    // Check name (most common match)
+
                     if (protocol.name.toLowerCase().includes(lowerSearchTerm)) {
                         return true;
                     }
-                    
-                    // Check description
+
                     if (protocol.description && protocol.description.toLowerCase().includes(lowerSearchTerm)) {
                         return true;
                     }
-                    
-                    // Check port
+
                     if (protocol.port != null) {
                         const portStr = String(protocol.port).toLowerCase();
                         if (portStr.includes(lowerSearchTerm)) {
                             return true;
                         }
-                        
-                        // Check more complex port matching if needed
+
                         if (/\d/.test(lowerSearchTerm) && matchesPort(protocol.port, lowerSearchTerm)) {
                             return true;
                         }
                     }
-                    
+
                     return false;
                 });
             } catch (error) {
@@ -1428,17 +1348,15 @@
             const searchPorts = searchStr.split(',').map(p => p.trim()).filter(p => p !== '');
             if (searchPorts.length === 0) return false;
 
-            // Direct match first
             if (searchPorts.includes(portStr)) return true;
 
             for (const singleSearchPort of searchPorts) {
-                // Check if search term is within a comma-separated list in protocolPort
+
                 if (portStr.includes(',')) {
                     const protocolPortList = portStr.split(',').map(p => p.trim());
                     if (protocolPortList.includes(singleSearchPort)) return true;
                 }
-                
-                // Check if search term is within a range in protocolPort
+
                 if (portStr.includes('-') && !portStr.includes(',')) {
                     const [minPort, maxPort] = portStr.split('-').map(p => parseInt(p.trim(), 10));
                     if (!isNaN(minPort) && !isNaN(maxPort)) {
@@ -1446,8 +1364,7 @@
                         if (!isNaN(searchNum) && searchNum >= minPort && searchNum <= maxPort) return true;
                     }
                 }
-                
-                // Check if protocolPort is within a range specified in search
+
                 if (singleSearchPort.includes('-')) {
                     const [minSearch, maxSearch] = singleSearchPort.split('-').map(p => parseInt(p.trim(), 10));
                     if (!isNaN(minSearch) && !isNaN(maxSearch)) {
@@ -1459,16 +1376,15 @@
             return false;
         }
 
-        // Optimized card rendering using batch processing and virtualization
         function renderProtocolCards() {
-            // Prevent concurrent renders
+
             if (appState.renderInProgress) {
                 debug("Skipping render - already in progress");
                 return;
             }
-            
+
             appState.renderInProgress = true;
-            
+
             const container = document.getElementById('protocolCards');
             const pagination = document.getElementById('paginationContainer');
             const loadingIndicator = document.getElementById('loadingIndicator');
@@ -1485,14 +1401,11 @@
             const currentSearchForRender = appState.searchTerm;
             debug(`Render Cards: Filter="${currentFilterForRender}", Search="${currentSearchForRender}", Page=${currentPageForRender}`);
 
-            // Clear previous content
             container.innerHTML = '';
             pagination.style.display = 'none';
 
-            // Disconnect observer before re-rendering
             if (appState.observer) appState.observer.disconnect();
-            
-            // Process in the next animation frame for better UI responsiveness
+
             requestAnimationFrame(() => {
                 try {
                     const filtered = getFilteredProtocols();
@@ -1502,7 +1415,7 @@
                     } else {
                         renderFilteredCards(filtered, container, pagination, currentPageForRender);
                     }
-                    
+
                     appState.renderInProgress = false;
                 } catch (error) {
                     console.error("Error during card rendering:", error);
@@ -1542,7 +1455,7 @@
         }
 
         function renderFilteredCards(filtered, container, pagination, currentPageForRender) {
-            // Calculate pagination
+
             const totalPages = Math.ceil(filtered.length / appState.itemsPerPage);
             let validatedPage = Math.max(1, Math.min(currentPageForRender, totalPages));
 
@@ -1553,11 +1466,10 @@
                 }
             }
 
-            // Get slice for current page
             const start = (validatedPage - 1) * appState.itemsPerPage;
             const end = Math.min(start + appState.itemsPerPage, filtered.length);
             const toRender = filtered.slice(start, end);
-            
+
             if (toRender.length === 0 && filtered.length > 0) {
                 if (validatedPage > 1) {
                     appState.currentPage = 1;
@@ -1571,11 +1483,9 @@
                     return;
                 }
             }
-            
-            // Create document fragment for batch DOM update
+
             const fragment = document.createDocumentFragment();
-            
-            // Render cards
+
             toRender.forEach((protocol, index) => {
                 const card = createProtocolCard(protocol, index);
                 if (card) {
@@ -1585,42 +1495,36 @@
                     }
                 }
             });
-            
-            // Single batch DOM update
+
             container.appendChild(fragment);
-            
-            // Update pagination
+
             updatePagination(totalPages);
-            
-            // Update progress after cards are rendered
+
             requestAnimationFrame(() => {
                 updateProgress();
                 handleScrollAnimations();
             });
-            
+
             debug('Cards rendered successfully');
         }
 
         function updatePagination(totalPages) {
             const container = document.getElementById('paginationContainer');
             if (!container) return;
-            
-            // Clear previous pagination
+
             container.innerHTML = '';
 
             if (totalPages <= 1) {
                 container.style.display = 'none';
                 return;
             }
-            
+
             container.style.display = 'flex';
 
             const currentPage = appState.currentPage;
-            
-            // Create document fragment for batch DOM update
+
             const fragment = document.createDocumentFragment();
 
-            // Previous button
             const prevBtn = document.createElement('button');
             prevBtn.className = 'pagination-btn';
             prevBtn.innerHTML = '<i class="bx bx-chevron-left"></i>';
@@ -1629,7 +1533,6 @@
             prevBtn.addEventListener('click', () => goToPage(currentPage - 1));
             fragment.appendChild(prevBtn);
 
-            // Page number buttons with ellipsis logic
             const maxVisible = appState.isMobile ? 3 : 5;
             let startPage = Math.max(1, currentPage - Math.floor(maxVisible / 2));
             let endPage = Math.min(totalPages, startPage + maxVisible - 1);
@@ -1638,7 +1541,6 @@
                 startPage = Math.max(1, endPage - maxVisible + 1);
             }
 
-            // First page and ellipsis if needed
             if (startPage > 1) {
                 const firstBtn = document.createElement('button');
                 firstBtn.className = 'pagination-btn';
@@ -1646,7 +1548,7 @@
                 firstBtn.setAttribute('aria-label', 'Page 1');
                 firstBtn.addEventListener('click', () => goToPage(1));
                 fragment.appendChild(firstBtn);
-                
+
                 if (startPage > 2) {
                     const ellipsis = document.createElement('span');
                     ellipsis.className = 'pagination-ellipsis';
@@ -1656,7 +1558,6 @@
                 }
             }
 
-            // Visible page numbers
             for (let i = startPage; i <= endPage; i++) {
                 const pageBtn = document.createElement('button');
                 pageBtn.className = `pagination-btn ${i === currentPage ? 'active' : ''}`;
@@ -1667,7 +1568,6 @@
                 fragment.appendChild(pageBtn);
             }
 
-            // Last page and ellipsis if needed
             if (endPage < totalPages) {
                 if (endPage < totalPages - 1) {
                     const ellipsis = document.createElement('span');
@@ -1676,7 +1576,7 @@
                     ellipsis.setAttribute('aria-hidden', 'true');
                     fragment.appendChild(ellipsis);
                 }
-                
+
                 const lastBtn = document.createElement('button');
                 lastBtn.className = 'pagination-btn';
                 lastBtn.textContent = totalPages;
@@ -1685,7 +1585,6 @@
                 fragment.appendChild(lastBtn);
             }
 
-            // Next button
             const nextBtn = document.createElement('button');
             nextBtn.className = 'pagination-btn';
             nextBtn.innerHTML = '<i class="bx bx-chevron-right"></i>';
@@ -1693,8 +1592,7 @@
             nextBtn.setAttribute('aria-label', 'Next page');
             nextBtn.addEventListener('click', () => goToPage(currentPage + 1));
             fragment.appendChild(nextBtn);
-            
-            // Single batch DOM update
+
             container.appendChild(fragment);
         }
 
@@ -1702,7 +1600,6 @@
             debug(`goToPage called: req=${page}, current=${appState.currentPage}`);
             if (page === appState.currentPage || page < 1) return;
 
-            // Validate page
             const filtered = getFilteredProtocols();
             const totalPages = Math.ceil(filtered.length / appState.itemsPerPage);
             const targetPage = Math.max(1, Math.min(page, totalPages));
@@ -1715,7 +1612,6 @@
             appState.currentPage = targetPage;
             renderProtocolCards();
 
-            // Scroll to top of content area with a small delay
             setTimeout(() => {
                 const mainContent = document.getElementById('mainContent');
                 if (mainContent) {
@@ -1727,9 +1623,8 @@
             }, 50);
         }
 
-        // Optimized list item generation
          function generateListItems(items, type, protocolId) {
-           // --- (Keep existing initial checks and variable definitions) ---
+
            if (!items || items.length === 0) { return '<li class="text-gray-500 text-sm list-item-no-checkbox">None listed.</li>'; }
            const includeCheckbox = (type === 'testing');
            const copyButtonHtml = `<button class="copy-command-btn ml-2 p-1 text-neutral-400 hover:text-primary focus:outline-none focus:ring-1 focus:ring-primary-light rounded transition-colors duration-200 inline-flex items-center align-middle" title="Copy command" aria-label="Copy command to clipboard"><i class='bx bx-copy text-sm'></i></button>`;
@@ -1737,29 +1632,26 @@
            const recognizedPrefixes = ["Alternative Metasploit Module:", "msf>"];
            const separator = ' - ';
 
-           // Helper function for HTML escaping
            const escapeHtml = (unsafe) => {
                if (typeof unsafe !== 'string') return unsafe;
-               // Basic escaping
+
                return unsafe
-                        // .replace(/&/g, "&amp;") // Usually only needed if source strings contain '&'
+
                         .replace(/</g, "&lt;")
                         .replace(/>/g, "&gt;");
            };
 
-           // Helper to highlight backticked commands AND add copy button
            const applyCommandHighlighting = (escapedText) => {
                 return escapedText.replace(/`([^`]+)`/g, (match, codeContent) => {
-                   // Escape the content inside backticks before wrapping
+
                    const safelyEscapedCodeContent = escapeHtml(codeContent);
                    const codeTag = `<code class="command-inline">${safelyEscapedCodeContent}</code>`;
                    return includeCheckbox ? codeTag + copyButtonHtml : codeTag;
                 });
            };
 
-
            for (let i = 0; i < items.length; i++) {
-               const item = items[i]; // Use the raw item for checks
+               const item = items[i]; 
                if (typeof item !== 'string' || item.trim() === '') continue;
 
                const key = `${protocolId}-${type}-${i}`;
@@ -1767,55 +1659,46 @@
                let processedItemHtml = '';
                let specialPrefixHandled = false;
 
-               // --- Generalized Prefix Handling (using raw 'item') ---
                if (includeCheckbox) {
                    let prefixUsed = null;
                    for (const prefix of recognizedPrefixes) {
-                       if (item.startsWith(prefix)) { // Check on original 'item'
+                       if (item.startsWith(prefix)) { 
                            prefixUsed = prefix;
                            break;
                        }
                    }
 
                    if (prefixUsed) {
-                       const separatorIndex = item.indexOf(separator); // Check on original 'item'
+                       const separatorIndex = item.indexOf(separator); 
 
                        if (separatorIndex !== -1) {
-                           // Extract raw parts
+
                            const rawCommandOrModulePart = item.substring(prefixUsed.length, separatorIndex).trim();
                            const rawDescriptionPart = item.substring(separatorIndex + separator.length).trim();
 
-                           // Escape parts
                            const escapedCommandOrModulePart = escapeHtml(rawCommandOrModulePart);
                            let escapedDescriptionPart = escapeHtml(rawDescriptionPart);
 
-                           // Apply backtick highlighting to the *escaped* description
                            escapedDescriptionPart = applyCommandHighlighting(escapedDescriptionPart);
 
-                           // Create highlighted command/module part (using escaped content) + copy button
                            const highlightedCommandOrModule = `<code class="command-inline">${escapedCommandOrModulePart}</code>${copyButtonHtml}`;
 
-                           // --- MODIFIED LINE ---
-                           // Construct the HTML, adding flex alignment and the icon bullet
                            processedItemHtml = `
                                <span class="block">${escapedDescriptionPart}</span>
                                <span class="block text-xs text-neutral-400 mt-1 flex items-center"> <i class='bx bx-chevron-right text-xs mr-1 text-primary align-middle'></i> ${escapeHtml(prefixUsed)} ${highlightedCommandOrModule}
                                </span>
                            `;
-                           // --- END MODIFIED LINE ---
 
-                           specialPrefixHandled = true; // Mark as handled
+                           specialPrefixHandled = true; 
                        }
                    }
-               } // End if(includeCheckbox)
+               } 
 
-               // --- General Handling ---
                if (!specialPrefixHandled) {
                     const escapedItem = escapeHtml(item);
                     processedItemHtml = applyCommandHighlighting(escapedItem);
                }
 
-               // --- Build List Item (No changes needed here) ---
                html += `<li class="flex items-start list-item-animate ${!includeCheckbox ? 'list-item-no-checkbox-container' : ''} mb-2">`;
                if (includeCheckbox) {
                    html += `<label class="toggle-container inline-flex mr-3 mt-0.5 flex-shrink-0"><input type="checkbox" class="toggle-input ${type}-check" data-protocol="${protocolId}" data-type="${type}" data-index="${i}" ${isChecked ? 'checked' : ''}><span class="toggle-slider"></span></label><span class="checkmark-animate text-sm flex-grow ${isChecked ? 'line-through text-gray-500' : ''}">${processedItemHtml}</span>`;
@@ -1824,27 +1707,23 @@
                }
                html += `</li>`;
 
-           } // End for loop
+           } 
            return html;
        }
 
-        // Card creation optimized for performance
         function createProtocolCard(protocol, indexOnPage) {
             try {
                 if (!protocol || !protocol.id || !protocol.name) {
                     console.warn("Skipping card: invalid data:", protocol);
                     return null;
                 }
-                
-                // Create card element
+
                 const card = document.createElement('div');
                 card.className = 'protocol-card glass-card section-animate';
                 card.id = protocol.id;
-                
-                // Get category color
+
                 const categoryColor = getCategoryColor(protocol.category);
-                
-                // Calculate progress
+
                 const totalItems = protocol.testing?.length || 0;
                 let checkedCount = 0;
                 if (protocol.testing) {
@@ -1854,20 +1733,18 @@
                         }
                     }
                 }
-                
+
                 const percentage = totalItems > 0 ? Math.round((checkedCount / totalItems) * 100) : 0;
                 const portDisplayHtml = getPortDisplay(protocol.port);
                 const isExpanded = appState.expandedCards.has(protocol.id);
-                
-                // Pre-generate content lists
+
                 const vulnerabilitiesList = protocol.vulnerabilities ? 
                     generateListItems(protocol.vulnerabilities, 'vulnerability', protocol.id) : '';
                 const testingList = protocol.testing ? 
                     generateListItems(protocol.testing, 'testing', protocol.id) : '';
                 const toolsList = protocol.tools ? 
                     generateListItems(protocol.tools, 'tool', protocol.id) : '';
-                
-                // Build card HTML
+
                 card.innerHTML = `
                     <div class="category-indicator" style="background: ${categoryColor.background}"></div> 
                     <div class="card-header p-4 md:p-6 flex flex-col md:flex-row md:items-center justify-between" data-id="${protocol.id}">
@@ -1908,8 +1785,7 @@
                             </div>
                         </div>
                     </div>`;
-                
-                // Apply expanded state if needed
+
                 if (isExpanded) {
                     card.classList.add('expanded');
                     const content = card.querySelector('.card-content');
@@ -1921,22 +1797,20 @@
                         content.style.transform = 'translateY(0)';
                         content.style.paddingTop = '1rem';
                         content.style.paddingBottom = '20px';
-                        
-                        // Make content sections visible immediately
+
                         card.querySelectorAll('.content-section').forEach(el => {
                             el.style.transition = 'none';
                             el.style.opacity = '1';
                             el.style.transform = 'translate(0, 0)';
                             requestAnimationFrame(() => { el.style.transition = ''; });
                         });
-                        
-                        // Restore transition after a frame
+
                         requestAnimationFrame(() => { content.style.transition = ''; });
                     }
                 }
-                
+
                 return card;
-                
+
             } catch (error) {
                 console.error(`Error creating card for ${protocol?.id}:`, error);
                 return null;
@@ -1948,14 +1822,13 @@
             if (appState.currentFilter === category) return;
 
             appState.currentFilter = category;
-            appState.currentPage = 1; // Reset to page 1 on filter change
+            appState.currentPage = 1; 
 
-            // Update active state on buttons
             document.querySelectorAll('#categoryFilters .category-filter').forEach(btn => {
                 const btnCategory = btn.getAttribute('data-category');
                 const isActive = (btnCategory === category);
                 btn.classList.toggle('active', isActive);
-                
+
                 if (isActive) {
                     const activeColor = (category === 'all')
                         ? 'var(--primary)'
@@ -1966,15 +1839,13 @@
                 }
             });
 
-            // Re-render with new filter
             renderProtocolCards();
             renderSidebarProtocols();
         }
 
-        // Optimized event listeners setup
         function setupEventListeners() {
             debug('Setting up listeners...');
-            
+
             const sidebar = document.getElementById('sidebar');
             const categoryFilters = document.getElementById('categoryFilters');
             const protocolCardsContainer = document.getElementById('protocolCards');
@@ -1983,11 +1854,9 @@
             const menuToggle = document.getElementById('menuToggle');
             const mobileClose = document.getElementById('mobileClose');
 
-            // Mobile menu toggle
             menuToggle?.addEventListener('click', () => sidebar?.classList.add('open'));
             mobileClose?.addEventListener('click', () => sidebar?.classList.remove('open'));
 
-            // Close sidebar on click outside on mobile
             document.addEventListener('click', (e) => {
                 if (appState.isMobile && sidebar?.classList.contains('open')) {
                     if (!sidebar.contains(e.target) && !menuToggle?.contains(e.target)) {
@@ -1996,24 +1865,22 @@
                 }
             }, true);
 
-            // Debounced search
             const debouncedSearch = debounce((value) => {
                 appState.searchTerm = value.trim();
                 appState.currentPage = 1;
                 renderProtocolCards();
                 renderSidebarProtocols();
             }, 300);
-            
+
             searchInput?.addEventListener('input', (e) => {
                 debouncedSearch(e.target.value);
             });
 
-            // Event delegation for card container - handles expansion and copy
             protocolCardsContainer?.addEventListener('click', (e) => {
-                // Handle card expansion
+
                 const trigger = e.target.closest('.card-header, .expand-btn');
                 const isInteractiveClick = e.target.closest('a, button:not(.expand-btn), input, label');
-                
+
                 if (trigger && !isInteractiveClick) {
                     const card = trigger.closest('.protocol-card');
                     if (card) {
@@ -2022,7 +1889,6 @@
                     }
                 }
 
-                // Handle copy button
                 const copyButton = e.target.closest('.copy-command-btn');
                 if (copyButton) {
                     const codeElement = copyButton.previousElementSibling;
@@ -2052,14 +1918,12 @@
                 }
             });
 
-            // Event delegation for checkbox changes
             protocolCardsContainer?.addEventListener('change', (e) => {
                 if (e.target.classList.contains('toggle-input') && e.target.type === 'checkbox') {
                     handleCheckboxChange(e.target);
                 }
             });
 
-            // Category filter handling
             categoryFilters?.addEventListener('click', (e) => {
                 const btn = e.target.closest('.category-filter');
                 if (btn && !btn.classList.contains('active')) {
@@ -2070,7 +1934,6 @@
                 }
             });
 
-            // Sidebar navigation item clicks
             protocolNavContainer?.addEventListener('click', (e) => {
                 const item = e.target.closest('[data-protocol-id]');
                 if (item) {
@@ -2084,18 +1947,16 @@
                 }
             });
 
-            // Optimized resize handler
             const handleResize = debounce(() => {
                 updateDeviceState();
             }, 250);
-            
+
             window.addEventListener('resize', () => {
                 requestAnimationFrame(() => {
                     handleResize();
                 });
             });
 
-            // Keyboard pagination
             document.addEventListener('keydown', (e) => {
                 if (document.activeElement && ['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
                     return;
@@ -2113,7 +1974,7 @@
                     if (appState.currentPage < totalPages) goToPage(appState.currentPage + 1);
                 }
             });
-            
+
             debug('Listeners setup complete');
         }
 
@@ -2121,19 +1982,17 @@
             const protocol = checkbox.getAttribute('data-protocol');
             const type = checkbox.getAttribute('data-type');
             const index = checkbox.getAttribute('data-index');
-            
+
             if (!protocol || !type || index === null) {
                 console.warn("Checkbox change handler missing data attributes:", checkbox);
                 return;
             }
-            
+
             const key = `${protocol}-${type}-${index}`;
             const isChecked = checkbox.checked;
 
-            // Update state
             appState.checkedItems[key] = isChecked;
-            
-            // Save to localStorage (batched for performance)
+
             window.requestIdleCallback(() => {
                 try {
                     localStorage.setItem('checkedItems', JSON.stringify(appState.checkedItems));
@@ -2142,7 +2001,6 @@
                 }
             }, { timeout: 1000 });
 
-            // Update visual style
             const listItem = checkbox.closest('li');
             if (listItem) {
                 const textElement = listItem.querySelector('span.checkmark-animate');
@@ -2152,26 +2010,22 @@
                 }
             }
 
-            // Update progress bar
             updateProgressForCard(protocol);
         }
 
         function updateProgressForCard(protocolId) {
-            // Find the protocol data
+
             const protocol = protocolData.find(p => p && p.id === protocolId);
             if (!protocol) return;
 
-            // Find the card element
             const cardElement = document.getElementById(protocolId);
             if (!cardElement) return;
 
-            // Get elements to update
             const bar = cardElement.querySelector(`.progress-bar[data-protocol="${protocolId}"]`);
             const text = cardElement.querySelector('.completion-percentage');
-            
+
             if (!bar || !text) return;
 
-            // Calculate progress
             const totalItems = protocol.testing?.length || 0;
             if (totalItems === 0) {
                 bar.style.width = '0%';
@@ -2179,7 +2033,6 @@
                 return;
             }
 
-            // Count checked items
             let checkedCount = 0;
             if (protocol.testing) {
                 for (let i = 0; i < protocol.testing.length; i++) {
@@ -2190,19 +2043,16 @@
             }
 
             const percentage = Math.round((checkedCount / totalItems) * 100);
-            
-            // Update progress bar (optimized animation)
+
             if (bar) {
                 bar.style.width = `${percentage}%`;
                 bar.classList.add('animate');
-                
-                // Remove animation class after animation completes
+
                 setTimeout(() => {
                     bar.classList.remove('animate');
                 }, 2500);
             }
 
-            // Update percentage text
             if (text) {
                 text.textContent = `${percentage}%`;
             }
@@ -2213,39 +2063,36 @@
                 debug("Skipping progress update - no data loaded.");
                 return;
             }
-            
-            // Update visible cards in batches
+
             const visibleCards = document.querySelectorAll('#protocolCards .protocol-card');
-            
-            // Use requestAnimationFrame to optimize updates
+
             if (visibleCards.length > 0) {
                 let index = 0;
-                
+
                 const updateNextBatch = () => {
                     const endIndex = Math.min(index + 3, visibleCards.length);
-                    
+
                     for (let i = index; i < endIndex; i++) {
                         const card = visibleCards[i];
                         if (card && card.id) {
                             updateProgressForCard(card.id);
                         }
                     }
-                    
+
                     index = endIndex;
-                    
+
                     if (index < visibleCards.length) {
                         requestAnimationFrame(updateNextBatch);
                     }
                 };
-                
+
                 requestAnimationFrame(updateNextBatch);
             }
         }
 
-        // Optimized card expansion toggle
         function toggleCardExpansion(card) {
             if (!card) return;
-            
+
             const content = card.querySelector('.card-content');
             const icon = card.querySelector('.expand-btn i');
             const button = card.querySelector('.expand-btn');
@@ -2257,74 +2104,62 @@
             }
 
             const wasExpanded = card.classList.contains('expanded');
-            
-            // Update state
+
             if (wasExpanded) {
                 appState.expandedCards.delete(id);
             } else {
                 appState.expandedCards.add(id);
             }
-            
+
             button.setAttribute('aria-expanded', !wasExpanded);
 
-            // Handle collapsing
             if (wasExpanded) {
-                // Start icon rotation
+
                 icon.style.transform = 'rotate(0deg)';
-                
-                // Fade out content sections
+
                 card.querySelectorAll('.content-section').forEach(section => {
                     section.style.opacity = '0';
                     section.style.transform = 'translateY(5px)';
                 });
-                
-                // Hide list items
+
                 card.querySelectorAll('.list-item-animate').forEach(item => {
                     item.style.opacity = '0';
                 });
-                
-                // Collapse the content with a slight delay
+
                 setTimeout(() => {
                     content.style.maxHeight = '0';
                     content.style.opacity = '0';
                     content.style.paddingBottom = '0px';
                     content.style.paddingTop = '0px';
                     content.style.transform = 'translateY(5px)';
-                    
-                    // Remove expanded class after animation completes
+
                     setTimeout(() => {
                         card.classList.remove('expanded');
                     }, 300);
                 }, 50);
-                
-            // Handle expanding
+
             } else {
-                // Add expanded class immediately
+
                 card.classList.add('expanded');
-                
-                // Start icon rotation
+
                 icon.style.transform = 'rotate(180deg)';
-                
-                // Set initial content state
+
                 content.style.opacity = '0';
                 content.style.transform = 'translateY(5px)';
-                
-                // Expand content
+
                 requestAnimationFrame(() => {
                     content.style.maxHeight = '1500px';
                     content.style.opacity = '1';
                     content.style.transform = 'translateY(0)';
                     content.style.paddingBottom = '20px';
                     content.style.paddingTop = '1rem';
-                    
-                    // Show content sections with staggered timing
+
                     setTimeout(() => {
                         card.querySelectorAll('.content-section').forEach((section, i) => {
                             setTimeout(() => {
                                 section.style.opacity = '1';
                                 section.style.transform = 'translateY(0)';
-                                
-                                // Show list items with staggered timing
+
                                 if (i === card.querySelectorAll('.content-section').length - 1) {
                                     setTimeout(() => {
                                         card.querySelectorAll('.list-item-animate').forEach((item, j) => {
@@ -2337,13 +2172,12 @@
                                 }
                             }, i * 50);
                         });
-                        
-                        // Check if card needs scrolling into view
+
                         setTimeout(() => {
                             if (card.classList.contains('expanded')) {
                                 const cardRect = card.getBoundingClientRect();
                                 const viewportHeight = window.innerHeight;
-                                
+
                                 if (cardRect.bottom > viewportHeight || cardRect.top < 0) {
                                     card.scrollIntoView({
                                         behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
@@ -2359,10 +2193,9 @@
 
         function initializeAnimations() {
             debug('Initializing Intersection Observer for animations');
-            
-            // Don't use overly complex animations for users who prefer reduced motion
+
             const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-            
+
             const options = {
                 root: null,
                 rootMargin: '0px 0px -40px 0px',
@@ -2377,8 +2210,7 @@
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('visible');
-                        
-                        // If the user prefers reduced motion, make everything immediately visible
+
                         if (prefersReducedMotion) {
                             const items = entry.target.querySelectorAll('.list-item-animate, .content-section');
                             items.forEach(item => {
@@ -2386,7 +2218,7 @@
                                 item.style.transform = 'none';
                             });
                         }
-                        
+
                         observer.unobserve(entry.target);
                     }
                 });
@@ -2406,26 +2238,25 @@
             });
         }
 
-        // Optimized dynamic color generation with caching
         const categoryColorCache = {};
 	const PREDEFINED_PALETTE = [
-    'hsl(210, 85%, 30%)', // Deep Navy Blue
-    'hsl(150, 75%, 25%)', // Deep Forest Green
-    'hsl( 15, 80%, 35%)', // Deep Rust/Auburn
-    'hsl(320, 70%, 30%)', // Deep Magenta
-    'hsl( 40, 90%, 30%)', // Deep Amber
-    'hsl(180, 65%, 25%)', // Deep Teal
-    'hsl(270, 65%, 30%)', // Deep Purple
-    'hsl(  0, 75%, 35%)', // Deep Crimson
-    'hsl(235, 75%, 30%)', // Deep Royal Blue
-    'hsl( 90, 60%, 25%)', // Deep Moss Green
+    'hsl(210, 85%, 30%)', 
+    'hsl(150, 75%, 25%)', 
+    'hsl( 15, 80%, 35%)', 
+    'hsl(320, 70%, 30%)', 
+    'hsl( 40, 90%, 30%)', 
+    'hsl(180, 65%, 25%)', 
+    'hsl(270, 65%, 30%)', 
+    'hsl(  0, 75%, 35%)', 
+    'hsl(235, 75%, 30%)', 
+    'hsl( 90, 60%, 25%)', 
 ];
 		function getIndexFromString(str, maxIndex) {
          if (!str || str.length === 0) str = 'uncategorized';
          let hash = 0;
          for (let i = 0; i < str.length; i++) {
              hash = ((hash << 5) - hash) + str.charCodeAt(i);
-             hash |= 0; // Convert to 32bit integer
+             hash |= 0; 
          }
          return Math.abs(hash) % maxIndex;
     }
@@ -2434,10 +2265,8 @@
         if (match) {
             return { h: parseInt(match[1]), s: parseInt(match[2]), l: parseInt(match[3]) };
         }
-        return null; // Fallback or error
+        return null; 
     }
-	
-	
 
         function getCategoryColor(category) {
         const categoryKey = (category && typeof category === 'string' && category.trim() !== '') ?
@@ -2450,15 +2279,14 @@
         const paletteIndex = getIndexFromString(categoryKey, PREDEFINED_PALETTE.length);
         const backgroundColor = PREDEFINED_PALETTE[paletteIndex];
 
-        // Generate a matching glow (optional, can be simplified)
-        let glowColor = 'hsla(258, 70%, 65%, 0.5)'; // Default glow similar to primary
+        let glowColor = 'hsla(258, 70%, 65%, 0.5)'; 
         const hsl = parseHsl(backgroundColor);
         if (hsl) {
             glowColor = `hsla(${hsl.h}, ${Math.min(100, hsl.s + 10)}%, ${Math.min(75, hsl.l + 10)}%, 0.6)`;
         }
 
         const result = {
-            background: backgroundColor, // Assign the solid color from palette
+            background: backgroundColor, 
             glow: glowColor
         };
 
@@ -2466,20 +2294,18 @@
         return result;
     }
 
-        // Protocol scrolling and highlighting
         function scrollToProtocol(id) {
             if (!protocolData || protocolData.length === 0) {
                 debug("Cannot scroll: Protocol data not loaded.");
                 return;
             }
-            
+
             const protocol = protocolData.find(p => p && p.id === id);
             if (!protocol) {
                 debug(`Protocol not found in loaded data: ${id}`);
                 return;
             }
 
-            // Check if filter change needed
             const needsFilterChange = appState.currentFilter !== 'all' && 
                                      protocol.category !== appState.currentFilter;
 
@@ -2533,36 +2359,30 @@
         function performScrollAndHighlight(element) {
             const id = element.id;
             const needsExpansion = !element.classList.contains('expanded');
-            
-            // First scroll to bring into view
+
             element.scrollIntoView({
                 behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
                 block: 'nearest'
             });
-            
-            // Then expand if needed
+
             setTimeout(() => {
                 if (!document.getElementById(id)) return;
-                
+
                 if (needsExpansion) {
                     toggleCardExpansion(element);
                 }
-                
-                // Apply highlight effect
+
                 setTimeout(() => {
                     if (!document.getElementById(id)) return;
-                    
-                    // Get category color for the highlight
+
                     const protocol = protocolData.find(p => p && p.id === id);
                     const categoryColor = getCategoryColor(protocol?.category);
                     const glowColorValue = categoryColor?.glow || 'rgba(139, 92, 246, 0.5)';
-                    
-                    // Apply highlight
+
                     const originalShadow = getComputedStyle(element).boxShadow;
                     element.classList.add('highlighting');
                     element.style.boxShadow = `0 0 20px 5px ${glowColorValue}, ${originalShadow || '0 8px 32px rgba(0, 0, 0, 0.2)'}`;
-                    
-                    // Remove highlight after duration
+
                     setTimeout(() => {
                         if (!document.getElementById(id)) return;
                         element.style.boxShadow = originalShadow || '';
